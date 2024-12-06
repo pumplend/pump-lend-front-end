@@ -113,7 +113,7 @@ export default function IndexPage() {
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
         <div className="inline-block max-w-xl text-center justify-center">
           <span className={title()}>Deposite&nbsp;</span>
-          <span className={title({ color: "violet" })}>Memecoin&nbsp;</span>
+          <span className={title({ color: "green" })}>Memecoin&nbsp;</span>
           <br />
           <span className={title()}>
             Release SOL 
