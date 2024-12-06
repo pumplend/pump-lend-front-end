@@ -26,6 +26,12 @@ import {
   Logo,
 } from "@/components/icons";
 
+import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+
+
+
 export const Navbar = () => {
   const searchInput = (
     <Input
@@ -103,6 +109,7 @@ export const Navbar = () => {
           >
             
           </Button>
+          <WalletMultiButton className="btn btn-ghost" style={{height:"85%"}} />
         </NavbarItem>
       </NavbarContent>
 
@@ -130,7 +137,8 @@ export const Navbar = () => {
                 href="#"
                 size="lg"
               >
-                {item.label}
+               
+                {/* {item.label} */}
               </Link>
             </NavbarMenuItem>
           ))}
