@@ -11,7 +11,7 @@ import DefaultLayout from "@/layouts/default";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { useState, useEffect } from "react";
 
-import {Input} from "@nextui-org/input"
+import {Input,Avatar} from "@nextui-org/react"
 
 
 import { Image } from "@nextui-org/image";
@@ -40,11 +40,74 @@ export default function IndexPage() {
     },
   ]);
 
+
+  const [repayData, setRepayData] = useState([
+    {
+      name: "Rastapepe",
+      picture: "https://ipfs.io/ipfs/QmQeSMMH2icVbm3rumZnC21z6YdzD3axJYZ47QpYLcrWPi",
+      amount: "2 SOL ",
+      amountToken: "1000000",
+    },
+    {
+      name: "PS1",
+      picture: "https://ipfs.io/ipfs/QmZXbptRrJTPGGeh7N19DfUbddggYG5CghnJhXvp4rp4uf",
+      amount: "0.2 SOL ",
+      amountToken: "31326",
+    },
+    {
+      name: "11Doge",
+      picture: "https://ipfs.io/ipfs/QmUuBn5rN8SuC1E6UWrJwcHHvRP62tpPokqRVTPXHEisEC",
+      amount: "1.4 SOL ",
+      amountToken: "100610000",
+    },
+    {
+      name: "0.047 ROS",
+      picture: "https://ipfs.io/ipfs/QmdbbxHmRdFYnEscy5aEXYw3v46Pb7N6nPtXYJZnk3pgRG",
+      amount: "1.8 SOL ",
+      amountToken: "624234234",
+    },
+
+  ]);
+
   const [selectedFunction, setSelectedFunction] = useState([
     "Borrow",
     "Repay",
     "Long"
   ]);
+
+
+
+  const [windowSize, setWindowSize] = useState({
+    width: 0,
+    height: 0
+  });
+
+  useEffect(() => {
+    //Window size function
+        const handleResize = () => {
+          setWindowSize({
+            width: window.innerWidth,
+            height: window.innerHeight
+          });
+        };
+      handleResize();
+      window.addEventListener('resize', handleResize);
+
+      //Onload functions
+      const onload = async () => {
+
+      };
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+
+      
+
+
+    onload().catch(console.error);
+  }, []);
+
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
@@ -57,7 +120,7 @@ export default function IndexPage() {
           </span>
         </div>
       
-      <div className="maincard">
+      <div className="maincard" style={{minWidth : windowSize.width*0.3}}>
         <div style={{width:"100%",minWidth:"300px"}} className="inline-block max-w-xl text-center justify-center">
           <ButtonGroup>
             {data.map((item:any, index:any) => (
@@ -133,7 +196,7 @@ export default function IndexPage() {
         </div>
 
         <div className="flex justify-between items-center text-gray-500">
-          <p className="text-sm">BTC</p>
+          <p className="text-sm">SOL</p>
           <p>Receive</p>
         </div>
         <div className="flex justify-between items-center">
@@ -141,11 +204,11 @@ export default function IndexPage() {
             <Image
               alt="chain logo"
               height={40}
-              src="https://pump.fun/logo.png"
+              src="/icon/sol.png"
               width={40}
             />
             <div className="font-semibold text-white">
-              <p>Bitcoin</p>
+              <p>SOL</p>
               <p>0</p>
             </div>
           </div>
@@ -179,7 +242,7 @@ export default function IndexPage() {
 
 {
   data[1].display ? 
-        <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full" style={{ width:"100%"}}>
+        <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full  justify-center" style={{ width:"100%"}}>
             <CardBody className="py-5 gap-4">
               <div className="flex gap-2.5 justify-center">
                 <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
@@ -189,18 +252,34 @@ export default function IndexPage() {
                 </div>
               </div>
 
-              {/* <div className="flex flex-col gap-6 w-full">
-                  <div style={{width:"100%"}}>
-                  <Input
-                  placeholder="Amount to repay"
-                  />
-                  <div className="bottom-14 right-0 w-full p-4">
-                  <Button className="w-full" color="primary">
-                    Connect Wallet
-                  </Button>
+              <div className="flex flex-col gap-6  justify-center ">
+              {repayData.map((item) => (
+                <div key={item.name} className="grid grid-cols-4 w-full">
+                  <div className="w-full">
+                    <Avatar
+                      isBordered
+                      color="secondary"
+                      src={item.picture}
+                    />
                   </div>
+
+                  <span className="text-default-900  font-semibold">
+                    ${item.name}
+                  </span>
+                  <div>
+                    
+                    <div style={{display:"flex",flexDirection:"column"}}>
+                      <span className="text-success text-xs">{item.amount}</span>
+                      <span className="text-success text-xs">{item.amountToken}</span>
+                    </div>
                   </div>
-              </div> */}
+                  <div>
+                  <Button color="danger">Close</Button>
+                    {/* <span className="text-default-500 text-xs">{item.date}</span> */}
+                  </div>
+                </div>
+              ))}
+              </div>
 
 
             </CardBody>
