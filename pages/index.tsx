@@ -20,6 +20,10 @@ import { TbTransferVertical } from "react-icons/tb";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import { Display } from "next/dist/compiled/@next/font";
 
+import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+
 export default function IndexPage() {
 
   const [data, setData] = useState([
@@ -101,12 +105,17 @@ export default function IndexPage() {
       return () => {
         window.removeEventListener('resize', handleResize);
       };
-
-      
-
-
     onload().catch(console.error);
   }, []);
+
+  const { publicKey } = useWallet();
+  const connectWalletTest =  async () =>
+  {
+    
+    console.log(
+      publicKey
+    )
+  }
 
   return (
     <DefaultLayout>
@@ -227,7 +236,7 @@ export default function IndexPage() {
           Network fee: 0.0025 SOL
         </div>
         <div className="bottom-14 right-0 w-full p-4">
-        <Button className="w-full" color="success">
+        <Button className="w-full" color="success" onClick={connectWalletTest}>
           Connect Wallet
         </Button>
         </div>
