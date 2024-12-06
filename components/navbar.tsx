@@ -109,7 +109,7 @@ export const Navbar = () => {
           >
             
           </Button>
-          <WalletMultiButton className="btn btn-ghost" style={{height:"85%"}} />
+          <WalletMultiButton className="btn btn-ghost" style={{height:"85%" , backgroundColor:"green"}} />
         </NavbarItem>
       </NavbarContent>
 

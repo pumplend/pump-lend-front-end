@@ -25,7 +25,7 @@ export default function IndexPage() {
   const [data, setData] = useState([
     {
       name:"Borrow",
-      color:"primary",
+      color:"success",
       display:true
     },
     {
@@ -137,7 +137,7 @@ export default function IndexPage() {
                     tmp[i].color = "default";
                     tmp[i].display = false;
                   }
-                  tmp[index].color = "primary";
+                  tmp[index].color = "success";
                   tmp[index].display = true
                   setData(tmp);
                 }}
@@ -227,7 +227,7 @@ export default function IndexPage() {
           Network fee: 0.0025 SOL
         </div>
         <div className="bottom-14 right-0 w-full p-4">
-        <Button className="w-full" color="primary">
+        <Button className="w-full" color="success">
           Connect Wallet
         </Button>
         </div>
