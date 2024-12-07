@@ -123,13 +123,68 @@ export default function IndexPage() {
         <div className="inline-block max-w-xl text-center justify-center">
           <span className={title()}>Deposite&nbsp;</span>
           <span className={title({ color: "green" })}>Memecoin&nbsp;</span>
-          <br />
+          {/* <br />
           <span className={title()}>
             Release SOL 
-          </span>
+          </span> */}
         </div>
+      <br></br>
       
-      <div className="maincard" style={{minWidth : windowSize.width*0.3}}>
+      <div className="maincard">
+      <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full" style={{ width:"100%" }}>
+  <CardBody className="py-5 gap-4">
+    <div className="flex gap-2.5 justify-center">
+      <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
+        <span className="text-default-900 text-xl font-semibold">
+          Stake Sol
+        </span>
+      </div>
+    </div>
+
+    <div className="flex flex-col gap-6 w-full" style={{minWidth : windowSize.width*0.3}}>
+      <div  style={{width:'100%' , display:"flex" , justifyContent:"space-between" }}>
+        <Image
+                alt="chain logo"
+                height={40}
+                src="/icon/sol.png"
+                width={40}
+        />
+
+        <div style={{display:"flex",flexDirection:"column"}}>
+                      <span className=" text-xs">Your Supply</span>
+                      <span className="text-success text-xs">321</span>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column"}}>
+                      <span className=" text-xs">Total Supply</span>
+                      <span className="text-success text-xs">321</span>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column"}}>
+                      <span className=" text-xs">Total Borrow</span>
+                      <span className="text-success text-xs">321</span>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column"}}>
+                      <span className=" text-xs">Supply APY</span>
+                      <span className="text-success text-xs">321</span>
+        </div>
+        <Button  color="success">
+          ➕ Supply
+        </Button>
+        <Button  color="danger">
+          ➖ Withdraw
+        </Button>
+      </div>
+    </div>
+
+
+  </CardBody>
+</Card>
+      </div>
+
+      <br></br>
+      <div className="maincard" style={{minWidth : windowSize.width*0.32}}>
         <div style={{width:"100%",minWidth:"300px"}} className="inline-block max-w-xl text-center justify-center">
           <ButtonGroup>
             {data.map((item:any, index:any) => (
