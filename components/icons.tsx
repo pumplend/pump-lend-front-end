@@ -11,9 +11,10 @@ export const Logo: React.FC<IconSvgProps> = ({
     src="/logo.png"
     className="apple"
     style={{
-      width : "120px",
+      width : "100px",
       height :"100px",
       backgroundColor: '#000',
+      paddingTop:"10%"
     }}
   >
   </img>

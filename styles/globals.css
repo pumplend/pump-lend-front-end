@@ -331,6 +331,7 @@ swapcard {
 .twitter
 .facebook,
 .github,
+.colorfulbuttons,
 .apple{
   font-size:1em;
   color:#fff;
@@ -353,6 +354,11 @@ swapcard {
 .github{
   animation-delay:0.1s;
 }
+.colorfulbuttons{
+    animation-delay:1s;
+  }
+
+  
 @keyframes animate {
   from{
     filter: hue-rotate(0deg);

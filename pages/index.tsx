@@ -5,7 +5,7 @@ import { Card, CardBody, CardFooter } from "@nextui-org/card";
 
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
+import { GithubIcon, Logo } from "@/components/icons";
 import DefaultLayout from "@/layouts/default";
 
 import { Button, ButtonGroup } from "@nextui-org/button";
@@ -129,7 +129,8 @@ export default function IndexPage() {
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
         <div className="inline-block max-w-xl text-center justify-center">
           <span className={title()}>Deposite&nbsp;</span>
-          <span className={title({ color: "green" })}>Memecoin&nbsp;</span>
+          <span className={title({ color: "green" })+" github"}>Memecoin&nbsp;</span>
+          {/* <span className={title({ color: "green" })}>Memecoin&nbsp;</span> */}
           {/* <br />
           <span className={title()}>
             Release SOL 
@@ -298,7 +299,7 @@ export default function IndexPage() {
           Network fee: 0.0025 SOL
         </div>
         <div className="bottom-14 right-0 w-full p-4">
-        <Button className="w-full" color="success" onClick={connectWalletTest}>
+        <Button className="w-full colorfulbuttons" color="success" onClick={connectWalletTest}>
           Connect Wallet
         </Button>
         </div>
