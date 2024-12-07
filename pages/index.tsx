@@ -115,6 +115,13 @@ export default function IndexPage() {
     console.log(
       publicKey
     )
+
+    if(publicKey)
+    {
+      console.log("already connect ::",publicKey.toBase58())
+    }else{
+
+    }
   }
 
   return (
