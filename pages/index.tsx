@@ -24,6 +24,17 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
+
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/react";
+
+
 export default function IndexPage() {
 
   const [data, setData] = useState([
@@ -85,6 +96,10 @@ export default function IndexPage() {
     width: 0,
     height: 0
   });
+
+  const { isOpen: isSupplyOpen, onOpen: onSupplyOpen, onClose: onSupplyClose } = useDisclosure();
+  const { isOpen: isWithdrawOpen, onOpen: onWithdrawOpen, onClose: onWithdrawClose } = useDisclosure();
+
 
   useEffect(() => {
     //Window size function
@@ -177,10 +192,10 @@ export default function IndexPage() {
                       <span className=" text-xs">Supply APY</span>
                       <span className="text-success text-xs">321</span>
         </div>
-        <Button  color="success">
+        <Button  color="success" onClick={onSupplyOpen}>
           ➕ Supply
         </Button>
-        <Button  color="danger">
+        <Button  color="danger" onClick={onWithdrawOpen}>
           ➖ Withdraw
         </Button>
       </div>
@@ -358,6 +373,68 @@ export default function IndexPage() {
         </Card> : null
 
 }
+      </div>
+
+
+      <div>
+        {/* All the models */}
+
+
+      {/* Supply Modal */}
+      <Modal isOpen={isSupplyOpen} onClose={onSupplyClose}>
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">Supply SOL</ModalHeader>
+          <ModalBody>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+              <Image alt="chain logo" height={40} src="/icon/sol.png" width={40} />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span className="text-xs">Your Supply</span>
+                <span className="text-success text-xs">321</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span className="text-xs">Supply APY</span>
+                <span className="text-success text-xs">321</span>
+              </div>
+            </div>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+              <Input key="payinput" description="Withdraw anytime" label="Sol" labelPlacement="inside" placeholder="Enter sol amount to deposit" />
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="success" onClick={onSupplyClose} style={{ width: '100%' }}>
+              Apply
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* Withdraw Modal */}
+      <Modal isOpen={isWithdrawOpen} onClose={onWithdrawClose}>
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">Withdraw SOL</ModalHeader>
+          <ModalBody>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+              <Image alt="chain logo" height={40} src="/icon/sol.png" width={40} />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span className="text-xs">Your Supply</span>
+                <span className="text-success text-xs">321</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span className="text-xs">Supply APY</span>
+                <span className="text-success text-xs">321</span>
+              </div>
+            </div>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+              <Input key="payinput" description="Including all rewards" label="Sol" labelPlacement="inside" placeholder="Enter sol amount to withdraw" />
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="success" onClick={onWithdrawClose} style={{ width: '100%' }}>
+              Withdraw
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       </div>
       </section>
     </DefaultLayout>
