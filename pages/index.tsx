@@ -1,3 +1,4 @@
+'use client';
 import { Link } from "@nextui-org/link";
 import { Snippet } from "@nextui-org/snippet";
 import { Code } from "@nextui-org/code";
@@ -24,6 +25,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
+import {addressBooks} from "@/core/action"
 
 import {
   Modal,
@@ -134,6 +136,19 @@ export default function IndexPage() {
     if(publicKey)
     {
       console.log("already connect ::",publicKey.toBase58())
+
+      const addbook = await addressBooks(publicKey)
+      if(addbook)
+      {
+        console.log(
+          addbook.systemConfig.toBase58(),
+          addbook.poolStakingData.toBase58(),
+          addbook.userStakingData.toBase58(),
+          addbook.userBorrowData.toBase58(),
+          addbook.userTokenAccount.toBase58()
+        )
+      }
+
     }else{
 
     }

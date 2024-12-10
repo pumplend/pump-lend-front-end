@@ -8,6 +8,7 @@ export const Logo: React.FC<IconSvgProps> = ({
   ...props
 }) => (
   <img
+  alt="logo"
     src="/logo.png"
     className="apple"
     style={{
