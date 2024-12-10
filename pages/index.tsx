@@ -25,7 +25,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
-import {addressBooks , userStakeSol , getTokenBalance} from "@/core/action"
+import {addressBooks , userStakeSol , getTokenBalance ,userWithdrawSol} from "@/core/action"
 
 import {
   Modal,
@@ -57,6 +57,7 @@ export default function IndexPage() {
     },
   ]);
   const [stakeAmout, setStakeAmount] = useState(0)
+  const [withdrawAmount, setWithdrawAmount] = useState(0)
   
 
   const [repayData, setRepayData] = useState([
@@ -167,8 +168,6 @@ export default function IndexPage() {
   {
     if(publicKey && signTransaction)
       {
-        console.log("already connect ::",publicKey.toBase58())
-  
         const addbook = addressBooks(publicKey)
         if(addbook)
         {
@@ -179,6 +178,21 @@ export default function IndexPage() {
   
       }
   }
+
+  const userWithdrawButton = async ()=>
+    {
+      if(publicKey && signTransaction)
+        {
+          const addbook = addressBooks(publicKey)
+          if(addbook)
+          {
+            await userWithdrawSol(withdrawAmount,publicKey,signTransaction);
+          }
+          onWithdrawClose();
+        }else{
+    
+        }
+    }
 
   return (
     <DefaultLayout>
@@ -466,11 +480,11 @@ export default function IndexPage() {
               </div>
             </div>
             <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-              <Input key="payinput" description="Including all rewards" label="Sol" labelPlacement="inside" placeholder="Enter sol amount to withdraw" />
+              <Input onChange={e => { setWithdrawAmount(e.currentTarget.value); }} key="payinput" description="Including all rewards" label="Sol" labelPlacement="inside" placeholder="Enter sol amount to withdraw" />
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button color="success" onClick={onWithdrawClose} style={{ width: '100%' }}>
+            <Button color="success" onClick={userWithdrawButton} style={{ width: '100%' }}>
               Withdraw
             </Button>
           </ModalFooter>

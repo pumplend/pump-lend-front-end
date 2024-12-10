@@ -133,9 +133,6 @@ const userStakeSol = async (
 
       const stakeAmountInLamports = new BN(amount * LAMPORTS_PER_SOL);
 
-      const stakeId=  findInstructionsId('stake')
-      console.log("👷 stakeId :: ",stakeId)
-
       const args = new StakeArgs({ amount: stakeAmountInLamports });
       const stakeBuffer = serialize(StakeArgsSchema, args);
 
@@ -174,6 +171,67 @@ const userStakeSol = async (
       }
     
 }
+
+const userWithdrawSol = async ( 
+    amount:number,
+    publicKey:PublicKey,
+    signTransaction: (transaction: Transaction) => Promise<Transaction>
+)=>
+{
+    
+    console.log(
+        "🎦 User stake sol :",
+        systemConfig.toBase58(),
+        poolStakingData.toBase58(),
+        userStakingData.toBase58(),
+        userBorrowData.toBase58(),
+        userTokenAccount.toBase58(),
+        poolTokenAuthority.toBase58(),
+        poolTokenAccount.toBase58(),
+      )
+
+      console.log(" Withdraws amount : ",amount)
+      const stakeAmountInLamports = new BN(amount * LAMPORTS_PER_SOL);
+
+      const args = new StakeArgs({ amount: stakeAmountInLamports });
+      const stakeBuffer = serialize(StakeArgsSchema, args);
+
+    const data = Buffer.concat(
+        [
+            new Uint8Array(sighash("global","withdraw")),
+            stakeBuffer
+        ]
+    )
+      const instruction = new TransactionInstruction({
+        keys: [
+            { pubkey: publicKey, isSigner: true, isWritable: true },
+            { pubkey: poolStakingData, isSigner: false, isWritable: true },
+            { pubkey: userStakingData, isSigner: false, isWritable: true },
+            { pubkey: poolTokenAuthority, isSigner: false, isWritable: true },
+            { pubkey: systemConfig, isSigner: false, isWritable: true },
+            { pubkey: SystemProgram.programId, isSigner: false, isWritable: false }
+          ],
+        programId: programIdDefault,
+        data: data
+    });
+
+    const transaction = new Transaction().add(instruction);
+    transaction.feePayer = publicKey;
+
+    const { blockhash } = await connection.getLatestBlockhash();
+    transaction.recentBlockhash = blockhash;
+    console.log("🚀 final txn :: ",transaction)
+    const signedTransaction = await signTransaction(transaction);
+
+    try {
+        const txid = await connection.sendRawTransaction(signedTransaction.serialize());
+        console.log('Transaction sent with ID:', txid);
+      } catch (error) {
+        console.error('Transaction failed:', error);
+      }
+    
+}
+
 
 const getTokenBalance = async ( walletAddress: PublicKey) =>
 {
@@ -275,5 +333,6 @@ function sighash(namespace: string, name: string): Buffer {
 export {
     addressBooks,
     userStakeSol,
-    getTokenBalance
+    getTokenBalance,
+    userWithdrawSol
 }
