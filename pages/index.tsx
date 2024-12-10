@@ -25,7 +25,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
-import {addressBooks , userStakeSol} from "@/core/action"
+import {addressBooks , userStakeSol , getTokenBalance} from "@/core/action"
 
 import {
   Modal,
@@ -150,7 +150,10 @@ export default function IndexPage() {
           addbook.poolTokenAccount.toBase58(),
 
         )
-
+        console.log(
+          "bal ::",
+          await getTokenBalance()
+        )
         await userStakeSol(publicKey,signTransaction);
       }
 

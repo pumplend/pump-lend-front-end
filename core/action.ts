@@ -8,7 +8,8 @@ import { Keypair,LAMPORTS_PER_SOL, PublicKey,
     Connection,
     clusterApiUrl,
     TransactionInstruction,
-    Struct
+    Struct,
+    SendTransactionError
  } from "@solana/web3.js";
 import {
   mintTo,
@@ -17,9 +18,11 @@ import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   createAssociatedTokenAccount,
   getAssociatedTokenAddressSync,
+  getAssociatedTokenAddress,
   createInitializeMintInstruction,
   getMintLen,
-  getOrCreateAssociatedTokenAccount
+  getOrCreateAssociatedTokenAccount,
+  getAccount
 } from "@solana/spl-token";
 import BigNumber from 'bignumber.js';
 import BN from 'bn.js';
@@ -130,14 +133,9 @@ const userStakeSol = async (
       const stakeId=  findInstructionsId('stake')
       console.log("👷 stakeId :: ",stakeId)
 
-      const args = new StakeArgs({ amount: stakeAmountInLamports });
-      const data = Buffer.from(
-        serialize
-        (
-            StakeArgsSchema,
-             args
-            )
-        );
+    // 创建 Borsh 参数对象
+    const args = new StakeArgs({ amount: stakeAmountInLamports });
+    const data = Buffer.from(serialize(StakeArgsSchema, args));
 
       const instruction = new TransactionInstruction({
         keys: [
@@ -159,14 +157,32 @@ const userStakeSol = async (
     transaction.recentBlockhash = blockhash;
     console.log("🚀 final txn :: ",transaction)
     const signedTransaction = await signTransaction(transaction);
-    const txid = await connection.sendRawTransaction(signedTransaction.serialize());
 
-    console.log('Stake transaction sent with ID:', txid);
-    return txid;
+    try {
+        const txid = await connection.sendRawTransaction(signedTransaction.serialize());
+        console.log('Transaction sent with ID:', txid);
+      } catch (error) {
+        console.error('Transaction failed:', error);
+      }
     
 }
 
-
+const getTokenBalance = async ( walletAddress: PublicKey) =>
+{
+  try {
+    // 获取用户的 token 账户地址
+    const tokenAddress = userTokenAccount;
+    
+    // 获取用户的 token 账户信息
+    const accountInfo = await getAccount(connection, tokenAddress);
+    
+    // 返回余额 (以最小单位表示)
+    return accountInfo.amount.toString();
+  } catch (error) {
+    console.error('Failed to get token balance:', error);
+    return null;
+  }
+}
 
 
 /**
@@ -224,20 +240,23 @@ const stakeMethod = {
     args: [{ name: "amount", type: "u64" }]
   };
   
-  // Borsh
-  class StakeArgs  extends Struct {
+// Borsh 数据结构
+class StakeArgs {
     amount: BN;
+    
     constructor(fields: { amount: BN }) {
-     super(fields.amount);
-      this.amount = fields.amount;
+        this.amount = fields.amount;
     }
-  }
-  const StakeArgsSchema = new Map([
+}
+
+// StakeArgs 的 Borsh schema
+const StakeArgsSchema = new Map([
     [StakeArgs, { kind: "struct", fields: [["amount", "u64"]] }]
-  ]);
+]);
 
 
 export {
     addressBooks,
-    userStakeSol
+    userStakeSol,
+    getTokenBalance
 }
