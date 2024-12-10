@@ -114,6 +114,7 @@ const addressBooks = ( publicKey:PublicKey) =>
  * Staking function
  */
 const userStakeSol = async ( 
+    amount:number,
     publicKey:PublicKey,
     signTransaction: (transaction: Transaction) => Promise<Transaction>
 )=>
@@ -130,7 +131,7 @@ const userStakeSol = async (
         poolTokenAccount.toBase58(),
       )
 
-      const stakeAmountInLamports = new BN(0.01 * LAMPORTS_PER_SOL);
+      const stakeAmountInLamports = new BN(amount * LAMPORTS_PER_SOL);
 
       const stakeId=  findInstructionsId('stake')
       console.log("👷 stakeId :: ",stakeId)

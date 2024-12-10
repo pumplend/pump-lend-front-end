@@ -56,7 +56,8 @@ export default function IndexPage() {
       display:false
     },
   ]);
-
+  const [stakeAmout, setStakeAmount] = useState(0)
+  
 
   const [repayData, setRepayData] = useState([
     {
@@ -152,14 +153,31 @@ export default function IndexPage() {
         )
         console.log(
           "bal ::",
-          await getTokenBalance()
+          await getTokenBalance(publicKey)
         )
-        await userStakeSol(publicKey,signTransaction);
+        await userStakeSol(stakeAmout,publicKey,signTransaction);
       }
 
     }else{
 
     }
+  }
+
+  const userStakeButton = async ()=>
+  {
+    if(publicKey && signTransaction)
+      {
+        console.log("already connect ::",publicKey.toBase58())
+  
+        const addbook = addressBooks(publicKey)
+        if(addbook)
+        {
+          await userStakeSol(stakeAmout,publicKey,signTransaction);
+        }
+        onSupplyClose();
+      }else{
+  
+      }
   }
 
   return (
@@ -420,11 +438,11 @@ export default function IndexPage() {
               </div>
             </div>
             <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-              <Input key="payinput" description="Withdraw anytime" label="Sol" labelPlacement="inside" placeholder="Enter sol amount to deposit" />
+              <Input onChange={e => { setStakeAmount(e.currentTarget.value); }} key="payinput" description="Withdraw anytime" label="Sol" labelPlacement="inside" placeholder="Enter sol amount to deposit" />
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button color="success" onClick={onSupplyClose} style={{ width: '100%' }}>
+            <Button color="success" onClick={userStakeButton} style={{ width: '100%' }}>
               Apply
             </Button>
           </ModalFooter>
