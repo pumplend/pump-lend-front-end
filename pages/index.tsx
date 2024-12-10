@@ -45,11 +45,11 @@ export default function IndexPage() {
       color:"success",
       display:true
     },
-    {
-      name:"Repay",
-      color:"default",
-      display:false
-    },
+    // {
+    //   name:"Repay",
+    //   color:"default",
+    //   display:false
+    // },
     {
       name:"Long",
       color:"default",
@@ -309,33 +309,45 @@ export default function IndexPage() {
 
 
         <div className="flex justify-between items-center text-gray-500">
-          <p className="text-sm">USDT</p>
-          <p>Send</p>
+          <p className="text-sm">PUMP</p>
+          <p>Borrow</p>
         </div>
-        <div className="flex justify-between items-center text-white">
-          <div className="flex items-center space-x-2">
+        <div className="flex justify-between items-center text-white" >
+          <div className="flex items-center space-x-2" style={{width:"100%"}}>
             <Image
               alt="chain logo"
               height={40}
               src="https://pump.fun/logo.png"
               width={40}
             />
-            <div className="font-semibold">
-              <p>Tether</p>
-              <p>0</p>
+            <div className="font-semibold" >
+              <p>Pump</p>
+              <div style={{textSizeAdjust:"auto"}} >
+               <a style={{background:"grey"}}> 50% </a> &nbsp;
+               <a style={{background:"grey"}}> MAX </a>
+              </div>
+              
             </div>
           </div>
 
-          <IoIosArrowForward className="text-gray-500" />
-          <p>0</p>
+          {/* <IoIosArrowForward className="text-gray-500" /> */}
+          {/* <p>0</p> */}
+          <Input 
+          onChange={e => { setStakeAmount(e.currentTarget.value); }} 
+          key="payinput" description="Withdraws anytime" 
+          label="amount" labelPlacement="inside" 
+          placeholder="0"
+          />
         </div>
-
-        <div className="flex justify-center items-center text-gray-500">
+        {/* <Tabs fullWidth radius="md">
+          <Tab key="25" title="25%" />
+          <Tab key="50" title="50%" />
+          <Tab key="100" title="100%" />
+        </Tabs> */}
+        {/* <div className="flex justify-center items-center text-gray-500">
           <TbTransferVertical />
-          {/* <div className="mx-2 border rounded-md px-2 py-1 text-sm">
-            1 USDT = 0.0000167 BTC
-          </div> */}
-        </div>
+        </div> */}
+
 
         <div className="flex justify-between items-center text-gray-500">
           <p className="text-sm">SOL</p>
@@ -355,22 +367,18 @@ export default function IndexPage() {
             </div>
           </div>
 
-          <IoIosArrowForward className="text-gray-500" />
+          {/* <IoIosArrowForward className="text-gray-500" /> */}
           <p className="text-gray-500">0</p>
         </div>
 
-        <Tabs fullWidth radius="md">
-          <Tab key="25" title="25%" />
-          <Tab key="50" title="50%" />
-          <Tab key="100" title="100%" />
-        </Tabs>
+
 
         <div className="text-center text-gray-500 text-xs">
           Network fee: 0.0025 SOL
         </div>
         <div className="bottom-14 right-0 w-full p-4">
         <Button className="w-full colorfulbuttons" color="success" onClick={connectWalletTest}>
-          Connect Wallet
+          Borrow SOL
         </Button>
         </div>
         </div>
@@ -430,6 +438,52 @@ export default function IndexPage() {
 }
       </div>
 
+<br></br>
+<div style={{width:windowSize.width*0.33}}>
+<Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full  justify-center" style={{ width:"100%"}}>
+            <CardBody className="py-5 gap-4">
+              <div className="flex gap-2.5 justify-center">
+                <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
+                  <span className="text-default-900 text-xl font-semibold">
+                    Repay Sol
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-6  justify-center ">
+              {repayData.map((item) => (
+                <div key={item.name} className="grid grid-cols-4 w-full">
+                  <div className="w-full">
+                    <Avatar
+                      isBordered
+                      color="secondary"
+                      src={item.picture}
+                    />
+                  </div>
+
+                  <span className="text-default-900  font-semibold">
+                    ${item.name}
+                  </span>
+                  <div>
+                    
+                    <div style={{display:"flex",flexDirection:"column"}}>
+                      <span className="text-success text-xs">{item.amount}</span>
+                      <span className="text-success text-xs">{item.amountToken}</span>
+                    </div>
+                  </div>
+                  <div>
+                  
+                  <Button color="danger">Close</Button>
+                    {/* <span className="text-default-500 text-xs">{item.date}</span> */}
+                  </div>
+                </div>
+              ))}
+              </div>
+
+
+            </CardBody>
+        </Card>
+</div>
 
       <div>
         {/* All the models */}
