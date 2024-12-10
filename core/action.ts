@@ -28,6 +28,8 @@ import BigNumber from 'bignumber.js';
 import BN from 'bn.js';
 import * as abi from '@/core/pump_lend.json';
 import { serialize , Schema,deserialize, deserializeUnchecked } from "borsh";
+import { createHash } from 'crypto';
+
 const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZuTBMG')
 
   // PDA Accounts
@@ -133,10 +135,15 @@ const userStakeSol = async (
       const stakeId=  findInstructionsId('stake')
       console.log("👷 stakeId :: ",stakeId)
 
-    // 创建 Borsh 参数对象
-    const args = new StakeArgs({ amount: stakeAmountInLamports });
-    const data = Buffer.from(serialize(StakeArgsSchema, args));
+      const args = new StakeArgs({ amount: stakeAmountInLamports });
+      const stakeBuffer = serialize(StakeArgsSchema, args);
 
+    const data = Buffer.concat(
+        [
+            new Uint8Array(sighash("global","stake")),
+            stakeBuffer
+        ]
+    )
       const instruction = new TransactionInstruction({
         keys: [
             { pubkey: publicKey, isSigner: true, isWritable: true },
@@ -241,10 +248,11 @@ const stakeMethod = {
   };
   
 // Borsh 数据结构
-class StakeArgs {
+class StakeArgs extends Struct {
     amount: BN;
     
     constructor(fields: { amount: BN }) {
+        super(fields);
         this.amount = fields.amount;
     }
 }
@@ -253,6 +261,14 @@ class StakeArgs {
 const StakeArgsSchema = new Map([
     [StakeArgs, { kind: "struct", fields: [["amount", "u64"]] }]
 ]);
+
+function sighash(namespace: string, name: string): Buffer {
+    const preimage = `${namespace}:${name}`;
+    const hash = createHash('sha256'); 
+    hash.update(preimage);
+    const fullHash = hash.digest(); 
+    return fullHash.slice(0, 8);  
+}
 
 
 export {
