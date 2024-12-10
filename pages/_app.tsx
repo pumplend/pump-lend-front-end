@@ -13,7 +13,7 @@ import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { useMemo } from "react";
 
-const endpoint = "https://api.mainnet-beta.solana.com";
+const endpoint = 'https://api.devnet.solana.com';
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();

@@ -5,7 +5,10 @@ import { Keypair,LAMPORTS_PER_SOL, PublicKey,
     sendAndConfirmTransaction,
     SystemProgram,
     Transaction,
-    Connection
+    Connection,
+    clusterApiUrl,
+    TransactionInstruction,
+    Struct
  } from "@solana/web3.js";
 import {
   mintTo,
@@ -19,7 +22,9 @@ import {
   getOrCreateAssociatedTokenAccount
 } from "@solana/spl-token";
 import BigNumber from 'bignumber.js';
-
+import BN from 'bn.js';
+import * as abi from '@/core/pump_lend.json';
+import { serialize , Schema,deserialize, deserializeUnchecked } from "borsh";
 const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZuTBMG')
 
   // PDA Accounts
@@ -33,9 +38,9 @@ const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZu
   let userTokenAccount: PublicKey;
   let poolTokenAccount: PublicKey;
 
-  const connection = new Connection('https://api.devnet.solana.com');
+  const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
-const addressBooks = async ( publicKey:PublicKey) =>
+const addressBooks = ( publicKey:PublicKey) =>
 {
     if(!publicKey)
     {
@@ -71,25 +76,98 @@ const addressBooks = async ( publicKey:PublicKey) =>
         ],
         programIdDefault
       )[0];
-    //   userTokenAccount = (await getOrCreateAssociatedTokenAccount(
-    //     connection,
-    //     publicKey,
-    //     tokenMint,
-    //     publicKey,
-    //   )).address
     userTokenAccount = (getAssociatedTokenAddressSync(
         tokenMint,
         publicKey,
         true
     ))
+
+    poolTokenAuthority = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("pool_token_authority")
+        ],
+        programIdDefault
+      )[0];
+    poolTokenAccount = getAssociatedTokenAddressSync(
+        tokenMint,
+        poolTokenAuthority,
+        true
+      );
+
     return{
         systemConfig,
         poolStakingData,
         userStakingData,
         userBorrowData,
-        userTokenAccount
+        userTokenAccount,
+        poolTokenAuthority,
+        poolTokenAccount
     }
 }
+
+/**
+ * Staking function
+ */
+const userStakeSol = async ( 
+    publicKey:PublicKey,
+    signTransaction: (transaction: Transaction) => Promise<Transaction>
+)=>
+{
+    
+    console.log(
+        "🎦 User stake sol :",
+        systemConfig.toBase58(),
+        poolStakingData.toBase58(),
+        userStakingData.toBase58(),
+        userBorrowData.toBase58(),
+        userTokenAccount.toBase58(),
+        poolTokenAuthority.toBase58(),
+        poolTokenAccount.toBase58(),
+      )
+
+      const stakeAmountInLamports = new BN(0.01 * LAMPORTS_PER_SOL);
+
+      const stakeId=  findInstructionsId('stake')
+      console.log("👷 stakeId :: ",stakeId)
+
+      const args = new StakeArgs({ amount: stakeAmountInLamports });
+      const data = Buffer.from(
+        serialize
+        (
+            StakeArgsSchema,
+             args
+            )
+        );
+
+      const instruction = new TransactionInstruction({
+        keys: [
+            { pubkey: publicKey, isSigner: true, isWritable: true },
+            { pubkey: poolStakingData, isSigner: false, isWritable: true },
+            { pubkey: userStakingData, isSigner: false, isWritable: true },
+            { pubkey: poolTokenAuthority, isSigner: false, isWritable: true },
+            { pubkey: systemConfig, isSigner: false, isWritable: true },
+            { pubkey: SystemProgram.programId, isSigner: false, isWritable: false }
+          ],
+        programId: programIdDefault,
+        data: data
+    });
+
+    const transaction = new Transaction().add(instruction);
+    transaction.feePayer = publicKey;
+
+    const { blockhash } = await connection.getLatestBlockhash();
+    transaction.recentBlockhash = blockhash;
+    console.log("🚀 final txn :: ",transaction)
+    const signedTransaction = await signTransaction(transaction);
+    const txid = await connection.sendRawTransaction(signedTransaction.serialize());
+
+    console.log('Stake transaction sent with ID:', txid);
+    return txid;
+    
+}
+
+
+
 
 /**
  * Tools function
@@ -121,6 +199,45 @@ async function createTokenMint(
     return mint;
 }
 
+function findInstructionsId(name:string)
+{
+    for(let i = 0 ; i < abi.instructions.length ; i++)
+        {
+          if(abi.instructions[i].name == name)
+          {
+            return i ;
+          }
+        }
+    return 0 ;
+}
+
+const stakeMethod = {
+    name: "stake",
+    accounts: [
+      { name: "staker", isMut: true, isSigner: true },
+      { name: "poolStakingData", isMut: true, isSigner: false },
+      { name: "userStakingData", isMut: true, isSigner: false },
+      { name: "poolTokenAuthority", isMut: true, isSigner: false },
+      { name: "systemConfig", isMut: true, isSigner: false },
+      { name: "systemProgram", isMut: false, isSigner: false }
+    ],
+    args: [{ name: "amount", type: "u64" }]
+  };
+  
+  // Borsh
+  class StakeArgs  extends Struct {
+    amount: BN;
+    constructor(fields: { amount: BN }) {
+     super(fields.amount);
+      this.amount = fields.amount;
+    }
+  }
+  const StakeArgsSchema = new Map([
+    [StakeArgs, { kind: "struct", fields: [["amount", "u64"]] }]
+  ]);
+
+
 export {
-    addressBooks
+    addressBooks,
+    userStakeSol
 }

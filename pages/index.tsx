@@ -25,7 +25,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
-import {addressBooks} from "@/core/action"
+import {addressBooks , userStakeSol} from "@/core/action"
 
 import {
   Modal,
@@ -125,7 +125,7 @@ export default function IndexPage() {
     onload().catch(console.error);
   }, []);
 
-  const { publicKey } = useWallet();
+  const { publicKey ,signTransaction } = useWallet();
   const connectWalletTest =  async () =>
   {
     
@@ -133,11 +133,11 @@ export default function IndexPage() {
       publicKey
     )
 
-    if(publicKey)
+    if(publicKey && signTransaction)
     {
       console.log("already connect ::",publicKey.toBase58())
 
-      const addbook = await addressBooks(publicKey)
+      const addbook = addressBooks(publicKey)
       if(addbook)
       {
         console.log(
@@ -145,8 +145,13 @@ export default function IndexPage() {
           addbook.poolStakingData.toBase58(),
           addbook.userStakingData.toBase58(),
           addbook.userBorrowData.toBase58(),
-          addbook.userTokenAccount.toBase58()
+          addbook.userTokenAccount.toBase58(),
+          addbook.poolTokenAuthority.toBase58(),
+          addbook.poolTokenAccount.toBase58(),
+
         )
+
+        await userStakeSol(publicKey,signTransaction);
       }
 
     }else{
