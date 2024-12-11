@@ -35,6 +35,11 @@ import {
 } from "@/core/action"
 
 import {
+  testSoalanData,
+  solanaDataInit
+} from "@/core/solanaData"
+
+import {
   Modal,
   ModalContent,
   ModalHeader,
@@ -168,10 +173,13 @@ export default function IndexPage() {
   {
     if(publicKey && signTransaction)
       {
+        
         const addbook = addressBooks(publicKey)
         if(addbook)
         {
           await userStakeSol(stakeAmout,publicKey,signTransaction);
+          // await testStake(stakeAmout,publicKey,signTransaction);
+          
         }
         onSupplyClose();
       }else{
@@ -222,12 +230,26 @@ export default function IndexPage() {
           }
       }
 
+      const debugs = async () => 
+      {
+        if(publicKey)
+        {
+          const bk = solanaDataInit(publicKey);
+          if(bk)
+          {
+            await testSoalanData()
+          }
+        }
+       
+
+      }
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
         <div className="inline-block max-w-xl text-center justify-center">
           <span className={title()}>Deposite&nbsp;</span>
           <span className={title({ color: "green" })+" github"}>Memecoin&nbsp;</span>
+          <Button onClick={debugs}> Debug</Button>
           {/* <span className={title({ color: "green" })}>Memecoin&nbsp;</span> */}
           {/* <br />
           <span className={title()}>
