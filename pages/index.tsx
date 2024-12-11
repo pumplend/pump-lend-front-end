@@ -25,7 +25,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
-import {addressBooks , userStakeSol , getTokenBalance ,userWithdrawSol} from "@/core/action"
+import {addressBooks , userStakeSol , getTokenBalance ,userWithdrawSol , userBorrowToken} from "@/core/action"
 
 import {
   Modal,
@@ -58,6 +58,7 @@ export default function IndexPage() {
   ]);
   const [stakeAmout, setStakeAmount] = useState(0)
   const [withdrawAmount, setWithdrawAmount] = useState(0)
+  const [borrowAmount, setBorrowAmount] = useState(0)
   
 
   const [repayData, setRepayData] = useState([
@@ -189,6 +190,20 @@ export default function IndexPage() {
             await userWithdrawSol(withdrawAmount,publicKey,signTransaction);
           }
           onWithdrawClose();
+        }else{
+    
+        }
+    }
+
+  const userBorrowButton = async ()=>
+    {
+      if(publicKey && signTransaction)
+        {
+          const addbook = addressBooks(publicKey)
+          if(addbook)
+          {
+            await userBorrowToken(borrowAmount,publicKey,signTransaction);
+          }
         }else{
     
         }
@@ -333,7 +348,7 @@ export default function IndexPage() {
           {/* <IoIosArrowForward className="text-gray-500" /> */}
           {/* <p>0</p> */}
           <Input 
-          onChange={e => { setStakeAmount(e.currentTarget.value); }} 
+          onChange={e => { setBorrowAmount(e.currentTarget.value); }} 
           key="payinput" description="Withdraws anytime" 
           label="amount" labelPlacement="inside" 
           placeholder="0"
@@ -377,7 +392,7 @@ export default function IndexPage() {
           Network fee: 0.0025 SOL
         </div>
         <div className="bottom-14 right-0 w-full p-4">
-        <Button className="w-full colorfulbuttons" color="success" onClick={connectWalletTest}>
+        <Button className="w-full colorfulbuttons" color="success" onClick={userBorrowButton}>
           Borrow SOL
         </Button>
         </div>
