@@ -4,18 +4,18 @@ export const siteConfig = {
   name: "PUMPLEND",
   description: "First lending protocol base on pump.",
   navItems: [
-    // {
-    //   label: "Home",
-    //   href: "/",
-    // },
+    {
+      label: "[How it works]",
+      href: "/",
+    },
     // {
     //   label: "Docs",
     //   href: "/docs",
     // },
-    // {
-    //   label: "Pricing",
-    //   href: "/pricing",
-    // },
+    {
+      label: "[Referral]",
+      href: "/pricing",
+    },
     // {
     //   label: "Blog",
     //   href: "/blog",

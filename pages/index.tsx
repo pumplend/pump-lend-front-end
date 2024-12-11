@@ -48,7 +48,7 @@ export default function IndexPage() {
 
   const [data, setData] = useState([
     {
-      name:"Borrow",
+      name:"💰 Borrow",
       color:"success",
       display:true
     },
@@ -58,7 +58,7 @@ export default function IndexPage() {
     //   display:false
     // },
     {
-      name:"Long",
+      name:"📈 Long",
       color:"default",
       display:false
     },
@@ -258,30 +258,33 @@ export default function IndexPage() {
 
         <div style={{display:"flex",flexDirection:"column"}}>
                       <span className=" text-xs">Your Supply</span>
-                      <span className="text-success text-xs">321</span>
+                      <span className="text-success">321</span>
         </div>
 
         <div style={{display:"flex",flexDirection:"column"}}>
                       <span className=" text-xs">Total Supply</span>
-                      <span className="text-success text-xs">321</span>
+                      <span className="text-success">321</span>
         </div>
 
         <div style={{display:"flex",flexDirection:"column"}}>
                       <span className=" text-xs">Total Borrow</span>
-                      <span className="text-success text-xs">321</span>
+                      <span className="text-success">321</span>
         </div>
 
         <div style={{display:"flex",flexDirection:"column"}}>
                       <span className=" text-xs">Supply APY</span>
-                      <span className="text-success text-xs">321</span>
+                      <span className="text-success">321</span>
         </div>
-        <Button  color="success" onClick={onSupplyOpen}>
+
+      </div>
+      <div style={{width:'100%' , display:"flex" , justifyContent:"space-between" }}>
+      <Button  color="success" onClick={onSupplyOpen} style={{width:"47%"}}>
           ➕ Supply
         </Button>
-        <Button  color="danger" onClick={onWithdrawOpen}>
+        <Button  color="danger" onClick={onWithdrawOpen} style={{width:"47%"}}>
           ➖ Withdraw
         </Button>
-      </div>
+        </div>
     </div>
 
 
@@ -360,7 +363,8 @@ export default function IndexPage() {
           {/* <p>0</p> */}
           <Input 
           onChange={e => { setBorrowAmount(e.currentTarget.value); }} 
-          key="payinput" description="Withdraws anytime" 
+          key="payinput" 
+          // description="Withdraws anytime" 
           // label="amount" labelPlacement="inside" 
           placeholder="0"
           />
@@ -374,7 +378,7 @@ export default function IndexPage() {
           <TbTransferVertical />
         </div> */}
 
-
+          <br></br>
         <div className="flex justify-between items-center text-gray-500">
           <p className="text-sm">TO Borrow</p>
           {/* <p>Receive</p> */}
