@@ -96,14 +96,6 @@ export default function IndexPage() {
 
   ]);
 
-  const [selectedFunction, setSelectedFunction] = useState([
-    "Borrow",
-    "Repay",
-    "Long"
-  ]);
-
-
-
   const [windowSize, setWindowSize] = useState({
     width: 0,
     height: 0
@@ -298,8 +290,7 @@ export default function IndexPage() {
       </div>
 
       <br></br>
-      <div className="maincard" style={{minWidth : windowSize.width*0.32}}>
-        <div style={{width:"100%",minWidth:"300px"}} className="inline-block max-w-xl text-center justify-center">
+      <div style={{width:"100%",minWidth:"300px"}} className="inline-block max-w-xl text-center justify-center item-center">
           <ButtonGroup>
             {data.map((item:any, index:any) => (
               <Button key={index} color={item.color}
@@ -325,8 +316,7 @@ export default function IndexPage() {
             ))}
           </ButtonGroup>
         </div>
-
-
+      <div className="maincard" style={{minWidth : windowSize.width*0.32}}>
 
 {
   data[0].display ? 
@@ -345,8 +335,8 @@ export default function IndexPage() {
 
 
         <div className="flex justify-between items-center text-gray-500">
-          <p className="text-sm">PUMP</p>
-          <p>Borrow</p>
+          <p className="text-sm">USE COLLATERAL</p>
+          {/* <p>Borrow</p> */}
         </div>
         <div className="flex justify-between items-center text-white" >
           <div className="flex items-center space-x-2" style={{width:"100%"}}>
@@ -371,7 +361,7 @@ export default function IndexPage() {
           <Input 
           onChange={e => { setBorrowAmount(e.currentTarget.value); }} 
           key="payinput" description="Withdraws anytime" 
-          label="amount" labelPlacement="inside" 
+          // label="amount" labelPlacement="inside" 
           placeholder="0"
           />
         </div>
@@ -386,8 +376,8 @@ export default function IndexPage() {
 
 
         <div className="flex justify-between items-center text-gray-500">
-          <p className="text-sm">SOL</p>
-          <p>Receive</p>
+          <p className="text-sm">TO Borrow</p>
+          {/* <p>Receive</p> */}
         </div>
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
@@ -475,7 +465,9 @@ export default function IndexPage() {
       </div>
 
 <br></br>
-<div style={{width:windowSize.width*0.33}}>
+
+
+<div className="maincard" style={{minWidth : windowSize.width*0.32}}>
 <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full  justify-center" style={{ width:"100%"}}>
             <CardBody className="py-5 gap-4">
               <div className="flex gap-2.5 justify-center">
@@ -510,6 +502,7 @@ export default function IndexPage() {
                   <div>
                   
                   <Button color="danger" onClick={userRepayButton}>Close</Button>
+                  <Button color="success" onClick={userRepayButton}>Repay</Button>
                     {/* <span className="text-default-500 text-xs">{item.date}</span> */}
                   </div>
                 </div>
@@ -518,8 +511,9 @@ export default function IndexPage() {
 
 
             </CardBody>
-        </Card>
+</Card>
 </div>
+
 
       <div>
         {/* All the models */}
