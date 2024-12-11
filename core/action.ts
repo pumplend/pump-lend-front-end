@@ -252,7 +252,7 @@ const userBorrowToken = async (
       )
 
       console.log(" Borrow amount : ",amount)
-      const stakeAmountInLamports = new BN(amount * 1000000);
+      const stakeAmountInLamports = new BN(amount * 1e6);
 
       const args = new StakeArgs({ amount: stakeAmountInLamports });
       const stakeBuffer = serialize(StakeArgsSchema, args);
@@ -298,7 +298,62 @@ const userBorrowToken = async (
     
 }
 
+const userRepayToken = async ( 
+    publicKey:PublicKey,
+    signTransaction: (transaction: Transaction) => Promise<Transaction>
+)=>
+{
+    
+    console.log(
+        "🎦 User withdraw sol :",
+        systemConfig.toBase58(),
+        poolStakingData.toBase58(),
+        userStakingData.toBase58(),
+        userBorrowData.toBase58(),
+        userTokenAccount.toBase58(),
+        poolTokenAuthority.toBase58(),
+        poolTokenAccount.toBase58(),
+      )
 
+    const data = Buffer.concat(
+        [
+            new Uint8Array(sighash("global","repay")),
+        ]
+    )
+      const instruction = new TransactionInstruction({
+        keys: [
+            { pubkey: publicKey, isSigner: true, isWritable: true },
+            { pubkey: poolStakingData, isSigner: false, isWritable: true },
+            { pubkey: userBorrowData, isSigner: false, isWritable: true },
+            { pubkey: poolTokenAuthority, isSigner: false, isWritable: true },
+            { pubkey: userTokenAccount, isSigner: false, isWritable: true },
+            { pubkey: poolTokenAccount, isSigner: false, isWritable: true },
+            { pubkey: systemConfig, isSigner: false, isWritable: true },
+            { pubkey: tokenMint, isSigner: false, isWritable: true },
+            { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: true },
+            { pubkey: ASSOCIATED_TOKEN_PROGRAM_ID, isSigner: false, isWritable: true },
+            { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+          ],
+        programId: programIdDefault,
+        data: data
+    });
+
+    const transaction = new Transaction().add(instruction);
+    transaction.feePayer = publicKey;
+
+    const { blockhash } = await connection.getLatestBlockhash();
+    transaction.recentBlockhash = blockhash;
+    console.log("🚀 final txn :: ",transaction)
+    const signedTransaction = await signTransaction(transaction);
+
+    try {
+        const txid = await connection.sendRawTransaction(signedTransaction.serialize());
+        console.log('Transaction sent with ID:', txid);
+      } catch (error) {
+        console.error('Transaction failed:', error);
+      }
+    
+}
 
 const getTokenBalance = async ( walletAddress: PublicKey) =>
 {
@@ -402,5 +457,6 @@ export {
     userStakeSol,
     getTokenBalance,
     userWithdrawSol,
-    userBorrowToken
+    userBorrowToken,
+    userRepayToken
 }

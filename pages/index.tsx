@@ -25,7 +25,14 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
-import {addressBooks , userStakeSol , getTokenBalance ,userWithdrawSol , userBorrowToken} from "@/core/action"
+import {
+  addressBooks , 
+  userStakeSol , 
+  getTokenBalance ,
+  userWithdrawSol , 
+  userBorrowToken,
+  userRepayToken
+} from "@/core/action"
 
 import {
   Modal,
@@ -208,6 +215,20 @@ export default function IndexPage() {
     
         }
     }
+
+    const userRepayButton = async ()=>
+      {
+        if(publicKey && signTransaction)
+          {
+            const addbook = addressBooks(publicKey)
+            if(addbook)
+            {
+              await userRepayToken(publicKey,signTransaction);
+            }
+          }else{
+      
+          }
+      }
 
   return (
     <DefaultLayout>
@@ -488,7 +509,7 @@ export default function IndexPage() {
                   </div>
                   <div>
                   
-                  <Button color="danger">Close</Button>
+                  <Button color="danger" onClick={userRepayButton}>Close</Button>
                     {/* <span className="text-default-500 text-xs">{item.date}</span> */}
                   </div>
                 </div>
