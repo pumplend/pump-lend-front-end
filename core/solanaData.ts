@@ -44,10 +44,11 @@ const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZu
   let userTokenAccount: PublicKey;
   let poolTokenAccount: PublicKey;
 
-  const connection = new Connection('https://api.devnet.solana.com');
+  const connection = new Connection(envConfig.rpc);
 
-const solanaDataInit = ( publicKey:PublicKey) =>
+const solanaDataInit = ( publicKey:PublicKey, token:string) =>
 {
+    tokenMint = new PublicKey(token)
     if(!publicKey)
     {
         return false;

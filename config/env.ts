@@ -6,5 +6,6 @@ export const envConfig = {
     },
     apiKey:{
         shyft:"AwM0UoO6r1w8XNOA"
-    }
+    },
+    rpc:'https://api.devnet.solana.com'
 };

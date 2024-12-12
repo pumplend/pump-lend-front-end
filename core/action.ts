@@ -30,7 +30,7 @@ import BN from 'bn.js';
 import * as abi from '@/core/pump_lend.json';
 import { serialize , Schema,deserialize, deserializeUnchecked } from "borsh";
 import { createHash } from 'crypto';
-
+import {envConfig} from "@/config/env"
 const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZuTBMG')
 
   // PDA Accounts
@@ -44,10 +44,11 @@ const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZu
   let userTokenAccount: PublicKey;
   let poolTokenAccount: PublicKey;
 
-  const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
+  const connection = new Connection(envConfig.rpc);
 
-const addressBooks = ( publicKey:PublicKey) =>
+const addressBooks = ( publicKey:PublicKey , token:string) =>
 {
+    tokenMint = new PublicKey(tokenMint)
     if(!publicKey)
     {
         return false;

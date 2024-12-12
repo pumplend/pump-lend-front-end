@@ -12,7 +12,7 @@ import DefaultLayout from "@/layouts/default";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { useState, useEffect } from "react";
 
-import {Input,Avatar} from "@nextui-org/react"
+import {Input,Avatar,Spinner} from "@nextui-org/react"
 
 
 import { Image } from "@nextui-org/image";
@@ -28,7 +28,6 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import {
   addressBooks , 
   userStakeSol , 
-  getTokenBalance ,
   userWithdrawSol , 
   userBorrowToken,
   userRepayToken
@@ -40,6 +39,12 @@ import {
 } from "@/core/solanaData"
 
 import {
+  userTokens,
+  userTokenInit,
+  getTokenBalance
+} from "@/core/tokens"
+
+import {
   Modal,
   ModalContent,
   ModalHeader,
@@ -47,10 +52,12 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/react";
+import { PublicKey } from "@solana/web3.js";
 
 
 export default function IndexPage() {
-
+  const { publicKey,connected ,signTransaction } = useWallet();
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([
     {
       name:"💰 Borrow",
@@ -72,6 +79,7 @@ export default function IndexPage() {
   const [withdrawAmount, setWithdrawAmount] = useState(0)
   const [borrowAmount, setBorrowAmount] = useState(0)
   
+  const [selectedToken, setSelectedToken] = useState("")
 
   const [repayData, setRepayData] = useState([
     {
@@ -108,10 +116,12 @@ export default function IndexPage() {
 
   const { isOpen: isSupplyOpen, onOpen: onSupplyOpen, onClose: onSupplyClose } = useDisclosure();
   const { isOpen: isWithdrawOpen, onOpen: onWithdrawOpen, onClose: onWithdrawClose } = useDisclosure();
+  const { isOpen: isLoadingOpen, onOpen: onLoadingOpen, onClose: onLoadingClose } = useDisclosure();
 
-
+  
   useEffect(() => {
     //Window size function
+   
         const handleResize = () => {
           setWindowSize({
             width: window.innerWidth,
@@ -122,17 +132,32 @@ export default function IndexPage() {
       window.addEventListener('resize', handleResize);
 
       //Onload functions
-      const onload = async () => {
-
+      const onConnect = async (address:PublicKey) => {
+        onLoadingOpen()
+        await userTokenInit(address);
+        console.log("🍺 All my token ::",userTokens)
+        if(userTokens  &&userTokens.length>0)
+        {
+          setSelectedToken(userTokens[0].address);
+        }
+        
+        onLoadingClose()
       };
 
+      if (connected && publicKey) {
+        console.log(
+          "🍺 Wallet connect status ::",publicKey,connected
+        )
+        onConnect(publicKey).catch(console.error);
+      }
+      
       return () => {
         window.removeEventListener('resize', handleResize);
       };
-    onload().catch(console.error);
-  }, []);
+    
+  }, [connected,publicKey]);
 
-  const { publicKey ,signTransaction } = useWallet();
+
   const connectWalletTest =  async () =>
   {
     
@@ -157,10 +182,6 @@ export default function IndexPage() {
           addbook.poolTokenAccount.toBase58(),
 
         )
-        console.log(
-          "bal ::",
-          await getTokenBalance(publicKey)
-        )
         await userStakeSol(stakeAmout,publicKey,signTransaction);
       }
 
@@ -174,7 +195,7 @@ export default function IndexPage() {
     if(publicKey && signTransaction)
       {
         
-        const addbook = addressBooks(publicKey)
+        const addbook = addressBooks(publicKey,selectedToken)
         if(addbook)
         {
           await userStakeSol(stakeAmout,publicKey,signTransaction);
@@ -191,7 +212,7 @@ export default function IndexPage() {
     {
       if(publicKey && signTransaction)
         {
-          const addbook = addressBooks(publicKey)
+          const addbook = addressBooks(publicKey,selectedToken)
           if(addbook)
           {
             await userWithdrawSol(withdrawAmount,publicKey,signTransaction);
@@ -206,7 +227,7 @@ export default function IndexPage() {
     {
       if(publicKey && signTransaction)
         {
-          const addbook = addressBooks(publicKey)
+          const addbook = addressBooks(publicKey,selectedToken)
           if(addbook)
           {
             await userBorrowToken(borrowAmount,publicKey,signTransaction);
@@ -220,7 +241,7 @@ export default function IndexPage() {
       {
         if(publicKey && signTransaction)
           {
-            const addbook = addressBooks(publicKey)
+            const addbook = addressBooks(publicKey,selectedToken)
             if(addbook)
             {
               await userRepayToken(publicKey,signTransaction);
@@ -232,9 +253,10 @@ export default function IndexPage() {
 
       const debugs = async () => 
       {
+        
         if(publicKey)
         {
-          const bk = solanaDataInit(publicKey);
+          const bk = solanaDataInit(publicKey,selectedToken);
           if(bk)
           {
             await testSoalanData(publicKey)
@@ -243,6 +265,7 @@ export default function IndexPage() {
        
 
       }
+
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
@@ -598,6 +621,16 @@ export default function IndexPage() {
               Withdraw
             </Button>
           </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+            {/* Loading Modal */}
+        <Modal isOpen={isLoadingOpen} onClose={onLoadingClose} hideCloseButton={true} isDismissable={false} isKeyboardDismissDisabled='true'>
+        <ModalContent>
+         
+          <ModalBody>
+            <Spinner  style={{height:"300px"}} color="warning" label="Account Loading ..." />
+          </ModalBody>
         </ModalContent>
       </Modal>
       </div>
