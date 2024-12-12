@@ -131,7 +131,21 @@ const testSoalanData = async (
     const tokens = await getUserTokenList(publicKey.toBase58())
     console.log("tokens :: ",tokens)
 
-    await fetchUserBorrowData()
+    console.log(
+        await fetchUserBorrowData()
+    )
+
+    console.log(
+        await fetchPoolStakingData()
+    )
+
+    console.log(
+        await fetchSystemConfigData()
+    )
+
+    console.log(
+        await fetchUserStakingData()
+    )
     const id = new Uint8Array(sighash("global","PoolStakingData"));
     console.log(id)
     const accounts = await connection.getProgramAccounts(programIdDefault, {
@@ -160,39 +174,6 @@ const testSoalanData = async (
     console.log("deserializedData :: " ,deserializedData)
 }
 
-const fetchUserBorrowData = async () => {
-    try {
-      const accountInfo = await connection.getAccountInfo(userBorrowData);
-      console.log("🍺 accountInfo",accountInfo,userBorrowData.toBase58())
-      if (!accountInfo) {
-        throw new Error("Account not found");
-      }
-
-      const data = accountInfo.data;
-
-      // Parse the account data using the structure in idl.json
-      const collateralAmount = BigInt(data.readBigUInt64LE(0));
-      const borrowedAmount = BigInt(data.readBigUInt64LE(8));
-      const lastUpdated = BigInt(data.readBigInt64LE(16));
-
-      console.log("User Borrow Data :: ",collateralAmount,borrowedAmount,lastUpdated)
-    } catch (err: any) {
-      console.log(err)
-    }
-  };
-
-
-const getTokenBalance = async ( walletAddress: PublicKey) =>
-{
-  try {
-    const tokenAddress = userTokenAccount;
-    const accountInfo = await getAccount(connection, tokenAddress);
-    return accountInfo.amount.toString();
-  } catch (error) {
-    console.error('Failed to get token balance:', error);
-    return null;
-  }
-}
 
 
 /**
@@ -243,6 +224,125 @@ async function getUserTokenList(address:string) {
     );
     return (await tokenResponse.json()).result;
 }
+
+const getTokenBalance = async ( walletAddress: PublicKey) =>
+    {
+      try {
+        const tokenAddress = userTokenAccount;
+        const accountInfo = await getAccount(connection, tokenAddress);
+        return accountInfo.amount.toString();
+      } catch (error) {
+        console.error('Failed to get token balance:', error);
+        return null;
+      }
+    }
+    
+
+    
+const fetchUserBorrowData = async () => {
+    try {
+      const accountInfo = await connection.getAccountInfo(userBorrowData);
+      if (!accountInfo) {
+        throw new Error("Account not found");
+      }
+
+      const data = accountInfo.data;
+
+      // Parse the account data using the structure in idl.json
+      const collateralAmount = BigInt(data.readBigUInt64LE(0));
+      const borrowedAmount = BigInt(data.readBigUInt64LE(8));
+      const lastUpdated = BigInt(data.readBigInt64LE(16));
+
+      return {
+        collateralAmount,borrowedAmount,lastUpdated
+      }
+    } catch (err: any) {
+      return false;
+    }
+  };
+
+
+  const fetchPoolStakingData = async () => {
+    try {
+      const accountInfo = await connection.getAccountInfo(new PublicKey(poolStakingData));
+
+      if (!accountInfo) {
+        throw new Error("Account not found");
+      }
+
+      const data = accountInfo.data;
+
+      const totalStaked = BigInt(data.readBigUInt64LE(0));
+      const totalShares = BigInt(data.readBigUInt64LE(8));
+      const totalBorrowed = BigInt(data.readBigUInt64LE(16));
+      const pendingVaultProfit = BigInt(data.readBigUInt64LE(24));
+
+      return {
+        totalStaked,
+        totalShares,
+        totalBorrowed,
+        pendingVaultProfit
+      }
+    } catch (err: any) {
+        return false;
+    }
+  };
+
+
+  const fetchUserStakingData = async () => {
+    try {
+      const accountInfo = await connection.getAccountInfo(new PublicKey(userStakingData));
+
+      if (!accountInfo) {
+        throw new Error("Account not found");
+      }
+
+      const data = accountInfo.data;
+
+      const shares = BigInt(data.readBigUInt64LE(0));
+
+      return {
+        shares
+      }
+    } catch (err: any) {
+        return false;
+    }
+  };
+  
+
+  const fetchSystemConfigData = async () => {
+    try {
+      const accountInfo = await connection.getAccountInfo(new PublicKey(systemConfig));
+
+      if (!accountInfo) {
+        throw new Error("Account not found");
+      }
+
+      const data = accountInfo.data;
+
+      const initialized = Boolean(data.readUInt8(0));
+      const authority = new PublicKey(data.slice(1, 33)).toBase58();
+      const poolTokenAuthority = new PublicKey(data.slice(33, 65)).toBase58();
+      const pumpFunProgram = new PublicKey(data.slice(65, 97)).toBase58();
+      const baseVirtualTokenReserves = BigInt(data.readBigUInt64LE(97));
+      const baseVirtualSolReserves = BigInt(data.readBigUInt64LE(105));
+      const poolTokenAuthorityBumpSeed = data.readUInt8(113);
+      const borrowRatePerSecond = BigInt(data.readBigUInt64LE(114));
+
+      return {
+        initialized,
+        authority,
+        poolTokenAuthority,
+        pumpFunProgram,
+        baseVirtualTokenReserves,
+        baseVirtualSolReserves,
+        poolTokenAuthorityBumpSeed,
+        borrowRatePerSecond
+      }
+    } catch (err: any) {
+        return false;
+    }
+  };
 
 export {
     testSoalanData,

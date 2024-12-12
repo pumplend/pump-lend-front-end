@@ -257,7 +257,7 @@ const userBorrowToken = async (
         poolTokenAccount.toBase58(),
       )
 
-      console.log(" Borrow amount : ",amount)
+      console.log(" Borrow amount : ",amount* 1e6)
       const stakeAmountInLamports = new BN(amount * 1e6);
 
       const args = new StakeArgs({ amount: stakeAmountInLamports });
