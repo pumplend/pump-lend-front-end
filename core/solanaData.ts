@@ -30,7 +30,7 @@ import BN from 'bn.js';
 import * as abi from '@/core/pump_lend.json';
 import { serialize , Schema,deserialize, deserializeUnchecked } from "borsh";
 import { createHash } from 'crypto';
-
+import {envConfig} from "@/config/env"
 const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZuTBMG')
 
   // PDA Accounts
@@ -44,7 +44,7 @@ const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZu
   let userTokenAccount: PublicKey;
   let poolTokenAccount: PublicKey;
 
-  const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
+  const connection = new Connection('https://api.devnet.solana.com');
 
 const solanaDataInit = ( publicKey:PublicKey) =>
 {
@@ -115,22 +115,39 @@ const solanaDataInit = ( publicKey:PublicKey) =>
  * Data fetching
  */
 const testSoalanData = async ( 
-
+    publicKey:PublicKey
 )=>
 {
+    console.log(
+        "🎦 User borrow sol :",
+        systemConfig.toBase58(),
+        poolStakingData.toBase58(),
+        userStakingData.toBase58(),
+        userBorrowData.toBase58(),
+        userTokenAccount.toBase58(),
+        poolTokenAuthority.toBase58(),
+        poolTokenAccount.toBase58(),
+      )
+    const tokens = await getUserTokenList(publicKey.toBase58())
+    console.log("tokens :: ",tokens)
+
+    await fetchUserBorrowData()
     const id = new Uint8Array(sighash("global","PoolStakingData"));
     console.log(id)
     const accounts = await connection.getProgramAccounts(programIdDefault, {
         filters: [
-          {
-            memcmp: {
-                offset: 0, // 假设函数标识位于数据的起始位置
-                bytes:id.toString('base64'), // 要匹配的字节值，通常是函数名或特定标识符
-              },
-          },
+        //   {
+        //     memcmp: {
+        //         offset: 0, // 假设函数标识位于数据的起始位置
+        //         bytes:id.toString('base64'), // 要匹配的字节值，通常是函数名或特定标识符
+        //       },
+        //   },
         ],
       });
       console.log("accounts :: " ,accounts)
+      accounts.forEach(es => {
+        console.log(es.pubkey.toBase58())
+      });
       // Deserialize account data
       const deserializedData = accounts.map(({ pubkey, account }) => {
         const data = deserialize(
@@ -142,6 +159,28 @@ const testSoalanData = async (
       });
     console.log("deserializedData :: " ,deserializedData)
 }
+
+const fetchUserBorrowData = async () => {
+    try {
+      const accountInfo = await connection.getAccountInfo(userBorrowData);
+      console.log("🍺 accountInfo",accountInfo,userBorrowData.toBase58())
+      if (!accountInfo) {
+        throw new Error("Account not found");
+      }
+
+      const data = accountInfo.data;
+
+      // Parse the account data using the structure in idl.json
+      const collateralAmount = BigInt(data.readBigUInt64LE(0));
+      const borrowedAmount = BigInt(data.readBigUInt64LE(8));
+      const lastUpdated = BigInt(data.readBigInt64LE(16));
+
+      console.log("User Borrow Data :: ",collateralAmount,borrowedAmount,lastUpdated)
+    } catch (err: any) {
+      console.log(err)
+    }
+  };
+
 
 const getTokenBalance = async ( walletAddress: PublicKey) =>
 {
@@ -193,6 +232,17 @@ function sighash(namespace: string, name: string): Buffer {
     return fullHash.slice(0, 8);  
 }
 
+async function getUserTokenList(address:string) {
+    const myHeaders = new Headers();
+    myHeaders.append("x-api-key", envConfig.apiKey.shyft);
+
+    const tokenResponse = await fetch(
+      envConfig.api.shyft +
+      address,
+      { method: "GET", headers: myHeaders, redirect: "follow" }
+    );
+    return (await tokenResponse.json()).result;
+}
 
 export {
     testSoalanData,

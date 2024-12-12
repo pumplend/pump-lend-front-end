@@ -237,7 +237,7 @@ export default function IndexPage() {
           const bk = solanaDataInit(publicKey);
           if(bk)
           {
-            await testSoalanData()
+            await testSoalanData(publicKey)
           }
         }
        
