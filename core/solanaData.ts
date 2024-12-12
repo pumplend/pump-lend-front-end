@@ -26,6 +26,7 @@ import {
   
 } from "@solana/spl-token";
 import BigNumber from 'bignumber.js';
+// @ts-ignore
 import BN from 'bn.js';
 import * as abi from '@/core/pump_lend.json';
 import { serialize , Schema,deserialize, deserializeUnchecked } from "borsh";

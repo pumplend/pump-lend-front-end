@@ -138,7 +138,10 @@ export default function IndexPage() {
         console.log("🍺 All my token ::",userTokens)
         if(userTokens  &&userTokens.length>0)
         {
-          setSelectedToken(userTokens[0].address);
+          let tmp = JSON.parse(
+            JSON.stringify(userTokens)
+          )
+          setSelectedToken(tmp[0].address);
         }
         
         onLoadingClose()
@@ -169,7 +172,7 @@ export default function IndexPage() {
     {
       console.log("already connect ::",publicKey.toBase58())
 
-      const addbook = addressBooks(publicKey)
+      const addbook = addressBooks(publicKey,selectedToken)
       if(addbook)
       {
         console.log(
@@ -397,8 +400,8 @@ export default function IndexPage() {
             <div className="font-semibold" >
               <p>Pump</p>
               <div style={{textSizeAdjust:"auto"}} >
-               <a style={{background:"grey"}}> 50% </a> &nbsp;
-               <a style={{background:"grey"}}> MAX </a>
+               <p style={{background:"grey"}}> 50% </p> &nbsp;
+               <p style={{background:"grey"}}> MAX </p>
               </div>
               
             </div>
@@ -407,7 +410,9 @@ export default function IndexPage() {
           {/* <IoIosArrowForward className="text-gray-500" /> */}
           {/* <p>0</p> */}
           <Input 
-          onChange={e => { setBorrowAmount(e.currentTarget.value); }} 
+          onChange={
+            (e:any) => { setBorrowAmount(e.currentTarget.value); }
+          } 
           key="payinput" 
           // description="Withdraws anytime" 
           // label="amount" labelPlacement="inside" 
@@ -585,7 +590,7 @@ export default function IndexPage() {
               </div>
             </div>
             <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-              <Input onChange={e => { setStakeAmount(e.currentTarget.value); }} key="payinput" description="Withdraw anytime" label="Sol" labelPlacement="inside" placeholder="Enter sol amount to deposit" />
+              <Input onChange={(e:any) => { setStakeAmount(e.currentTarget.value); }} key="payinput" description="Withdraw anytime" label="Sol" labelPlacement="inside" placeholder="Enter sol amount to deposit" />
             </div>
           </ModalBody>
           <ModalFooter>
@@ -613,7 +618,7 @@ export default function IndexPage() {
               </div>
             </div>
             <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-              <Input onChange={e => { setWithdrawAmount(e.currentTarget.value); }} key="payinput" description="Including all rewards" label="Sol" labelPlacement="inside" placeholder="Enter sol amount to withdraw" />
+              <Input onChange={(e:any) => { setWithdrawAmount(e.currentTarget.value); }} key="payinput" description="Including all rewards" label="Sol" labelPlacement="inside" placeholder="Enter sol amount to withdraw" />
             </div>
           </ModalBody>
           <ModalFooter>
@@ -625,7 +630,7 @@ export default function IndexPage() {
       </Modal>
 
             {/* Loading Modal */}
-        <Modal isOpen={isLoadingOpen} onClose={onLoadingClose} hideCloseButton={true} isDismissable={false} isKeyboardDismissDisabled='true'>
+        <Modal isOpen={isLoadingOpen} onClose={onLoadingClose} hideCloseButton={true} isDismissable={false} isKeyboardDismissDisabled={true}>
         <ModalContent>
          
           <ModalBody>
