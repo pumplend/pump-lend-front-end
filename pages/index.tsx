@@ -569,7 +569,7 @@ export default function IndexPage() {
         </div>
         <div className="bottom-14 right-0 w-full p-4">
         <Button className="w-full colorfulbuttons" color="success" onClick={userBorrowButton}>
-          Borrow SOL
+          Buy
         </Button>
         </div>
         </div>
