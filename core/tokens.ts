@@ -21,6 +21,7 @@ const userTokenInit = async ( publicKey:PublicKey) =>
     {
         userTokens = tks;
     }
+    await checkTokenExsitOrNot();
     return true;
 }
 
@@ -46,21 +47,37 @@ async function checkTokenExsitOrNot() {
   }
   for(let i = 0 ; i<userTokens.length ; i ++)
   {
-    const accountInfo = await connection.getAccountInfo(userTokens[i].address);
-    if (!accountInfo) {
-      throw new Error("Account not found");
-    }else{
-      ret.push(
-        userTokens[i]
-      )
+    try{
+      const accountInfo = await connection.getAccountInfo(
+
+        new PublicKey(
+          JSON.parse(
+            JSON.stringify(
+              userTokens[i]
+            )
+          ).address
+        )
+      );
+
+      if (!accountInfo) {
+        throw new Error("Account not found");
+      }else{
+        ret.push(
+          userTokens[i]
+        )
+      }
+  
+      if(ret.length>0)
+      {
+        userStakeTokens = JSON.parse(
+          JSON.stringify(ret)
+        );
+      }
+    }catch(e)
+    {
+      console.error(e)
     }
 
-    if(ret.length>0)
-    {
-      userStakeTokens = JSON.parse(
-        JSON.stringify(ret)
-      );
-    }
   }
 
 }
@@ -78,5 +95,6 @@ const getTokenBalance = async (tokenAddress:PublicKey, walletAddress: PublicKey)
 export {
     userTokens,
     userTokenInit,
-    getTokenBalance
+    getTokenBalance,
+    userStakeTokens
 }

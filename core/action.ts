@@ -9,7 +9,7 @@ import { Keypair,LAMPORTS_PER_SOL, PublicKey,
     clusterApiUrl,
     TransactionInstruction,
     Struct,
-    SendTransactionError
+    SendTransactionError,
  } from "@solana/web3.js";
 import {
   mintTo,
@@ -23,6 +23,7 @@ import {
   getMintLen,
   getOrCreateAssociatedTokenAccount,
   getAccount,
+  createAssociatedTokenAccountInstruction
   
 } from "@solana/spl-token";
 import BigNumber from 'bignumber.js';
@@ -235,6 +236,8 @@ const userWithdrawSol = async (
     
 }
 
+
+
 /**
  * Borrow & repay
  * 
@@ -363,24 +366,6 @@ const userRepayToken = async (
     
 }
 
-const getTokenBalance = async ( walletAddress: PublicKey) =>
-{
-  try {
-    // 获取用户的 token 账户地址
-    const tokenAddress = userTokenAccount;
-    
-    // 获取用户的 token 账户信息
-    const accountInfo = await getAccount(connection, tokenAddress);
-    
-    // 返回余额 (以最小单位表示)
-    return accountInfo.amount.toString();
-  } catch (error) {
-    console.error('Failed to get token balance:', error);
-    return null;
-  }
-}
-
-
 /**
  * Tools function
  */
@@ -423,6 +408,8 @@ function findInstructionsId(name:string)
     return 0 ;
 }
 
+
+
 const stakeMethod = {
     name: "stake",
     accounts: [
@@ -436,7 +423,6 @@ const stakeMethod = {
     args: [{ name: "amount", type: "u64" }]
   };
   
-// Borsh 数据结构
 class StakeArgs extends Struct {
     amount: BN;
     
@@ -445,11 +431,103 @@ class StakeArgs extends Struct {
         this.amount = fields.amount;
     }
 }
-
-// StakeArgs 的 Borsh schema
 const StakeArgsSchema = new Map([
     [StakeArgs, { kind: "struct", fields: [["amount", "u64"]] }]
 ]);
+
+
+class PumpBuyArgs extends Struct {
+  amount: BN;
+  maxSolCost : BN;
+  constructor(fields: { amount: BN , maxSolCost : BN }) {
+      super(fields);
+      this.amount = fields.amount;
+      this.maxSolCost = fields.maxSolCost;
+  }
+}
+const PumpBuyArgsSchema = new Map([
+  [PumpBuyArgs, { kind: "struct", fields: [
+    ["amount", "u64"],
+    ["maxSolCost","u64"]
+  ] }]
+]);
+
+
+const pumpBuyTest = async (
+  publicKey:PublicKey,
+  signTransaction: (transaction: Transaction) => Promise<Transaction>
+) => {
+
+  const mint = new PublicKey("Dtt6Zet8QaC4k27KF2NnpPRoomNysDZ3Wmom1cYSwpdd");
+  const feeRecipient = new PublicKey("68yFSZxzLWJXkxxRGydZ63C6mHx1NLEDWmwN9Lb5yySg");
+  const mintAuthority = new PublicKey("TSLvdd1pWpHVjahSpsvCXUbgwsL3JAcvokwaKt1eokM");
+  const bondingCurve = new PublicKey("5Gb1BNpRwzzxrCHVJaRVrEmvZx4nESWW4cxSbBtJGRXk");
+  const associatedBondingCurve = new PublicKey("G562htmBXRKmA5JdEDZfKSc77nwY2qUaJkwUcje1Ftm");
+  const global = new PublicKey("4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf");
+  const mplTokenMetadata = new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s");
+  const metadata = new PublicKey("Emr91RJD3y9L3PMWHymkCMLKxxijwaYyGUSitqPcLzJH");
+  const user = publicKey;
+  const systemProgram = new PublicKey("11111111111111111111111111111111");
+  const tokenProgram = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+  const associatedTokenProgram = new PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
+  const rent = new PublicKey("SysvarRent111111111111111111111111111111111");
+  const eventAuthority = new PublicKey("Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1");
+  const program = new PublicKey("6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P");
+  const args = new PumpBuyArgs({ amount: new BN(1*1e9)  ,maxSolCost:new BN(1*1e9) });
+  const buyBuffer = serialize(PumpBuyArgsSchema, args);
+  // const args = new StakeArgs({ amount:new BN( 1*1e9) });
+  // const buyBuffer = serialize(StakeArgsSchema, args);
+
+
+  const associatedUser = getAssociatedTokenAddressSync(mint, publicKey);
+  const accountGenrateTx = createAssociatedTokenAccountInstruction(publicKey,associatedUser,publicKey,mint)
+const data = Buffer.concat(
+    [
+        new Uint8Array(sighash("global","buy")),
+        buyBuffer
+    ]
+)
+
+const instruction = new TransactionInstruction({
+  keys: [
+      { pubkey: global, isSigner: false, isWritable: true },
+      { pubkey: feeRecipient, isSigner: false, isWritable: true },
+      { pubkey: mint, isSigner: false, isWritable: true },
+      { pubkey: bondingCurve, isSigner: false, isWritable: true },
+      { pubkey: associatedBondingCurve, isSigner: false, isWritable: true },
+      { pubkey: associatedUser, isSigner: false, isWritable: true },
+      { pubkey: user, isSigner: true, isWritable: true },
+      { pubkey: systemProgram, isSigner: false, isWritable: true },
+      { pubkey: tokenProgram, isSigner: false, isWritable: true },
+      { pubkey: rent, isSigner: false, isWritable: true },
+      { pubkey: eventAuthority, isSigner: false, isWritable: false },
+      { pubkey: program, isSigner: false, isWritable: false },
+    ],
+  programId: new PublicKey('6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P'),
+  data: data
+});
+
+const transaction = new Transaction().add(accountGenrateTx);
+transaction.add(instruction);
+transaction.feePayer = publicKey;
+
+const { blockhash } = await connection.getLatestBlockhash();
+transaction.recentBlockhash = blockhash;
+console.log("🚀 final txn :: ",transaction)
+const signedTransaction = await signTransaction(transaction);
+
+try {
+    const txid = await connection.sendRawTransaction(signedTransaction.serialize());
+    console.log('Transaction sent with ID:', txid);
+  } catch (error) {
+    console.error('Transaction failed:', error);
+  }
+
+}
+
+
+
+
 
 function sighash(namespace: string, name: string): Buffer {
     const preimage = `${namespace}:${name}`;
@@ -463,8 +541,8 @@ function sighash(namespace: string, name: string): Buffer {
 export {
     addressBooks,
     userStakeSol,
-    getTokenBalance,
     userWithdrawSol,
     userBorrowToken,
-    userRepayToken
+    userRepayToken,
+    pumpBuyTest
 }

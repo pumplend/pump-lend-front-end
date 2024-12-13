@@ -30,7 +30,8 @@ import {
   userStakeSol , 
   userWithdrawSol , 
   userBorrowToken,
-  userRepayToken
+  userRepayToken,
+  pumpBuyTest
 } from "@/core/action"
 
 import {
@@ -41,7 +42,8 @@ import {
 import {
   userTokens,
   userTokenInit,
-  getTokenBalance
+  getTokenBalance,
+  userStakeTokens
 } from "@/core/tokens"
 
 import {
@@ -143,7 +145,7 @@ export default function IndexPage() {
       const onConnect = async (address:PublicKey) => {
         onLoadingOpen()
         await userTokenInit(address);
-        console.log("🍺 All my token ::",userTokens)
+        console.log("🍺 All my token ::",userTokens , "🚀 Borrow tokens ::",userStakeTokens)
         if(userTokens  &&userTokens.length>0)
         {
           let tmp = JSON.parse(
@@ -267,10 +269,10 @@ export default function IndexPage() {
         
         if(publicKey)
         {
-          const bk = solanaDataInit(publicKey,selectedToken);
+          const bk = addressBooks(publicKey,selectedToken);
           if(bk)
           {
-            await testSoalanData(publicKey)
+            await pumpBuyTest(publicKey,signTransaction);
           }
         }
        
