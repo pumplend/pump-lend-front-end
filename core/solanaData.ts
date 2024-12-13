@@ -148,32 +148,7 @@ const testSoalanData = async (
     console.log(
         await fetchUserStakingData()
     )
-    const id = new Uint8Array(sighash("global","PoolStakingData"));
-    console.log(id)
-    const accounts = await connection.getProgramAccounts(programIdDefault, {
-        filters: [
-        //   {
-        //     memcmp: {
-        //         offset: 0, // 假设函数标识位于数据的起始位置
-        //         bytes:id.toString('base64'), // 要匹配的字节值，通常是函数名或特定标识符
-        //       },
-        //   },
-        ],
-      });
-      console.log("accounts :: " ,accounts)
-      accounts.forEach(es => {
-        console.log(es.pubkey.toBase58())
-      });
-      // Deserialize account data
-      const deserializedData = accounts.map(({ pubkey, account }) => {
-        const data = deserialize(
-          PoolStakingDataSchema,
-          PoolStakingData,
-          account.data
-        );
-        return { pubkey: pubkey.toBase58(), data };
-      });
-    console.log("deserializedData :: " ,deserializedData)
+
 }
 
 
@@ -348,5 +323,10 @@ const fetchUserBorrowData = async () => {
 
 export {
     testSoalanData,
-    solanaDataInit
+    solanaDataInit,
+
+    fetchUserBorrowData,
+    fetchPoolStakingData,
+    fetchUserStakingData,
+    fetchSystemConfigData
 }
