@@ -32,7 +32,7 @@ import {
   userBorrowToken,
   userRepayToken,
   pumpBuyTest,
-  userLeverageToken,
+  userLeverageTokenPump,
   userCloseTokenPump
 } from "@/core/action"
 
@@ -275,7 +275,7 @@ export default function IndexPage() {
               const addbook = addressBooks(publicKey,selectedToken)
               if(addbook)
               {
-                await userLeverageToken(leverageAmount,publicKey,signTransaction);
+                await userLeverageTokenPump(leverageAmount,publicKey,signTransaction);
               }
             }else{
         
@@ -298,7 +298,15 @@ export default function IndexPage() {
         
       const debugs = async () => 
       {
-        await userClosePositionButton()
+        if(publicKey)
+        {
+          await solanaDataInit(publicKey,selectedToken)
+          console.log(
+            await testSoalanData(publicKey)
+          )
+        }
+
+        // await userClosePositionButton()
         // if(publicKey && signTransaction)
         // {
         //   const bk = addressBooks(publicKey,selectedToken);
