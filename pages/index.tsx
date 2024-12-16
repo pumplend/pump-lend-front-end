@@ -45,7 +45,9 @@ import {
   userTokens,
   userTokenInit,
   getTokenBalance,
-  userStakeTokens
+  userStakeTokens,
+  userSolStakeFetch,
+  userTokenBorrowFetch
 } from "@/core/tokens"
 
 import {
@@ -58,7 +60,8 @@ import {
 } from "@nextui-org/react";
 import { PublicKey } from "@solana/web3.js";
 
-
+// @ts-ignore
+import BN from 'bn.js';
 export default function IndexPage() {
   const { publicKey,connected ,signTransaction } = useWallet();
   const [isLoading, setIsLoading] = useState(true);
@@ -85,6 +88,31 @@ export default function IndexPage() {
   const [leverageAmount, setLeverageAmount] = useState(0)
   
   const [selectedToken, setSelectedToken] = useState("")
+
+  const [userStakeSolInformation, setUserStakeSolInformation] = useState(
+    {
+      totalStaked:BN,
+      totalShares:BN,
+      totalBorrowed:BN,
+      pendingVaultProfit:BN,
+      userShares:BN,
+    }
+  )
+
+  const [userStakeSolApy , setUserStakeSolApy] = useState(
+    "0"
+  )
+  const [userBorrorwInformation , setUserBorrowInformation] = useState(
+    0
+  )
+  const [userBorrowInformationArray, setUserBorrowInformationArray] = useState([
+    {
+      token: PublicKey,
+      borrowedAmount : BN,
+      collateralAmount : BN,
+      lastUpdated : BN
+    }
+  ])
 
   const [repayData, setRepayData] = useState([
     {
@@ -155,6 +183,34 @@ export default function IndexPage() {
             JSON.stringify(userTokens)
           )
           setSelectedToken(tmp[1].address);
+          const userStakeInfo = await userSolStakeFetch()
+          setUserStakeSolInformation(userStakeInfo)
+          setUserStakeSolApy(
+            (
+              (
+                (
+                  (
+                    Number(userStakeInfo.totalStaked)/Number(userStakeInfo.totalShares))-1
+                  )/
+            (
+              (Date.now()/1000 - 1733369330)/(365*24*3600)
+            )
+          )*100
+          ).toFixed(3) 
+          )
+
+          if(userStakeTokens)
+          {
+            const borrowInformationArray = await userTokenBorrowFetch(address,userStakeTokens);
+            console.log("🍺 borrowInformationArray::",borrowInformationArray)
+            setUserBorrowInformationArray(
+              borrowInformationArray.tokenData
+            )
+            setUserBorrowInformation(
+              borrowInformationArray.totalStake
+            )
+          }
+
         }
         
         onLoadingClose()
@@ -356,22 +412,22 @@ export default function IndexPage() {
 
         <div style={{display:"flex",flexDirection:"column"}}>
                       <span className=" text-xs">Your Supply</span>
-                      <span className="text-success">321</span>
+                      <span className="text-success">{((Number(userStakeSolInformation.userShares)/Number(userStakeSolInformation.totalShares))* Number(userStakeSolInformation.totalStaked)/1e9).toFixed(3) }</span>
         </div>
 
         <div style={{display:"flex",flexDirection:"column"}}>
                       <span className=" text-xs">Total Supply</span>
-                      <span className="text-success">321</span>
+                      <span className="text-success">{(Number(userStakeSolInformation.totalStaked)/1e9).toFixed(3)}</span>
         </div>
 
         <div style={{display:"flex",flexDirection:"column"}}>
                       <span className=" text-xs">Total Borrow</span>
-                      <span className="text-success">321</span>
+                      <span className="text-success">{(userBorrorwInformation/1e9).toFixed(3)}</span>
         </div>
 
         <div style={{display:"flex",flexDirection:"column"}}>
                       <span className=" text-xs">Supply APY</span>
-                      <span className="text-success">321</span>
+                      <span className="text-success">{userStakeSolApy}%</span>
         </div>
 
       </div>

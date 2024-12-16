@@ -8,15 +8,52 @@ import {
   
 } from "@solana/spl-token";
 import {envConfig} from "@/config/env"
-
+import { 
+  fetchUserBorrowData,
+  fetchPoolStakingData,
+  fetchUserStakingData,
+  fetchSystemConfigData
+} from "@/core/solanaData"
+// @ts-ignore
+import BN from 'bn.js';
 const connection = new Connection(envConfig.rpc);
 
 const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZuTBMG')
 let userTokens : false | [] ;
 
 let userStakeTokens : false | [] ;
+
+
+
+let systemConfig: PublicKey;
+let poolStakingData: PublicKey;
+let userStakingData: PublicKey;
+
 const userTokenInit = async ( publicKey:PublicKey) =>
 {
+  //Address init
+  systemConfig = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("system_config")
+    ],
+    programIdDefault
+  )[0];
+
+  poolStakingData = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("pool_staking_data")
+    ],
+    programIdDefault
+  )[0];
+
+  userStakingData = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("user_staking_data"),
+      publicKey.toBuffer()
+    ],
+    programIdDefault
+  )[0];
+
     const tks = await getUserTokenList(publicKey.toBase58());
     if(tks)
     {
@@ -26,6 +63,75 @@ const userTokenInit = async ( publicKey:PublicKey) =>
     return true;
 }
 
+const userSolStakeFetch = async() =>
+{
+  const pool = await fetchPoolStakingData(poolStakingData);
+  const user = await fetchUserStakingData(userStakingData);
+  let ret = {
+    totalStaked:new BN(0),
+    totalShares:new BN(0),
+    totalBorrowed:new BN(0),
+    pendingVaultProfit:new BN(0),
+    userShares:new BN(0),
+  }
+  if(pool)
+  {
+    ret.totalStaked = pool.totalStaked;
+    ret.totalShares = pool.totalShares;
+    ret.totalBorrowed = pool.totalBorrowed;
+    ret.pendingVaultProfit = pool.pendingVaultProfit;
+  }
+
+  if(user)
+  {
+    ret.userShares = user.shares
+  }
+
+  return ret;
+}
+
+const userTokenBorrowFetch = async(publicKey:PublicKey,tks:any[]) =>
+  {
+    let ret : any[];
+    ret = [];
+    let totalStake = 0;
+    for(let i = 0 ; i < tks.length ; i++)
+    {
+      try{
+        const bda = PublicKey.findProgramAddressSync(
+          [
+            Buffer.from("user_borrow_data"),
+            new PublicKey(tks[i].address).toBuffer(),
+            publicKey.toBuffer()
+          ],
+          programIdDefault
+        )[0];
+  
+        const bd = await fetchUserBorrowData(
+          bda
+        )
+        if(bd)
+        {
+          const retSeed = {
+            token: tks[i].address,
+            borrowedAmount : bd.borrowedAmount,
+            collateralAmount : bd.collateralAmount,
+            lastUpdated : bd.lastUpdated
+          }
+          ret.push(retSeed)
+          totalStake+= Number(bd.borrowedAmount)
+        }
+      }catch(e)
+      {
+        console.error(e)
+      }
+      
+    }
+    return {
+      tokenData :ret,
+      totalStake
+    };
+  }
 
 async function getUserTokenList(address:string) {
     const myHeaders = new Headers();
@@ -120,5 +226,7 @@ export {
     userTokens,
     userTokenInit,
     getTokenBalance,
-    userStakeTokens
+    userStakeTokens,
+    userSolStakeFetch,
+    userTokenBorrowFetch
 }

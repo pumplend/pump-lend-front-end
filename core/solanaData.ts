@@ -134,19 +134,19 @@ const testSoalanData = async (
     console.log("tokens :: ",tokens)
 
     console.log(
-        await fetchUserBorrowData()
+        await fetchUserBorrowData(userBorrowData)
     )
 
     console.log(
-        await fetchPoolStakingData()
+        await fetchPoolStakingData(poolStakingData)
     )
 
     console.log(
-        await fetchSystemConfigData()
+        await fetchSystemConfigData(systemConfig)
     )
 
     console.log(
-        await fetchUserStakingData()
+        await fetchUserStakingData(userStakingData)
     )
 
 }
@@ -216,9 +216,9 @@ const getTokenBalance = async ( walletAddress: PublicKey) =>
     
 
     
-const fetchUserBorrowData = async () => {
+const fetchUserBorrowData = async (_userBorrowData:PublicKey) => {
     try {
-      const accountInfo = await connection.getAccountInfo(userBorrowData);
+      const accountInfo = await connection.getAccountInfo(_userBorrowData);
       if (!accountInfo) {
         throw new Error("Account not found");
       }
@@ -240,9 +240,9 @@ const fetchUserBorrowData = async () => {
   };
 
 
-  const fetchPoolStakingData = async () => {
+  const fetchPoolStakingData = async (_poolStakingData:PublicKey) => {
     try {
-      const accountInfo = await connection.getAccountInfo(new PublicKey(poolStakingData));
+      const accountInfo = await connection.getAccountInfo(new PublicKey(_poolStakingData));
 
       if (!accountInfo) {
         throw new Error("Account not found");
@@ -267,9 +267,9 @@ const fetchUserBorrowData = async () => {
   };
 
 
-  const fetchUserStakingData = async () => {
+  const fetchUserStakingData = async (_userStakingData:PublicKey) => {
     try {
-      const accountInfo = await connection.getAccountInfo(new PublicKey(userStakingData));
+      const accountInfo = await connection.getAccountInfo(new PublicKey(_userStakingData));
 
       if (!accountInfo) {
         throw new Error("Account not found");
@@ -287,9 +287,9 @@ const fetchUserBorrowData = async () => {
   };
   
 
-  const fetchSystemConfigData = async () => {
+  const fetchSystemConfigData = async (_systemConfig:PublicKey) => {
     try {
-      const accountInfo = await connection.getAccountInfo(new PublicKey(systemConfig));
+      const accountInfo = await connection.getAccountInfo(new PublicKey(_systemConfig));
   
       if (!accountInfo) {
         throw new Error("Account not found");
