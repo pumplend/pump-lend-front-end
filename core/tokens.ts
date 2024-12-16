@@ -10,7 +10,7 @@ import {
 import {envConfig} from "@/config/env"
 
 const connection = new Connection(envConfig.rpc);
-
+const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZuTBMG')
 let userTokens : false | [] ;
 
 let userStakeTokens : false | [] ;
@@ -21,7 +21,7 @@ const userTokenInit = async ( publicKey:PublicKey) =>
     {
         userTokens = tks;
     }
-    await checkTokenExsitOrNot();
+    await checkTokenExsitOrNot(publicKey);
     return true;
 }
 
@@ -38,7 +38,7 @@ async function getUserTokenList(address:string) {
     return (await tokenResponse.json()).result;
 }
 
-async function checkTokenExsitOrNot() {
+async function checkTokenExsitOrNot(publicKey:PublicKey) {
   let ret :any[];
   ret = [];
   if(!userTokens)
@@ -48,31 +48,45 @@ async function checkTokenExsitOrNot() {
   for(let i = 0 ; i<userTokens.length ; i ++)
   {
     try{
-      const accountInfo = await connection.getAccountInfo(
+      const borrowAddress = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("user_borrow_data"),
+          new PublicKey(
+            JSON.parse(
+              JSON.stringify(
+                userTokens[i]
+              )
+            ).address
+          ).toBuffer(),
+          publicKey.toBuffer()
+        ],
+        programIdDefault
+      )[0];
 
-        new PublicKey(
-          JSON.parse(
-            JSON.stringify(
-              userTokens[i]
-            )
-          ).address
-        )
+      const accountInfo = await connection.getAccountInfo(
+        borrowAddress
+
       );
 
       if (!accountInfo) {
+        console.log("✈Token not found",JSON.parse(
+          JSON.stringify(
+            userTokens[i]
+          )
+        ).address)
         throw new Error("Account not found");
       }else{
+        console.log("✈Token found",accountInfo,JSON.parse(
+          JSON.stringify(
+            userTokens[i]
+          )
+        ).address)
         ret.push(
           userTokens[i]
         )
       }
   
-      if(ret.length>0)
-      {
-        userStakeTokens = JSON.parse(
-          JSON.stringify(ret)
-        );
-      }
+
     }catch(e)
     {
       console.error(e)
@@ -80,6 +94,15 @@ async function checkTokenExsitOrNot() {
 
   }
 
+
+  if(ret.length>0)
+    {
+      console.log("✈ Final stake tokens :: ",ret)
+      userStakeTokens = JSON.parse(
+        JSON.stringify(ret)
+      );
+    }
+    
 }
 const getTokenBalance = async (tokenAddress:PublicKey, walletAddress: PublicKey) =>
     {

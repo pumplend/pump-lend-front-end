@@ -46,11 +46,13 @@ const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZu
   let userTokenAccount: PublicKey;
   let poolTokenAccount: PublicKey;
 
+  let pumpKeyAccount = new PublicKey('6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P');
+
   const connection = new Connection(envConfig.rpc);
 
 const addressBooks = ( publicKey:PublicKey , token:string) =>
 {
-    tokenMint = new PublicKey(tokenMint)
+    tokenMint = new PublicKey(token)
     if(!publicKey)
     {
         return false;
@@ -260,8 +262,9 @@ const userBorrowToken = async (
         userTokenAccount.toBase58(),
         poolTokenAuthority.toBase58(),
         poolTokenAccount.toBase58(),
+        tokenMint.toBase58()
       )
-
+      const bondingCurve = new PublicKey("5Gb1BNpRwzzxrCHVJaRVrEmvZx4nESWW4cxSbBtJGRXk");
       console.log(" Borrow amount : ",amount* 1e6)
       const stakeAmountInLamports = new BN(amount * 1e6);
 
@@ -287,6 +290,8 @@ const userBorrowToken = async (
             { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: true },
             { pubkey: ASSOCIATED_TOKEN_PROGRAM_ID, isSigner: false, isWritable: true },
             { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+            { pubkey: pumpKeyAccount, isSigner: false, isWritable: false },
+            { pubkey: bondingCurve, isSigner: false, isWritable: true },
           ],
         programId: programIdDefault,
         data: data
@@ -331,6 +336,7 @@ const userRepayToken = async (
             new Uint8Array(sighash("global","repay")),
         ]
     )
+
       const instruction = new TransactionInstruction({
         keys: [
             { pubkey: publicKey, isSigner: true, isWritable: true },
@@ -473,14 +479,14 @@ const pumpBuyTest = async (
   const rent = new PublicKey("SysvarRent111111111111111111111111111111111");
   const eventAuthority = new PublicKey("Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1");
   const program = new PublicKey("6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P");
-  const args = new PumpBuyArgs({ amount: new BN(1*1e9)  ,maxSolCost:new BN(1*1e9) });
+  const args = new PumpBuyArgs({ amount: new BN(1000*1e9)  ,maxSolCost:new BN(100*1e9) });
   const buyBuffer = serialize(PumpBuyArgsSchema, args);
   // const args = new StakeArgs({ amount:new BN( 1*1e9) });
   // const buyBuffer = serialize(StakeArgsSchema, args);
 
 
   const associatedUser = getAssociatedTokenAddressSync(mint, publicKey);
-  const accountGenrateTx = createAssociatedTokenAccountInstruction(publicKey,associatedUser,publicKey,mint)
+  // const accountGenrateTx = createAssociatedTokenAccountInstruction(publicKey,associatedUser,publicKey,mint)
 const data = Buffer.concat(
     [
         new Uint8Array(sighash("global","buy")),
@@ -500,14 +506,14 @@ const instruction = new TransactionInstruction({
       { pubkey: systemProgram, isSigner: false, isWritable: true },
       { pubkey: tokenProgram, isSigner: false, isWritable: true },
       { pubkey: rent, isSigner: false, isWritable: true },
-      { pubkey: eventAuthority, isSigner: false, isWritable: false },
-      { pubkey: program, isSigner: false, isWritable: false },
+      { pubkey: eventAuthority, isSigner: false, isWritable: true },
+      { pubkey: program, isSigner: false, isWritable: true },
     ],
-  programId: new PublicKey('6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P'),
+  programId: program,
   data: data
 });
 
-const transaction = new Transaction().add(accountGenrateTx);
+const transaction = new Transaction();
 transaction.add(instruction);
 transaction.feePayer = publicKey;
 

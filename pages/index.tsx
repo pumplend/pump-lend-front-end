@@ -151,7 +151,7 @@ export default function IndexPage() {
           let tmp = JSON.parse(
             JSON.stringify(userTokens)
           )
-          setSelectedToken(tmp[0].address);
+          setSelectedToken(tmp[1].address);
         }
         
         onLoadingClose()
@@ -267,7 +267,7 @@ export default function IndexPage() {
       const debugs = async () => 
       {
         
-        if(publicKey)
+        if(publicKey && signTransaction)
         {
           const bk = addressBooks(publicKey,selectedToken);
           if(bk)
