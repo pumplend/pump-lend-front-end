@@ -31,7 +31,9 @@ import {
   userWithdrawSol , 
   userBorrowToken,
   userRepayToken,
-  pumpBuyTest
+  pumpBuyTest,
+  userLeverageToken,
+  userCloseTokenPump
 } from "@/core/action"
 
 import {
@@ -80,6 +82,7 @@ export default function IndexPage() {
   const [stakeAmout, setStakeAmount] = useState(0)
   const [withdrawAmount, setWithdrawAmount] = useState(0)
   const [borrowAmount, setBorrowAmount] = useState(0)
+  const [leverageAmount, setLeverageAmount] = useState(0)
   
   const [selectedToken, setSelectedToken] = useState("")
 
@@ -264,17 +267,46 @@ export default function IndexPage() {
           }
       }
 
+
+      const userLeverageButton = async ()=>
+        {
+          if(publicKey && signTransaction)
+            {
+              const addbook = addressBooks(publicKey,selectedToken)
+              if(addbook)
+              {
+                await userLeverageToken(leverageAmount,publicKey,signTransaction);
+              }
+            }else{
+        
+            }
+        }
+
+        const userClosePositionButton = async ()=>
+          {
+            if(publicKey && signTransaction)
+              {
+                const addbook = addressBooks(publicKey,selectedToken)
+                if(addbook)
+                {
+                  await userCloseTokenPump(publicKey,signTransaction);
+                }
+              }else{
+          
+              }
+          }
+        
       const debugs = async () => 
       {
-        
-        if(publicKey && signTransaction)
-        {
-          const bk = addressBooks(publicKey,selectedToken);
-          if(bk)
-          {
-            await pumpBuyTest(publicKey,signTransaction);
-          }
-        }
+        await userClosePositionButton()
+        // if(publicKey && signTransaction)
+        // {
+        //   const bk = addressBooks(publicKey,selectedToken);
+        //   if(bk)
+        //   {
+        //     await pumpBuyTest(publicKey,signTransaction);
+        //   }
+        // }
        
 
       }
@@ -532,7 +564,7 @@ export default function IndexPage() {
           {/* <p>0</p> */}
           <Input 
           onChange={
-            (e:any) => { setBorrowAmount(e.currentTarget.value); }
+            (e:any) => { setLeverageAmount(e.currentTarget.value); }
           } 
           key="payinput" 
           // description="Withdraws anytime" 
@@ -570,7 +602,7 @@ export default function IndexPage() {
           Network fee: 0.0025 SOL
         </div>
         <div className="bottom-14 right-0 w-full p-4">
-        <Button className="w-full colorfulbuttons" color="success" onClick={userBorrowButton}>
+        <Button className="w-full colorfulbuttons" color="success" onClick={userLeverageButton}>
           Buy
         </Button>
         </div>

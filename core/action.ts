@@ -372,6 +372,182 @@ const userRepayToken = async (
     
 }
 
+
+/**
+ * Leverage & Close
+ * 
+ * Both pump.close raydium.close
+ */
+
+const userLeverageToken = async ( 
+  amount:number,
+  publicKey:PublicKey,
+  signTransaction: (transaction: Transaction) => Promise<Transaction>
+)=>
+{
+  
+  console.log(
+      "🎦 User borrow sol :",
+      systemConfig.toBase58(),
+      poolStakingData.toBase58(),
+      userStakingData.toBase58(),
+      userBorrowData.toBase58(),
+      userTokenAccount.toBase58(),
+      poolTokenAuthority.toBase58(),
+      poolTokenAccount.toBase58(),
+      tokenMint.toBase58()
+    )
+
+    console.log(" Borrow amount : ",amount* 1e9)
+    const stakeAmountInLamports = new BN(amount * 1e9);
+
+    const args = new StakeArgs({ amount: stakeAmountInLamports });
+    const stakeBuffer = serialize(StakeArgsSchema, args);
+
+  const data = Buffer.concat(
+      [
+          new Uint8Array(sighash("global","borrow_loop_pump")),
+          stakeBuffer
+      ]
+  )
+  const bondingCurve = new PublicKey("5Gb1BNpRwzzxrCHVJaRVrEmvZx4nESWW4cxSbBtJGRXk");
+  const mint = new PublicKey("Dtt6Zet8QaC4k27KF2NnpPRoomNysDZ3Wmom1cYSwpdd");
+  const feeRecipient = new PublicKey("68yFSZxzLWJXkxxRGydZ63C6mHx1NLEDWmwN9Lb5yySg");
+  const associatedBondingCurve = new PublicKey("G562htmBXRKmA5JdEDZfKSc77nwY2qUaJkwUcje1Ftm");
+  const global = new PublicKey("4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf");
+  const rent = new PublicKey("SysvarRent111111111111111111111111111111111");
+  const eventAuthority = new PublicKey("Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1");
+
+    const instruction = new TransactionInstruction({
+      keys: [
+          { pubkey: publicKey, isSigner: true, isWritable: true },
+          { pubkey: poolStakingData, isSigner: false, isWritable: true },
+          { pubkey: userBorrowData, isSigner: false, isWritable: true },
+          { pubkey: poolTokenAuthority, isSigner: false, isWritable: true },
+          { pubkey: userTokenAccount, isSigner: false, isWritable: true },
+          { pubkey: poolTokenAccount, isSigner: false, isWritable: true },
+          { pubkey: systemConfig, isSigner: false, isWritable: true },
+          { pubkey: tokenMint, isSigner: false, isWritable: true },
+          { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: true },
+          { pubkey: bondingCurve, isSigner: false, isWritable: true },
+          { pubkey: pumpKeyAccount, isSigner: false, isWritable: false },
+          { pubkey: ASSOCIATED_TOKEN_PROGRAM_ID, isSigner: false, isWritable: true },
+          { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+
+          //Remnaining Account
+          { pubkey: global, isSigner: false, isWritable: true },
+          { pubkey: feeRecipient, isSigner: false, isWritable: true },
+          { pubkey: mint, isSigner: false, isWritable: true },
+          { pubkey: bondingCurve, isSigner: false, isWritable: true },
+          { pubkey: associatedBondingCurve, isSigner: false, isWritable: true },
+          { pubkey: poolTokenAccount, isSigner: false, isWritable: true },
+          { pubkey: poolTokenAuthority, isSigner: false, isWritable: true },
+          { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+          { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
+          { pubkey: rent, isSigner: false, isWritable: true },
+          { pubkey: eventAuthority, isSigner: false, isWritable: true },
+        ],
+      programId: programIdDefault,
+      data: data
+  });
+
+  const transaction = new Transaction().add(instruction);
+  transaction.feePayer = publicKey;
+
+  const { blockhash } = await connection.getLatestBlockhash();
+  transaction.recentBlockhash = blockhash;
+  console.log("🚀 final txn :: ",transaction)
+  const signedTransaction = await signTransaction(transaction);
+
+  try {
+      const txid = await connection.sendRawTransaction(signedTransaction.serialize());
+      console.log('Transaction sent with ID:', txid);
+    } catch (error) {
+      console.error('Transaction failed:', error);
+    }
+  
+}
+
+
+const userCloseTokenPump = async ( 
+  publicKey:PublicKey,
+  signTransaction: (transaction: Transaction) => Promise<Transaction>
+)=>
+{
+  
+  console.log(
+      "🎦 User withdraw sol :",
+      systemConfig.toBase58(),
+      poolStakingData.toBase58(),
+      userStakingData.toBase58(),
+      userBorrowData.toBase58(),
+      userTokenAccount.toBase58(),
+      poolTokenAuthority.toBase58(),
+      poolTokenAccount.toBase58(),
+    )
+
+  const data = Buffer.concat(
+      [
+          new Uint8Array(sighash("global","liquidate_pump")),
+      ]
+  )
+  const bondingCurve = new PublicKey("5Gb1BNpRwzzxrCHVJaRVrEmvZx4nESWW4cxSbBtJGRXk");
+  const mint = new PublicKey("Dtt6Zet8QaC4k27KF2NnpPRoomNysDZ3Wmom1cYSwpdd");
+  const feeRecipient = new PublicKey("68yFSZxzLWJXkxxRGydZ63C6mHx1NLEDWmwN9Lb5yySg");
+  const associatedBondingCurve = new PublicKey("G562htmBXRKmA5JdEDZfKSc77nwY2qUaJkwUcje1Ftm");
+  const global = new PublicKey("4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf");
+  const rent = new PublicKey("SysvarRent111111111111111111111111111111111");
+  const eventAuthority = new PublicKey("Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1");
+  const instruction = new TransactionInstruction({
+      keys: [
+          { pubkey: publicKey, isSigner: true, isWritable: true },
+          { pubkey: publicKey, isSigner: true, isWritable: true },
+          { pubkey: poolStakingData, isSigner: false, isWritable: true },
+          { pubkey: userBorrowData, isSigner: false, isWritable: true },
+          { pubkey: poolTokenAuthority, isSigner: false, isWritable: true },
+          { pubkey: userTokenAccount, isSigner: false, isWritable: true },
+          { pubkey: poolTokenAccount, isSigner: false, isWritable: true },
+          { pubkey: systemConfig, isSigner: false, isWritable: true },
+          { pubkey: tokenMint, isSigner: false, isWritable: true },
+          { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: true },
+          { pubkey: ASSOCIATED_TOKEN_PROGRAM_ID, isSigner: false, isWritable: true },
+          { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+          { pubkey: pumpKeyAccount, isSigner: false, isWritable: false },
+
+          //Remnaining Account
+          { pubkey: global, isSigner: false, isWritable: true },
+          { pubkey: feeRecipient, isSigner: false, isWritable: true },
+          { pubkey: mint, isSigner: false, isWritable: true },
+          { pubkey: bondingCurve, isSigner: false, isWritable: true },
+          { pubkey: associatedBondingCurve, isSigner: false, isWritable: true },
+          { pubkey: poolTokenAccount, isSigner: false, isWritable: true },
+          { pubkey: poolTokenAuthority, isSigner: false, isWritable: true },
+          { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+          { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
+          { pubkey: rent, isSigner: false, isWritable: true },
+          { pubkey: eventAuthority, isSigner: false, isWritable: true },
+        ],
+      programId: programIdDefault,
+      data: data
+  });
+
+  const transaction = new Transaction().add(instruction);
+  transaction.feePayer = publicKey;
+
+  const { blockhash } = await connection.getLatestBlockhash();
+  transaction.recentBlockhash = blockhash;
+  console.log("🚀 final txn :: ",transaction)
+  const signedTransaction = await signTransaction(transaction);
+
+  try {
+      const txid = await connection.sendRawTransaction(signedTransaction.serialize());
+      console.log('Transaction sent with ID:', txid);
+    } catch (error) {
+      console.error('Transaction failed:', error);
+    }
+  
+}
+
 /**
  * Tools function
  */
@@ -550,5 +726,8 @@ export {
     userWithdrawSol,
     userBorrowToken,
     userRepayToken,
-    pumpBuyTest
+    pumpBuyTest,
+
+    userLeverageToken,
+    userCloseTokenPump
 }
