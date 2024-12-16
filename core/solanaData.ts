@@ -226,14 +226,15 @@ const fetchUserBorrowData = async () => {
       const data = accountInfo.data;
 
       // Parse the account data using the structure in idl.json
-      const collateralAmount = BigInt(data.readBigUInt64LE(0));
-      const borrowedAmount = BigInt(data.readBigUInt64LE(8));
-      const lastUpdated = BigInt(data.readBigInt64LE(16));
+      const collateralAmount = BigInt(data.readBigUInt64LE(8));
+      const borrowedAmount = BigInt(data.readBigUInt64LE(16));
+      const lastUpdated = BigInt(data.readBigInt64LE(24));
 
       return {
         collateralAmount,borrowedAmount,lastUpdated
       }
     } catch (err: any) {
+      console.error(err)
       return false;
     }
   };
@@ -249,10 +250,10 @@ const fetchUserBorrowData = async () => {
 
       const data = accountInfo.data;
 
-      const totalStaked = BigInt(data.readBigUInt64LE(0));
-      const totalShares = BigInt(data.readBigUInt64LE(8));
-      const totalBorrowed = BigInt(data.readBigUInt64LE(16));
-      const pendingVaultProfit = BigInt(data.readBigUInt64LE(24));
+      const totalStaked = BigInt(data.readBigUInt64LE(8));
+      const totalShares = BigInt(data.readBigUInt64LE(16));
+      const totalBorrowed = BigInt(data.readBigUInt64LE(24));
+      const pendingVaultProfit = BigInt(data.readBigUInt64LE(32));
 
       return {
         totalStaked,
@@ -275,8 +276,7 @@ const fetchUserBorrowData = async () => {
       }
 
       const data = accountInfo.data;
-
-      const shares = BigInt(data.readBigUInt64LE(0));
+      const shares = BigInt(data.readBigUInt64LE(8));
 
       return {
         shares
@@ -290,22 +290,24 @@ const fetchUserBorrowData = async () => {
   const fetchSystemConfigData = async () => {
     try {
       const accountInfo = await connection.getAccountInfo(new PublicKey(systemConfig));
-
+  
       if (!accountInfo) {
         throw new Error("Account not found");
       }
-
+  
       const data = accountInfo.data;
-
-      const initialized = Boolean(data.readUInt8(0));
-      const authority = new PublicKey(data.slice(1, 33)).toBase58();
-      const poolTokenAuthority = new PublicKey(data.slice(33, 65)).toBase58();
-      const pumpFunProgram = new PublicKey(data.slice(65, 97)).toBase58();
-      const baseVirtualTokenReserves = BigInt(data.readBigUInt64LE(97));
-      const baseVirtualSolReserves = BigInt(data.readBigUInt64LE(105));
-      const poolTokenAuthorityBumpSeed = data.readUInt8(113);
-      const borrowRatePerSecond = BigInt(data.readBigUInt64LE(114));
-
+  
+      const offset = 8;
+  
+      const initialized = Boolean(data.readUInt8(offset));
+      const authority = new PublicKey(data.slice(offset + 1, offset + 33)).toBase58();
+      const poolTokenAuthority = new PublicKey(data.slice(offset + 33, offset + 65)).toBase58();
+      const pumpFunProgram = new PublicKey(data.slice(offset + 65, offset + 97)).toBase58();
+      const baseVirtualTokenReserves = BigInt(data.readBigUInt64LE(offset + 97));
+      const baseVirtualSolReserves = BigInt(data.readBigUInt64LE(offset + 105));
+      const poolTokenAuthorityBumpSeed = data.readUInt8(offset + 113);
+      const borrowRatePerSecond = BigInt(data.readBigUInt64LE(offset + 114));
+  
       return {
         initialized,
         authority,
@@ -315,11 +317,13 @@ const fetchUserBorrowData = async () => {
         baseVirtualSolReserves,
         poolTokenAuthorityBumpSeed,
         borrowRatePerSecond
-      }
+      };
     } catch (err: any) {
-        return false;
+      console.error('Error fetching system config data:', err);
+      return false;
     }
   };
+  
 
 export {
     testSoalanData,
