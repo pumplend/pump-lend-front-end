@@ -204,7 +204,7 @@ export default function IndexPage() {
             const borrowInformationArray = await userTokenBorrowFetch(address,userStakeTokens);
             console.log("🍺 borrowInformationArray::",borrowInformationArray)
             setUserBorrowInformationArray(
-              borrowInformationArray.tokenData
+              borrowInformationArray.tokenData 
             )
             setUserBorrowInformation(
               borrowInformationArray.totalStake
@@ -684,7 +684,7 @@ export default function IndexPage() {
 <br></br>
 
 
-<div className="maincard" style={{minWidth : windowSize.width*0.32}}>
+<div className="maincard" style={{minWidth : windowSize.width*0.3}}>
 <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full  justify-center" style={{ width:"100%"}}>
             <CardBody className="py-5 gap-4">
               <div className="flex gap-2.5 justify-center">
@@ -695,34 +695,83 @@ export default function IndexPage() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-6  justify-center ">
-              {repayData.map((item) => (
-                <div key={item.name} className="grid grid-cols-4 w-full">
-                  <div className="w-full">
-                    <Avatar
-                      isBordered
-                      color="secondary"
-                      src={item.picture}
-                    />
+              <div className="gap-6  ">
+                <div  className="grid grid-cols-4 w-full " style={{display:"flex", alignItems:"center" ,justifyContent:"center"}} >
+                  <div style={{width:'20%'}}>
+                  <span className="text-default-900  font-semibold">
+                  Tokens
+                  </span>
+                    
                   </div>
 
-                  <span className="text-default-900  font-semibold">
-                    ${item.name}
+                  <span className="text-default-900  font-semibold" style={{width:'20%'}}>
+                   Name
                   </span>
-                  <div>
+                  <div style={{width:'20%'}}>
                     
                     <div style={{display:"flex",flexDirection:"column"}}>
-                      <span className="text-success text-xs">{item.amount}</span>
-                      <span className="text-success text-xs">{item.amountToken}</span>
+                    <span className="text-default-900  font-semibold">
+                    Colladge
+                  </span>   
                     </div>
                   </div>
-                  <div>
-                  
-                  <Button color="danger" onClick={userRepayButton}>Close</Button>
-                  <Button color="success" onClick={userRepayButton}>Repay</Button>
-                    {/* <span className="text-default-500 text-xs">{item.date}</span> */}
+
+
+
+                  <div style={{width:'20%'}}>
+                    <span className="text-default-900  font-semibold">
+                    Debt
+                    </span>
+                  </div>
+
+                  <div style={{width:'20%'}}>
+                    <span className="text-default-900  font-semibold">
+                    Actions
+                    </span>
                   </div>
                 </div>
+              </div>
+
+              <div className="gap-6  justify-center ">
+              {repayData.map((item) => (
+                <div
+  key={item.name}
+  className="w-full"
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(5, 1fr)", // 五等分列布局
+    alignItems: "center", // 垂直居中
+    justifyItems: "center", // 水平居中
+    gap: "1rem", // 间距
+  }}
+>
+  <div>
+    <Avatar isBordered color="secondary" src={item.picture} />
+  </div>
+
+  <div>
+    <span className="text-default-900 font-semibold">${item.name}</span>
+  </div>
+
+  <div>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <span className="text-success text-xs">{item.amount}</span>
+      <span className="text-success text-xs">{item.amountToken}</span>
+    </div>
+  </div>
+
+  <div>0.1 SOL</div>
+
+  <div style={{ display: "flex", gap: "0.5rem" }}>
+    <Button color="danger" onClick={userRepayButton}>
+      Close
+    </Button>
+    <Button color="success" onClick={userRepayButton}>
+      Repay
+    </Button>
+  </div>
+</div>
+
               ))}
               </div>
 
