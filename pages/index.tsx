@@ -4,7 +4,7 @@ import { Snippet } from "@nextui-org/snippet";
 import { Code } from "@nextui-org/code";
 import { Card, CardBody, CardFooter } from "@nextui-org/card";
 
-import { siteConfig } from "@/config/site";
+import { envConfig } from "@/config/env";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon, Logo } from "@/components/icons";
 import DefaultLayout from "@/layouts/default";
@@ -71,11 +71,6 @@ export default function IndexPage() {
       color:"success",
       display:true
     },
-    // {
-    //   name:"Repay",
-    //   color:"default",
-    //   display:false
-    // },
     {
       name:"📈 Long",
       color:"default",
@@ -99,6 +94,14 @@ export default function IndexPage() {
     }
   )
 
+  const [userSupply, setUserSupply] = useState(
+    {
+      your:"0",
+      total:"0",
+    }
+  )
+
+
   const [userStakeSolApy , setUserStakeSolApy] = useState(
     "0"
   )
@@ -118,25 +121,25 @@ export default function IndexPage() {
     {
       name: "Rastapepe",
       picture: "https://ipfs.io/ipfs/QmQeSMMH2icVbm3rumZnC21z6YdzD3axJYZ47QpYLcrWPi",
-      amount: "2 SOL ",
+      amount: "2",
       amountToken: "1000000",
     },
     {
       name: "PS1",
       picture: "https://ipfs.io/ipfs/QmZXbptRrJTPGGeh7N19DfUbddggYG5CghnJhXvp4rp4uf",
-      amount: "0.2 SOL ",
+      amount: "0.2",
       amountToken: "31326",
     },
     {
       name: "11Doge",
       picture: "https://ipfs.io/ipfs/QmUuBn5rN8SuC1E6UWrJwcHHvRP62tpPokqRVTPXHEisEC",
-      amount: "1.4 SOL ",
+      amount: "1.4",
       amountToken: "100610000",
     },
     {
       name: "0.047 ROS",
       picture: "https://ipfs.io/ipfs/QmdbbxHmRdFYnEscy5aEXYw3v46Pb7N6nPtXYJZnk3pgRG",
-      amount: "1.8 SOL ",
+      amount: "1.8",
       amountToken: "624234234",
     },
 
@@ -208,6 +211,23 @@ export default function IndexPage() {
             )
             setUserBorrowInformation(
               borrowInformationArray.totalStake
+            )
+            let _your = ((Number(userStakeInfo.userShares)/Number(userStakeInfo.totalShares))* Number(userStakeInfo.totalStaked)/1e9).toFixed(3);
+            if(!_your)
+            {
+              _your = "0"
+            }
+            let _total = (Number(userStakeInfo.totalStaked)/1e9).toFixed(3);
+            if(!_total)
+            {
+              _total = "0";
+            }
+            console.log("🚀 supply culcuation :: ",_your,_total)
+            setUserSupply(
+              {
+                your:_your,
+                total:_total
+              }
             )
           }
 
@@ -412,12 +432,12 @@ export default function IndexPage() {
 
         <div style={{display:"flex",flexDirection:"column"}}>
                       <span className=" text-xs">Your Supply</span>
-                      <span className="text-success">{((Number(userStakeSolInformation.userShares)/Number(userStakeSolInformation.totalShares))* Number(userStakeSolInformation.totalStaked)/1e9).toFixed(3) }</span>
+                      <span className="text-success">{userSupply.your }</span>
         </div>
 
         <div style={{display:"flex",flexDirection:"column"}}>
                       <span className=" text-xs">Total Supply</span>
-                      <span className="text-success">{(Number(userStakeSolInformation.totalStaked)/1e9).toFixed(3)}</span>
+                      <span className="text-success">{userSupply.total}</span>
         </div>
 
         <div style={{display:"flex",flexDirection:"column"}}>
@@ -739,10 +759,10 @@ export default function IndexPage() {
   className="w-full"
   style={{
     display: "grid",
-    gridTemplateColumns: "repeat(5, 1fr)", // 五等分列布局
-    alignItems: "center", // 垂直居中
-    justifyItems: "center", // 水平居中
-    gap: "1rem", // 间距
+    gridTemplateColumns: "repeat(5, 1fr)", 
+    alignItems: "center", 
+    justifyItems: "center", 
+    gap: "1rem", 
   }}
 >
   <div>
@@ -755,12 +775,13 @@ export default function IndexPage() {
 
   <div>
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <span className="text-success text-xs">{item.amount}</span>
       <span className="text-success text-xs">{item.amountToken}</span>
     </div>
   </div>
 
-  <div>0.1 SOL</div>
+  <div>
+    {item.amount} SOL
+  </div>
 
   <div style={{ display: "flex", gap: "0.5rem" }}>
     <Button color="danger" onClick={userRepayButton}>
