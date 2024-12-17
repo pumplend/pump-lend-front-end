@@ -21,7 +21,7 @@ const connection = new Connection(envConfig.rpc);
 const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZuTBMG')
 let userTokens : false | [] ;
 
-let userStakeTokens : false | [] ;
+let userBorrowTokens : false | [] ;
 
 
 
@@ -205,7 +205,7 @@ async function checkTokenExsitOrNot(publicKey:PublicKey) {
   if(ret.length>0)
     {
       console.log("✈ Final stake tokens :: ",ret)
-      userStakeTokens = JSON.parse(
+      userBorrowTokens = JSON.parse(
         JSON.stringify(ret)
       );
     }
@@ -226,7 +226,7 @@ export {
     userTokens,
     userTokenInit,
     getTokenBalance,
-    userStakeTokens,
+    userBorrowTokens,
     userSolStakeFetch,
     userTokenBorrowFetch
 }

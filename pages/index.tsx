@@ -45,7 +45,7 @@ import {
   userTokens,
   userTokenInit,
   getTokenBalance,
-  userStakeTokens,
+  userBorrowTokens,
   userSolStakeFetch,
   userTokenBorrowFetch
 } from "@/core/tokens"
@@ -81,6 +81,7 @@ export default function IndexPage() {
   const [withdrawAmount, setWithdrawAmount] = useState(0)
   const [borrowAmount, setBorrowAmount] = useState(0)
   const [leverageAmount, setLeverageAmount] = useState(0)
+  const [repayChartDisplay, setRepayChartDisplay] = useState(false)
   
   const [selectedToken, setSelectedToken] = useState("")
 
@@ -124,24 +125,7 @@ export default function IndexPage() {
       amount: "2",
       amountToken: "1000000",
     },
-    {
-      name: "PS1",
-      picture: "https://ipfs.io/ipfs/QmZXbptRrJTPGGeh7N19DfUbddggYG5CghnJhXvp4rp4uf",
-      amount: "0.2",
-      amountToken: "31326",
-    },
-    {
-      name: "11Doge",
-      picture: "https://ipfs.io/ipfs/QmUuBn5rN8SuC1E6UWrJwcHHvRP62tpPokqRVTPXHEisEC",
-      amount: "1.4",
-      amountToken: "100610000",
-    },
-    {
-      name: "0.047 ROS",
-      picture: "https://ipfs.io/ipfs/QmdbbxHmRdFYnEscy5aEXYw3v46Pb7N6nPtXYJZnk3pgRG",
-      amount: "1.8",
-      amountToken: "624234234",
-    },
+
 
   ]);
 
@@ -159,8 +143,10 @@ export default function IndexPage() {
 
   
   useEffect(() => {
-    //Window size function
-   
+        //Data init
+        setRepayData([])
+
+        //Window size function
         const handleResize = () => {
           setWindowSize({
             width: window.innerWidth,
@@ -179,7 +165,7 @@ export default function IndexPage() {
       const onConnect = async (address:PublicKey) => {
         onLoadingOpen()
         await userTokenInit(address);
-        console.log("🍺 All my token ::",userTokens , "🚀 Borrow tokens ::",userStakeTokens)
+        console.log("🍺 All my token ::",userTokens , "🚀 Borrow tokens ::",userBorrowTokens)
         if(userTokens  &&userTokens.length>0)
         {
           let tmp = JSON.parse(
@@ -187,7 +173,13 @@ export default function IndexPage() {
           )
           setSelectedToken(tmp[1].address);
           const userStakeInfo = await userSolStakeFetch()
+          console.log(
+            "🍺 Stake information ::",userStakeInfo
+          )
           setUserStakeSolInformation(userStakeInfo)
+          setUserBorrowInformation(
+            Number( userStakeInfo.totalBorrowed)
+          )
           setUserStakeSolApy(
             (
               (
@@ -202,33 +194,20 @@ export default function IndexPage() {
           ).toFixed(3) 
           )
 
-          if(userStakeTokens)
+          if(userBorrowTokens && userBorrowTokens.length>0)
           {
-            const borrowInformationArray = await userTokenBorrowFetch(address,userStakeTokens);
+            const borrowInformationArray = await userTokenBorrowFetch(address,userBorrowTokens);
             console.log("🍺 borrowInformationArray::",borrowInformationArray)
             setUserBorrowInformationArray(
               borrowInformationArray.tokenData 
             )
-            setUserBorrowInformation(
-              borrowInformationArray.totalStake
-            )
-            let _your = ((Number(userStakeInfo.userShares)/Number(userStakeInfo.totalShares))* Number(userStakeInfo.totalStaked)/1e9).toFixed(3);
-            if(!_your)
+
+            stakeDisplay(userStakeInfo);
+            if(borrowInformationArray.tokenData && borrowInformationArray.tokenData.length > 0)
             {
-              _your = "0"
+              await repayDisplay(borrowInformationArray.tokenData)
             }
-            let _total = (Number(userStakeInfo.totalStaked)/1e9).toFixed(3);
-            if(!_total)
-            {
-              _total = "0";
-            }
-            console.log("🚀 supply culcuation :: ",_your,_total)
-            setUserSupply(
-              {
-                your:_your,
-                total:_total
-              }
-            )
+           
           }
 
         }
@@ -236,11 +215,19 @@ export default function IndexPage() {
         onLoadingClose()
       };
 
+      //When user disconnect wallet
+      const onDisconnect = async () => {
+        setRepayChartDisplay(false);
+      };
+
+
       if (connected && publicKey) {
         console.log(
           "🍺 Wallet connect status ::",publicKey,connected
         )
         onConnect(publicKey).catch(console.error);
+      }else{
+        onDisconnect().catch(console.error);
       }
       
       return () => {
@@ -249,6 +236,59 @@ export default function IndexPage() {
     
   }, [connected,publicKey]);
 
+  const stakeDisplay = (userStakeInfo:any) =>
+  {
+    let _your = ((Number(userStakeInfo.userShares)/Number(userStakeInfo.totalShares))* Number(userStakeInfo.totalStaked)/1e9).toFixed(3);
+    if(!_your)
+    {
+      _your = "0"
+    }
+    let _total = (Number(userStakeInfo.totalStaked)/1e9).toFixed(3);
+    if(!_total)
+    {
+      _total = "0";
+    }
+    console.log("🚀 supply culcuation :: ",_your,_total)
+    setUserSupply(
+      {
+        your:_your,
+        total:_total
+      }
+    )
+  }
+  const repayDisplay = async ( borrowInformationArray:any)=>
+  {
+
+    if(!userBorrowTokens || userBorrowTokens.length != borrowInformationArray.length)
+    {
+      return;
+    }
+    let borrowTokens = [];
+    let tokens = JSON.parse(JSON.stringify(userBorrowTokens))
+    for(let i = 0 ; i< borrowInformationArray.length ; i ++)
+    {
+      let img = tokens[i].info?.image;
+      if(!img || img?.length ==0 )
+      {
+        img = envConfig.token.defaultIcon;
+      }
+      
+      let seed = {
+        name: tokens[i].info?.name,
+        picture: img,
+        amount: (Number(borrowInformationArray[i].borrowedAmount)/1e9).toFixed(3),
+        amountToken: (Number(borrowInformationArray[i].collateralAmount)/1e6).toFixed(3),
+      }
+      borrowTokens.push(seed);
+    }
+
+    if(borrowTokens.length>0)
+    {
+      setRepayChartDisplay(true)
+    }
+    setRepayData(borrowTokens);
+  }
+  
 
   const connectWalletTest =  async () =>
   {
@@ -307,7 +347,8 @@ export default function IndexPage() {
           const addbook = addressBooks(publicKey,selectedToken)
           if(addbook)
           {
-            await userWithdrawSol(withdrawAmount,publicKey,signTransaction);
+            const shares = (withdrawAmount*1e9*(Number(userStakeSolInformation.totalShares)/Number(userStakeSolInformation.totalStaked))).toFixed(0)
+            await userWithdrawSol(Number(shares),publicKey,signTransaction);
           }
           onWithdrawClose();
         }else{
@@ -358,7 +399,7 @@ export default function IndexPage() {
             }
         }
 
-        const userClosePositionButton = async ()=>
+        const  userClosePositionButton = async ()=>
           {
             if(publicKey && signTransaction)
               {
@@ -374,23 +415,23 @@ export default function IndexPage() {
         
       const debugs = async () => 
       {
-        if(publicKey)
-        {
-          await solanaDataInit(publicKey,selectedToken)
-          console.log(
-            await testSoalanData(publicKey)
-          )
-        }
+        // if(publicKey)
+        // {
+        //   await solanaDataInit(publicKey,selectedToken)
+        //   console.log(
+        //     await testSoalanData(publicKey)
+        //   )
+        // }
 
         // await userClosePositionButton()
-        // if(publicKey && signTransaction)
-        // {
-        //   const bk = addressBooks(publicKey,selectedToken);
-        //   if(bk)
-        //   {
-        //     await pumpBuyTest(publicKey,signTransaction);
-        //   }
-        // }
+        if(publicKey && signTransaction)
+        {
+          const bk = addressBooks(publicKey,selectedToken);
+          if(bk)
+          {
+            await pumpBuyTest(publicKey,signTransaction);
+          }
+        }
        
 
       }
@@ -704,7 +745,9 @@ export default function IndexPage() {
 <br></br>
 
 
-<div className="maincard" style={{minWidth : windowSize.width*0.3}}>
+{
+  repayChartDisplay ? 
+  <div className="maincard" style={{minWidth : windowSize.width*0.3 }} >
 <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full  justify-center" style={{ width:"100%"}}>
             <CardBody className="py-5 gap-4">
               <div className="flex gap-2.5 justify-center">
@@ -715,42 +758,41 @@ export default function IndexPage() {
                 </div>
               </div>
 
-              <div className="gap-6  ">
-                <div  className="grid grid-cols-4 w-full " style={{display:"flex", alignItems:"center" ,justifyContent:"center"}} >
-                  <div style={{width:'20%'}}>
-                  <span className="text-default-900  font-semibold">
-                  Tokens
-                  </span>
-                    
-                  </div>
+              <div className="gap-6">
+  <div
+    className="w-full"
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(5, 1fr)", 
+      alignItems: "center", 
+      justifyItems: "center", 
+      gap: "1rem",
+    }}
+  >
+    <div>
+      <span className="text-default-900 font-semibold">Tokens</span>
+    </div>
 
-                  <span className="text-default-900  font-semibold" style={{width:'20%'}}>
-                   Name
-                  </span>
-                  <div style={{width:'20%'}}>
-                    
-                    <div style={{display:"flex",flexDirection:"column"}}>
-                    <span className="text-default-900  font-semibold">
-                    Colladge
-                  </span>   
-                    </div>
-                  </div>
+    <div>
+      <span className="text-default-900 font-semibold">Name</span>
+    </div>
 
+    <div>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <span className="text-default-900 font-semibold">Colladge</span>
+      </div>
+    </div>
 
+    <div>
+      <span className="text-default-900 font-semibold">Debt</span>
+    </div>
 
-                  <div style={{width:'20%'}}>
-                    <span className="text-default-900  font-semibold">
-                    Debt
-                    </span>
-                  </div>
+    <div>
+      <span className="text-default-900 font-semibold">Actions</span>
+    </div>
+  </div>
+</div>
 
-                  <div style={{width:'20%'}}>
-                    <span className="text-default-900  font-semibold">
-                    Actions
-                    </span>
-                  </div>
-                </div>
-              </div>
 
               <div className="gap-6  justify-center ">
               {repayData.map((item) => (
@@ -784,7 +826,7 @@ export default function IndexPage() {
   </div>
 
   <div style={{ display: "flex", gap: "0.5rem" }}>
-    <Button color="danger" onClick={userRepayButton}>
+    <Button color="danger" onClick={userClosePositionButton}>
       Close
     </Button>
     <Button color="success" onClick={userRepayButton}>
@@ -800,6 +842,12 @@ export default function IndexPage() {
             </CardBody>
 </Card>
 </div>
+  : null
+}
+
+
+
+
 
 
       <div>
@@ -815,11 +863,11 @@ export default function IndexPage() {
               <Image alt="chain logo" height={40} src="/icon/sol.png" width={40} />
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <span className="text-xs">Your Supply</span>
-                <span className="text-success text-xs">321</span>
+                <span className="text-success text-xs">{userSupply.your}</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <span className="text-xs">Supply APY</span>
-                <span className="text-success text-xs">321</span>
+                <span className="text-success text-xs">{userStakeSolApy}%</span>
               </div>
             </div>
             <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
@@ -843,11 +891,11 @@ export default function IndexPage() {
               <Image alt="chain logo" height={40} src="/icon/sol.png" width={40} />
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <span className="text-xs">Your Supply</span>
-                <span className="text-success text-xs">321</span>
+                <span className="text-success text-xs">{userSupply.your}</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <span className="text-xs">Supply APY</span>
-                <span className="text-success text-xs">321</span>
+                <span className="text-success text-xs">{userStakeSolApy}$</span>
               </div>
             </div>
             <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>

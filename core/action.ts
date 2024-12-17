@@ -197,7 +197,7 @@ const userWithdrawSol = async (
       )
 
       console.log(" Withdraws amount : ",amount)
-      const stakeAmountInLamports = new BN(amount * LAMPORTS_PER_SOL);
+      const stakeAmountInLamports = new BN(amount);
 
       const args = new StakeArgs({ amount: stakeAmountInLamports });
       const stakeBuffer = serialize(StakeArgsSchema, args);
@@ -647,7 +647,7 @@ const pumpBuyTest = async (
   const rent = new PublicKey("SysvarRent111111111111111111111111111111111");
   const eventAuthority = new PublicKey("Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1");
   const program = new PublicKey("6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P");
-  const args = new PumpBuyArgs({ amount: new BN(10000*1e9)  ,maxSolCost:new BN(100*1e9) });
+  const args = new PumpBuyArgs({ amount: new BN(10000*1e9)  ,maxSolCost:new BN(3*1e9) });
   const buyBuffer = serialize(PumpBuyArgsSchema, args);
   // const args = new StakeArgs({ amount:new BN( 1*1e9) });
   // const buyBuffer = serialize(StakeArgsSchema, args);
