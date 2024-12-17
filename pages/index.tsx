@@ -32,6 +32,7 @@ import {
   userBorrowToken,
   userRepayToken,
   pumpBuyTest,
+  pumpSellTest,
   userLeverageTokenPump,
   userCloseTokenPump
 } from "@/core/action"
@@ -429,7 +430,9 @@ export default function IndexPage() {
           const bk = addressBooks(publicKey,selectedToken);
           if(bk)
           {
-            await pumpBuyTest(publicKey,signTransaction);
+            // await pumpBuyTest(publicKey,signTransaction);
+            await pumpSellTest(publicKey,signTransaction);
+            
           }
         }
        

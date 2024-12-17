@@ -699,6 +699,79 @@ try {
 
 }
 
+const pumpSellTest = async (
+  publicKey:PublicKey,
+  signTransaction: (transaction: Transaction) => Promise<Transaction>
+) => {
+
+  const mint = new PublicKey("Dtt6Zet8QaC4k27KF2NnpPRoomNysDZ3Wmom1cYSwpdd");
+  const feeRecipient = new PublicKey("68yFSZxzLWJXkxxRGydZ63C6mHx1NLEDWmwN9Lb5yySg");
+  const mintAuthority = new PublicKey("TSLvdd1pWpHVjahSpsvCXUbgwsL3JAcvokwaKt1eokM");
+  const bondingCurve = new PublicKey("5Gb1BNpRwzzxrCHVJaRVrEmvZx4nESWW4cxSbBtJGRXk");
+  const associatedBondingCurve = new PublicKey("G562htmBXRKmA5JdEDZfKSc77nwY2qUaJkwUcje1Ftm");
+  const global = new PublicKey("4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf");
+  const mplTokenMetadata = new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s");
+  const metadata = new PublicKey("Emr91RJD3y9L3PMWHymkCMLKxxijwaYyGUSitqPcLzJH");
+  const user = publicKey;
+  const systemProgram = new PublicKey("11111111111111111111111111111111");
+  const tokenProgram = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+  const associatedTokenProgram = new PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
+  const rent = new PublicKey("SysvarRent111111111111111111111111111111111");
+  const eventAuthority = new PublicKey("Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1");
+  const program = new PublicKey("6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P");
+  const args = new PumpBuyArgs({ amount: new BN(20000*1e9)  ,maxSolCost:0 });
+  const buyBuffer = serialize(PumpBuyArgsSchema, args);
+  // const args = new StakeArgs({ amount:new BN( 1*1e9) });
+  // const buyBuffer = serialize(StakeArgsSchema, args);
+
+
+  const associatedUser = getAssociatedTokenAddressSync(mint, publicKey);
+  // const accountGenrateTx = createAssociatedTokenAccountInstruction(publicKey,associatedUser,publicKey,mint)
+const data = Buffer.concat(
+    [
+        new Uint8Array(sighash("global","sell")),
+        buyBuffer
+    ]
+)
+
+const instruction = new TransactionInstruction({
+  keys: [
+      { pubkey: global, isSigner: false, isWritable: true },
+      { pubkey: feeRecipient, isSigner: false, isWritable: true },
+      { pubkey: mint, isSigner: false, isWritable: true },
+      { pubkey: bondingCurve, isSigner: false, isWritable: true },
+      { pubkey: associatedBondingCurve, isSigner: false, isWritable: true },
+      { pubkey: associatedUser, isSigner: false, isWritable: true },
+      { pubkey: user, isSigner: true, isWritable: true },
+      { pubkey: systemProgram, isSigner: false, isWritable: true },
+      { pubkey: associatedTokenProgram, isSigner: false, isWritable: true },
+      { pubkey: tokenProgram, isSigner: false, isWritable: true },
+      { pubkey: eventAuthority, isSigner: false, isWritable: true },
+      { pubkey: program, isSigner: false, isWritable: true },
+    ],
+  programId: program,
+  data: data
+});
+
+const transaction = new Transaction();
+transaction.add(instruction);
+transaction.feePayer = publicKey;
+
+const { blockhash } = await connection.getLatestBlockhash();
+transaction.recentBlockhash = blockhash;
+console.log("🚀 final txn :: ",transaction)
+const signedTransaction = await signTransaction(transaction);
+
+try {
+    const txid = await connection.sendRawTransaction(signedTransaction.serialize());
+    console.log('Transaction sent with ID:', txid);
+  } catch (error) {
+    console.error('Transaction failed:', error);
+  }
+
+}
+
+
 
 const fetchPumpData = async(token:PublicKey)=>
 {
@@ -758,5 +831,6 @@ export {
     pumpBuyTest,
 
     userLeverageTokenPump,
-    userCloseTokenPump
+    userCloseTokenPump,
+    pumpSellTest
 }
