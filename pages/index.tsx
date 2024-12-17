@@ -876,7 +876,7 @@ export default function IndexPage() {
               </div>
             </div>
             <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-              <Input onChange={(e:any) => { setStakeAmount(e.currentTarget.value); }} key="payinput" description="Withdraw anytime" label="Sol" labelPlacement="inside" placeholder="Enter sol amount to deposit" />
+              <Input onChange={(e:any) => { setStakeAmount(e.currentTarget.value); }} key="payinput" description={"BAL : "+Number((userWalletBlance)/1e9).toFixed(3)+" SOL"}  label="Sol" labelPlacement="inside" placeholder="Enter sol amount to deposit" />
             </div>
           </ModalBody>
           <ModalFooter>
@@ -900,11 +900,11 @@ export default function IndexPage() {
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <span className="text-xs">Supply APY</span>
-                <span className="text-success text-xs">{userStakeSolApy}$</span>
+                <span className="text-success text-xs">{userStakeSolApy}%</span>
               </div>
             </div>
             <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-              <Input onChange={(e:any) => { setWithdrawAmount(e.currentTarget.value); }} key="payinput" description="Including all rewards" label="Sol" labelPlacement="inside" placeholder="Enter sol amount to withdraw" />
+              <Input onChange={(e:any) => { setWithdrawAmount(e.currentTarget.value); }} key="payinput" description={"Withdrable : "+userSupply.your +" SOL"} label="Sol" labelPlacement="inside" placeholder="Enter sol amount to withdraw" />
             </div>
           </ModalBody>
           <ModalFooter>
