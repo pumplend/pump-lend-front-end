@@ -221,6 +221,10 @@ const getTokenBalance = async (tokenAddress:PublicKey, walletAddress: PublicKey)
         return null;
       }
     }
+const getAddressBalance = async (address : PublicKey) =>
+{
+  return await connection.getBalance(address);
+}
     
 export {
     userTokens,
@@ -228,5 +232,6 @@ export {
     getTokenBalance,
     userBorrowTokens,
     userSolStakeFetch,
-    userTokenBorrowFetch
+    userTokenBorrowFetch,
+    getAddressBalance
 }

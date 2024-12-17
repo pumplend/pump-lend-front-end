@@ -48,7 +48,8 @@ import {
   getTokenBalance,
   userBorrowTokens,
   userSolStakeFetch,
-  userTokenBorrowFetch
+  userTokenBorrowFetch,
+  getAddressBalance
 } from "@/core/tokens"
 
 import {
@@ -126,8 +127,6 @@ export default function IndexPage() {
       amount: "2",
       amountToken: "1000000",
     },
-
-
   ]);
 
   const [windowSize, setWindowSize] = useState({
@@ -142,7 +141,9 @@ export default function IndexPage() {
   const { isOpen: isWithdrawOpen, onOpen: onWithdrawOpen, onClose: onWithdrawClose } = useDisclosure();
   const { isOpen: isLoadingOpen, onOpen: onLoadingOpen, onClose: onLoadingClose } = useDisclosure();
 
-  
+  const [userWalletBlance , setUserWalletBlance] = useState(
+    0
+  )
   useEffect(() => {
         //Data init
         setRepayData([])
@@ -166,6 +167,7 @@ export default function IndexPage() {
       const onConnect = async (address:PublicKey) => {
         onLoadingOpen()
         await userTokenInit(address);
+        setUserWalletBlance(await getAddressBalance(address));
         console.log("🍺 All my token ::",userTokens , "🚀 Borrow tokens ::",userBorrowTokens)
         if(userTokens  &&userTokens.length>0)
         {
