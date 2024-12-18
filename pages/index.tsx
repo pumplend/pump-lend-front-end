@@ -617,7 +617,7 @@ export default function IndexPage() {
         </p>
       </div>
       <div className="card_body flex justify-between items-center text-white" >
-        <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-green-500/50 hover:bg-black" style={{minWidth:"25%"}}
+        <button className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-green-500/50 hover:bg-black" style={{minWidth:"25%"}}
         onClick={onTokenSelectOpen}
         >
           <Avatar
@@ -628,7 +628,7 @@ export default function IndexPage() {
           />
           <span className="text-medium ">{selectedTokenInfo.info.symbol}</span>
           <RiArrowDropDownLine size={24} />
-        </div>
+        </button>
 
 
         <input
@@ -706,7 +706,7 @@ export default function IndexPage() {
 
 <div style={{display:"flex-wrap"}}>
 
-<iframe src="https://www.gmgn.cc/kline/sol/CHUxbA8Y674koHfBERgoir2UQxwLTpW11C7LUgoYpump" width={kWindowsSize + "px"} height={windowSize.height*0.4}></iframe>
+<iframe title="kline" src="https://www.gmgn.cc/kline/sol/CHUxbA8Y674koHfBERgoir2UQxwLTpW11C7LUgoYpump" width={kWindowsSize + "px"} height={windowSize.height*0.4}></iframe>
 <div>
 &nbsp;
 &nbsp;
@@ -764,7 +764,7 @@ export default function IndexPage() {
 
       </div>
       <div className="card_body flex justify-between items-center text-white" >
-        <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-green-500/50 hover:bg-black" style={{minWidth:"25%"}}
+        <button className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-green-500/50 hover:bg-black" style={{minWidth:"25%"}}
         onClick={onTokenSelectOpen}
         >
           <Avatar
@@ -775,7 +775,7 @@ export default function IndexPage() {
           />
           <span className="text-medium ">{selectedTokenInfo.info.symbol}</span>
           <RiArrowDropDownLine size={24} />
-        </div>
+        </button>
 
 
         <p className=" text-2xl">3915.5243788572</p>
