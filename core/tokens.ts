@@ -76,15 +76,16 @@ const userSolStakeFetch = async() =>
   }
   if(pool)
   {
-    ret.totalStaked = pool.totalStaked;
-    ret.totalShares = pool.totalShares;
-    ret.totalBorrowed = pool.totalBorrowed;
-    ret.pendingVaultProfit = pool.pendingVaultProfit;
+   
+    ret.totalStaked = new BN(pool.totalStaked.toString())
+    ret.totalShares = new BN(pool.totalShares.toString());
+    ret.totalBorrowed = new BN(pool.totalBorrowed.toString());
+    ret.pendingVaultProfit = new BN(pool.pendingVaultProfit.toString());
   }
 
   if(user)
   {
-    ret.userShares = user.shares
+    ret.userShares = new BN(user.shares.toString())
   }
   return ret;
 }

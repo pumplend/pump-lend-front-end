@@ -12,13 +12,12 @@ import DefaultLayout from "@/layouts/default";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { useState, useEffect } from "react";
 
-import {Input,Avatar,Spinner ,DropdownItem,DropdownMenu,DropdownTrigger,Dropdown,Tooltip} from "@nextui-org/react"
+import {Input,Avatar,Spinner ,DropdownItem,DropdownMenu,DropdownTrigger,Dropdown,Tooltip , Tabs, Tab} from "@nextui-org/react"
 
 
 import { Image } from "@nextui-org/image";
 import { IoIosArrowForward } from "react-icons/io";
 import { TbTransferVertical } from "react-icons/tb";
-import { Tabs, Tab } from "@nextui-org/tabs";
 import { Display } from "next/dist/compiled/@next/font";
 
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -117,11 +116,11 @@ export default function IndexPage() {
 
   const [userStakeSolInformation, setUserStakeSolInformation] = useState(
     {
-      totalStaked:BN,
-      totalShares:BN,
-      totalBorrowed:BN,
-      pendingVaultProfit:BN,
-      userShares:BN,
+      totalStaked:new BN(0),
+      totalShares:new BN(0),
+      totalBorrowed:new BN(0),
+      pendingVaultProfit:new BN(0),
+      userShares:new BN(0),
     }
   )
 
