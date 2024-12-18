@@ -1,3 +1,4 @@
+'use client';
 import type { AppProps } from "next/app";
 
 import { NextUIProvider } from "@nextui-org/system";
