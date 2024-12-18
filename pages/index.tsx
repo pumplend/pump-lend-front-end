@@ -99,6 +99,20 @@ export default function IndexPage() {
   const [repayChartDisplay, setRepayChartDisplay] = useState(false)
   
   const [selectedToken, setSelectedToken] = useState("")
+  const [selectedTokenInfo, setSelectedTokenInfo] = useState(
+    {
+      "address": "",
+      "balance": 1000000,
+      "associated_account": "",
+      "info": {
+          "decimals": 9,
+          "name": "PUMP Coin",
+          "symbol": "PUMP",
+          "image": "",
+          "metadata_uri": ""
+      }
+  }
+  )
 
   const [userStakeSolInformation, setUserStakeSolInformation] = useState(
     {
@@ -169,8 +183,8 @@ export default function IndexPage() {
             width: window.innerWidth,
             height: window.innerHeight
           });
-          setKWindowsSize(window.innerWidth*0.3);
-          if(window.innerWidth*0.3<400)
+          setKWindowsSize(window.innerWidth*0.33);
+          if(window.innerWidth*0.33<300)
           {
             setKWindowsSize(window.innerWidth*0.8)
           }
@@ -189,6 +203,7 @@ export default function IndexPage() {
           let tmp = JSON.parse(
             JSON.stringify(userTokens)
           )
+          setSelectedTokenInfo(tmp[1])
           setSelectedToken(tmp[1].address);
           const userStakeInfo = await userSolStakeFetch()
           console.log(
@@ -464,7 +479,8 @@ export default function IndexPage() {
         <div className="inline-block max-w-xl text-center justify-center">
           <span className={title()}>Deposite&nbsp;</span>
           <span className={title({ color: "green" })+" github"}>Memecoin&nbsp;</span>
-          <Button onClick={debugs}> Debug</Button>
+
+          {/* <Button onClick={debugs}> Debug</Button> */}
           {/* <span className={title({ color: "green" })}>Memecoin&nbsp;</span> */}
           {/* <br />
           <span className={title()}>
@@ -473,22 +489,6 @@ export default function IndexPage() {
         </div>
       <br></br>
       
-      <div className="maincard" style={{minWidth : windowSize.width*0.32}}>
-      <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full" style={{ width:"100%" }}>
-      <CardBody className="py-5 gap-4">
-        <div className="flex gap-2.5 justify-center">
-          <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
-            <span className="text-default-900 text-xl font-semibold">
-              Test Card
-            </span>
-          </div>
-        </div>
-
-
-      </CardBody>
-    </Card>
-      </div>
-
 
       <div className="maincard">
       <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full" style={{ width:"100%" }}>
@@ -598,12 +598,16 @@ export default function IndexPage() {
         </p>
       </div>
       <div className="card_body flex justify-between items-center text-white" >
-        <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-green-500/50 hover:bg-black" style={{width:"30%"}}>
+        <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-green-500/50 hover:bg-black" style={{minWidth:"25%"}}
+        onClick={onTokenSelectOpen}
+        >
           <Avatar
             className="w-6 h-6 "
-            src="https://pump.fun/logo.png"
+            src={
+              selectedTokenInfo.info.image ? selectedTokenInfo.info.image : "https://pump.fun/logo.png"
+            }
           />
-          <span className="text-medium ">PUMP</span>
+          <span className="text-medium ">{selectedTokenInfo.info.symbol}</span>
           <RiArrowDropDownLine size={24} />
         </div>
 
@@ -621,7 +625,7 @@ export default function IndexPage() {
         </input>
       </div>
       <div className="card_foot flex justify-between  text-xs">
-        <p>PUMP COIN</p>
+        <p>{selectedTokenInfo.info.name}</p>
       </div>
           <div className="trans-icon rounded-full h-6 w-full flex justify-center">
             <div className="w-6 h-6 flex justify-center bg-white items-center rounded-full shadow-md">
@@ -632,7 +636,7 @@ export default function IndexPage() {
         <p>Borrow</p>
       </div>
       <div className="card_body flex justify-between items-center text-white" >
-        <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-blue-500/50 hover:bg-black" style={{width:"30%"}}>
+        <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-blue-500/50 hover:bg-black" style={{minWidth:"25%"}}>
           <Avatar
             className="w-6 h-6"
             src="/icon/sol.png"
@@ -689,82 +693,94 @@ export default function IndexPage() {
 &nbsp;
 &nbsp;
 </div>
+
 <div className="flex flex-col gap-6 w-full">
-  <div style={{width:"100%"}}>
-  </div>
-        <div style={{width:"100%"}}>
+    <div className="flex flex-col justify-center gap-1 relative">
 
-
-        <div className="flex justify-between items-center text-gray-500">
-          <p className="text-sm">USE COLLATERAL</p>
-          {/* <p>Borrow</p> */}
-        </div>
-        <div className="flex justify-between items-center text-white" >
-          <div className="flex items-center space-x-2" style={{width:"100%"}}>
-            <Image
-              alt="chain logo"
-              height={40}
-              src="https://pump.fun/logo.png"
-              width={40}
-            />
-            <div className="font-semibold" >
-              <p>Pump</p>
-              <div style={{textSizeAdjust:"auto"}} >
-               <p style={{background:"grey"}}> 50% </p> &nbsp;
-               <p style={{background:"grey"}}> MAX </p>
-              </div>
-              
-            </div>
-          </div>
-
-          {/* <IoIosArrowForward className="text-gray-500" /> */}
-          {/* <p>0</p> */}
-          <Input 
-          onChange={
-            (e:any) => { setLeverageAmount(e.currentTarget.value); }
-          } 
-          key="payinput" 
-          // description="Withdraws anytime" 
-          // label="amount" labelPlacement="inside" 
-          placeholder="0"
+      <div className="card_head flex justify-between">
+        <p>Borrow</p>
+      </div>
+      <p className=" text-xs">
+          <span>Balance: 0   </span>
+          <button className="bg-green-500/50">MAX</button>
+        </p>
+      <div className="card_body flex justify-between items-center text-white" >
+        <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-blue-500/50 hover:bg-black" style={{minWidth:"25%"}}>
+          <Avatar
+            className="w-6 h-6"
+            src="/icon/sol.png"
           />
+          <span className="text-medium ">SOL</span>
+          
         </div>
 
-          <br></br>
-        <div className="flex justify-between items-center text-gray-500">
-          <p className="text-sm">TO Borrow</p>
-          {/* <p>Receive</p> */}
-        </div>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <Image
-              alt="chain logo"
-              height={40}
-              src="/icon/sol.png"
-              width={40}
-            />
-            <div className="font-semibold text-white">
-              <p>SOL</p>
-              <p>0</p>
+        <input
+        className=" text-2xl "
+        style={{width:"30%"}}
+        placeholder={"3915.5243788572"}
+        onChange={
+          (e:any) => { setLeverageAmount(e.currentTarget.value); }
+        } 
+        key="payinput" 
+        > 
+        </input>
+        
+      </div>
+      <div className="card_foot flex justify-between">
+        <p>
+
+        </p>
+        <p>
+          <span>$15 346 144 </span>
+        </p>
+      </div>
+      <div className="trans-icon rounded-full h-6 w-full flex justify-center">
+            <div className="w-6 h-6 flex justify-center bg-white items-center rounded-full shadow-md">
+              <FaArrowDown color="blue" />
             </div>
+      </div>
+
+      <div className="card_head flex justify-between">
+        <p>Dposite</p>
+
+      </div>
+      <div className="card_body flex justify-between items-center text-white" >
+        <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-green-500/50 hover:bg-black" style={{minWidth:"25%"}}
+        onClick={onTokenSelectOpen}
+        >
+          <Avatar
+            className="w-6 h-6 "
+            src={
+              selectedTokenInfo.info.image ? selectedTokenInfo.info.image : "https://pump.fun/logo.png"
+            }
+          />
+          <span className="text-medium ">{selectedTokenInfo.info.symbol}</span>
+          <RiArrowDropDownLine size={24} />
+        </div>
+
+
+        <p className=" text-2xl">3915.5243788572</p>
+      </div>
+      <div className="card_foot flex justify-between  text-xs">
+        <p>{selectedTokenInfo.info.name}</p>
+        <p>
+          <span>$15 346 144 </span>
+        </p>
+      </div>
+
+
+
+          <div className="text-center text-gray-500 text-xs">
+          Borrow APH : 0.0416 %
           </div>
-
-          {/* <IoIosArrowForward className="text-gray-500" /> */}
-          <p className="text-gray-500">0</p>
-        </div>
-
-
-
-        <div className="text-center text-gray-500 text-xs">
-          Network fee: 0.0025 SOL
-        </div>
-        <div className="bottom-14 right-0 w-full p-4">
-        <Button className="w-full colorfulbuttons" color="success" onClick={userLeverageButton}>
+          <div className="bottom-14 right-0 w-full p-4">
+          <Button className="w-full colorfulbuttons" color="success" onClick={userLeverageButton}>
           Buy
         </Button>
+          </div>
         </div>
-        </div>
-    </div>
+        
+      </div>
 
 </div>
 
@@ -1029,7 +1045,7 @@ export default function IndexPage() {
 
         {[1, 2, 3].map((item) => (
 
-                  <div className="gap-6  justify-center w-full">
+                  <div className="gap-6  justify-center w-full" key={item}>
                               <br>
                               </br>
                   <div
