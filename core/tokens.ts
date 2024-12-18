@@ -68,24 +68,24 @@ const userSolStakeFetch = async() =>
   const pool = await fetchPoolStakingData(poolStakingData);
   const user = await fetchUserStakingData(userStakingData);
   let ret = {
-    totalStaked:new BN(0),
-    totalShares:new BN(0),
-    totalBorrowed:new BN(0),
-    pendingVaultProfit:new BN(0),
-    userShares:new BN(0),
+    totalStaked:BigInt(0),
+    totalShares:BigInt(0),
+    totalBorrowed:BigInt(0),
+    pendingVaultProfit:BigInt(0),
+    userShares:BigInt(0),
   }
   if(pool)
   {
    
-    ret.totalStaked = new BN(pool.totalStaked.toString())
-    ret.totalShares = new BN(pool.totalShares.toString());
-    ret.totalBorrowed = new BN(pool.totalBorrowed.toString());
-    ret.pendingVaultProfit = new BN(pool.pendingVaultProfit.toString());
+    ret.totalStaked = pool.totalStaked
+    ret.totalShares = pool.totalShares;
+    ret.totalBorrowed = pool.totalBorrowed;
+    ret.pendingVaultProfit = pool.pendingVaultProfit;
   }
 
   if(user)
   {
-    ret.userShares = new BN(user.shares.toString())
+    ret.userShares = user.shares
   }
   return ret;
 }

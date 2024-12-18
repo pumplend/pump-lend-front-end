@@ -116,11 +116,11 @@ export default function IndexPage() {
 
   const [userStakeSolInformation, setUserStakeSolInformation] = useState(
     {
-      totalStaked:new BN(0),
-      totalShares:new BN(0),
-      totalBorrowed:new BN(0),
-      pendingVaultProfit:new BN(0),
-      userShares:new BN(0),
+      totalStaked:BigInt(0),
+      totalShares:BigInt(0),
+      totalBorrowed:BigInt(0),
+      pendingVaultProfit:BigInt(0),
+      userShares:BigInt(0),
     }
   )
 
@@ -140,10 +140,10 @@ export default function IndexPage() {
   )
   const [userBorrowInformationArray, setUserBorrowInformationArray] = useState([
     {
-      token: PublicKey,
-      borrowedAmount : BN,
-      collateralAmount : BN,
-      lastUpdated : BN
+      token: new PublicKey(0),
+      borrowedAmount : BigInt(0),
+      collateralAmount :  BigInt(0),
+      lastUpdated :  BigInt(0),
     }
   ])
 
@@ -205,6 +205,7 @@ export default function IndexPage() {
           )
           setSelectedTokenInfo(tmp[1])
           setSelectedToken(tmp[1].address);
+          console.log("🍺 Selected token :: ",tmp[1])
           const userStakeInfo = await userSolStakeFetch()
           console.log(
             "🍺 Stake information ::",userStakeInfo
@@ -226,7 +227,7 @@ export default function IndexPage() {
           )*100
           ).toFixed(3) 
           )
-
+          stakeDisplay(userStakeInfo);
           if(userBorrowTokens && userBorrowTokens.length>0)
           {
             const borrowInformationArray = await userTokenBorrowFetch(address,userBorrowTokens);
@@ -235,7 +236,7 @@ export default function IndexPage() {
               borrowInformationArray.tokenData 
             )
 
-            stakeDisplay(userStakeInfo);
+            
             if(borrowInformationArray.tokenData && borrowInformationArray.tokenData.length > 0)
             {
               await repayDisplay(borrowInformationArray.tokenData)
@@ -254,6 +255,29 @@ export default function IndexPage() {
       };
 
 
+
+      
+      const onLoad = async ()=>
+      {
+
+            console.log("🍺 wallet not connect init :: ")
+            const userStakeInfo = await userSolStakeFetch()
+            setUserStakeSolApy(
+              (
+                (
+                  (
+                    (
+                      Number(userStakeInfo.totalStaked)/Number(userStakeInfo.totalShares))-1
+                    )/
+              (
+                (Date.now()/1000 - 1733369330)/(365*24*3600)
+              )
+            )*100
+            ).toFixed(3) 
+            )
+
+      }
+
       if (connected && publicKey) {
         console.log(
           "🍺 Wallet connect status ::",publicKey,connected
@@ -261,26 +285,10 @@ export default function IndexPage() {
         onConnect(publicKey).catch(console.error);
       }else{
         onDisconnect().catch(console.error);
+        // onLoad()
       }
+
       
-      const onLoad = async ()=>
-      {
-        const userStakeInfo = await userSolStakeFetch()
-        setUserStakeSolApy(
-          (
-            (
-              (
-                (
-                  Number(userStakeInfo.totalStaked)/Number(userStakeInfo.totalShares))-1
-                )/
-          (
-            (Date.now()/1000 - 1733369330)/(365*24*3600)
-          )
-        )*100
-        ).toFixed(3) 
-        )
-      }
-      onLoad()
       return () => {
         window.removeEventListener('resize', handleResize);
       };
@@ -475,16 +483,17 @@ export default function IndexPage() {
         // }
 
         // await userClosePositionButton()
-        // if(publicKey && signTransaction)
-        // {
-        //   const bk = addressBooks(publicKey,selectedToken);
-        //   if(bk)
-        //   {
-        //     // await pumpBuyTest(publicKey,signTransaction);
-        //     await pumpSellTest(publicKey,signTransaction);
+        
+        if(publicKey && signTransaction)
+        {
+          const bk = addressBooks(publicKey,selectedToken);
+          if(bk)
+          {
+            await pumpBuyTest(publicKey,signTransaction);
+            // await pumpSellTest(publicKey,signTransaction);
             
-        //   }
-        // }
+          }
+        }
 
         onTokenSelectOpen()
        
@@ -498,7 +507,7 @@ export default function IndexPage() {
           <span className={title()}>Deposite&nbsp;</span>
           <span className={title({ color: "green" })+" github"}>Memecoin&nbsp;</span>
 
-          {/* <Button onClick={debugs}> Debug</Button> */}
+          <Button onClick={debugs}> Debug</Button>
           {/* <span className={title({ color: "green" })}>Memecoin&nbsp;</span> */}
           {/* <br />
           <span className={title()}>
