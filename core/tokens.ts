@@ -29,19 +29,19 @@ let systemConfig: PublicKey;
 let poolStakingData: PublicKey;
 let userStakingData: PublicKey;
 
+poolStakingData = PublicKey.findProgramAddressSync(
+  [
+    Buffer.from("pool_staking_data")
+  ],
+  programIdDefault
+)[0];
+
 const userTokenInit = async ( publicKey:PublicKey) =>
 {
   //Address init
   systemConfig = PublicKey.findProgramAddressSync(
     [
       Buffer.from("system_config")
-    ],
-    programIdDefault
-  )[0];
-
-  poolStakingData = PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("pool_staking_data")
     ],
     programIdDefault
   )[0];
@@ -86,7 +86,6 @@ const userSolStakeFetch = async() =>
   {
     ret.userShares = user.shares
   }
-
   return ret;
 }
 

@@ -22,6 +22,7 @@ import { Tabs, Tab } from "@nextui-org/tabs";
 import { Display } from "next/dist/compiled/@next/font";
 
 import { useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
@@ -173,10 +174,10 @@ export default function IndexPage() {
   const [userWalletBlance , setUserWalletBlance] = useState(
     0
   )
+  const { setVisible } = useWalletModal();
   useEffect(() => {
         //Data init
         setRepayData([])
-
         //Window size function
         const handleResize = () => {
           setWindowSize({
@@ -263,6 +264,24 @@ export default function IndexPage() {
         onDisconnect().catch(console.error);
       }
       
+      const onLoad = async ()=>
+      {
+        const userStakeInfo = await userSolStakeFetch()
+        setUserStakeSolApy(
+          (
+            (
+              (
+                (
+                  Number(userStakeInfo.totalStaked)/Number(userStakeInfo.totalShares))-1
+                )/
+          (
+            (Date.now()/1000 - 1733369330)/(365*24*3600)
+          )
+        )*100
+        ).toFixed(3) 
+        )
+      }
+      onLoad()
       return () => {
         window.removeEventListener('resize', handleResize);
       };
@@ -369,7 +388,7 @@ export default function IndexPage() {
         }
         onSupplyClose();
       }else{
-  
+        setVisible(true)
       }
   }
 
@@ -385,7 +404,7 @@ export default function IndexPage() {
           }
           onWithdrawClose();
         }else{
-    
+          setVisible(true)
         }
     }
 
@@ -399,7 +418,7 @@ export default function IndexPage() {
             await userBorrowToken(borrowAmount,publicKey,signTransaction);
           }
         }else{
-    
+          setVisible(true)
         }
     }
 
@@ -413,7 +432,7 @@ export default function IndexPage() {
               await userRepayToken(publicKey,signTransaction);
             }
           }else{
-      
+            setVisible(true)
           }
       }
 
@@ -428,7 +447,7 @@ export default function IndexPage() {
                 await userLeverageTokenPump(leverageAmount,publicKey,signTransaction);
               }
             }else{
-        
+              setVisible(true)
             }
         }
 
@@ -442,7 +461,7 @@ export default function IndexPage() {
                   await userCloseTokenPump(publicKey,signTransaction);
                 }
               }else{
-          
+                setVisible(true)
               }
           }
         
