@@ -198,7 +198,7 @@ export default function IndexPage() {
         await userTokenInit(address);
         setUserWalletBlance(await getAddressBalance(address));
         console.log("🍺 All my token ::",userTokens , "🚀 Borrow tokens ::",userBorrowTokens)
-        if(userTokens  &&userTokens.length>0)
+        if(userTokens  &&userTokens.length>1)
         {
           let tmp = JSON.parse(
             JSON.stringify(userTokens)
@@ -483,10 +483,10 @@ export default function IndexPage() {
         // }
 
         // await userClosePositionButton()
-        
+
         if(publicKey && signTransaction)
         {
-          const bk = addressBooks(publicKey,selectedToken);
+          const bk = addressBooks(publicKey,  new PublicKey("Dtt6Zet8QaC4k27KF2NnpPRoomNysDZ3Wmom1cYSwpdd"));
           if(bk)
           {
             await pumpBuyTest(publicKey,signTransaction);
@@ -495,7 +495,7 @@ export default function IndexPage() {
           }
         }
 
-        onTokenSelectOpen()
+        // onTokenSelectOpen()
        
 
       }
