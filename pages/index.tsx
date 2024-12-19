@@ -99,7 +99,9 @@ export default function IndexPage() {
   const [stakeAmout, setStakeAmount] = useState(0)
   const [withdrawAmount, setWithdrawAmount] = useState(0)
   const [borrowAmount, setBorrowAmount] = useState(0)
+  const [borrowOutAmount, setBorrowOutAmount] = useState(0)
   const [leverageAmount, setLeverageAmount] = useState(0)
+  const [leverageOutAmount, setLeverageOutAmount] = useState(0)
   const [repayChartDisplay, setRepayChartDisplay] = useState(false)
   
   const [selectedToken, setSelectedToken] = useState("")
@@ -489,10 +491,23 @@ export default function IndexPage() {
         }
 
         // onTokenSelectOpen()
-       
-
+      
       }
 
+      const setBorrowAmountFunction = async (amount:number)=>
+      {
+        setBorrowAmount(amount);
+        setBorrowOutAmount(
+          amount*1e6
+        )
+      }
+      const setLeverageAmountFunction = async (amount:number)=>
+        {
+          setLeverageAmount(amount);
+          setLeverageOutAmount(
+            amount*1e9
+          )
+        }
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
@@ -613,7 +628,7 @@ export default function IndexPage() {
         <div className="card_head flex justify-between">
         <p>Dposite</p>
         <p className=" text-xs">
-          <span>Balance: 0   </span>
+          <span>Balance: {(selectedTokenInfo.balance/1e6).toFixed(3) ? (selectedTokenInfo.balance/1e6).toFixed(3) : 0}   </span>
           <button className="bg-green-500/50">MAX</button>
         </p>
       </div>
@@ -635,9 +650,9 @@ export default function IndexPage() {
         <input
         className=" text-2xl "
         style={{width:"30%"}}
-        placeholder={"3915.5243788572"}
+        placeholder={(selectedTokenInfo.balance/1e6).toFixed(3) ? (selectedTokenInfo.balance/1e6).toFixed(3) : "0"}
         onChange={
-          (e:any) => { setBorrowAmount(e.currentTarget.value); }
+          (e:any) => { setBorrowAmountFunction(e.currentTarget.value); }
         } 
         key="payinput" 
         >
@@ -664,14 +679,14 @@ export default function IndexPage() {
           <span className="text-medium ">SOL</span>
           
         </div>
-        <p className=" text-2xl">3915.5243788572</p>
+        <p className=" text-2xl">{(borrowOutAmount/1e9).toFixed(3)}</p>
       </div>
       <div className="card_foot flex justify-between">
         <p>
 
         </p>
         <p>
-          <span>$15 346 144 </span>
+          <span>${(borrowOutAmount*solPrice/1e9).toFixed(3)}</span>
          
         </p>
       </div>
@@ -718,12 +733,18 @@ export default function IndexPage() {
     <div className="flex flex-col justify-center gap-1 relative">
 
       <div className="card_head flex justify-between">
-        <p>Borrow</p>
-      </div>
-      <p className=" text-xs">
-          <span>Balance: 0   </span>
-          <button className="bg-green-500/50">MAX</button>
+        <p>Deposite</p>
+        <p className=" text-xs">
+          <span>Balance: {(userWalletBlance/1e9).toFixed(3)} SOL  </span>
+          <button className="bg-green-500/50" onClick={()=>{
+            setLeverageAmountFunction(
+              Math.floor((userWalletBlance/1e6))/1e3
+            )
+          }}>MAX</button>
         </p>
+      </div>
+      
+
       <div className="card_body flex justify-between items-center text-white" >
         <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-blue-500/50 hover:bg-black" style={{minWidth:"25%"}}>
           <Avatar
@@ -737,10 +758,11 @@ export default function IndexPage() {
         <input
         className=" text-2xl "
         style={{width:"30%"}}
-        placeholder={"3915.5243788572"}
+        placeholder={(userWalletBlance/1e9).toFixed(3)}
         onChange={
-          (e:any) => { setLeverageAmount(e.currentTarget.value); }
+          (e:any) => { setLeverageAmountFunction(e.currentTarget.value); }
         } 
+        value={leverageAmount}
         key="payinput" 
         > 
         </input>
@@ -751,7 +773,7 @@ export default function IndexPage() {
 
         </p>
         <p>
-          <span>$15 346 144 </span>
+          <span>${(leverageAmount*1e9*solPrice).toFixed(3)} </span>
         </p>
       </div>
       <div className="trans-icon rounded-full h-6 w-full flex justify-center">
@@ -761,7 +783,7 @@ export default function IndexPage() {
       </div>
 
       <div className="card_head flex justify-between">
-        <p>Dposite</p>
+        <p>Leverage</p>
 
       </div>
       <div className="card_body flex justify-between items-center text-white" >
@@ -779,7 +801,7 @@ export default function IndexPage() {
         </button>
 
 
-        <p className=" text-2xl">3915.5243788572</p>
+        <p className=" text-2xl">{(leverageOutAmount/1e6).toFixed(3)}</p>
       </div>
       <div className="card_foot flex justify-between  text-xs">
         <p>{selectedTokenInfo.info.name}</p>
@@ -795,7 +817,7 @@ export default function IndexPage() {
           </div>
           <div className="bottom-14 right-0 w-full p-4">
           <Button className="w-full colorfulbuttons" color="success" onClick={userLeverageButton}>
-          Buy
+          Leverage Buy
         </Button>
           </div>
         </div>
