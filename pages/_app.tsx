@@ -29,7 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <WalletProvider wallets={wallets} autoConnect>
       <WalletModalProvider>
       <NextUIProvider navigate={router.push}>
-          <NextThemesProvider>
+          <NextThemesProvider attribute="class" defaultTheme="dark">
             <Component {...pageProps} />
           </NextThemesProvider>
         </NextUIProvider>
