@@ -61,6 +61,7 @@ import {
   userTokenInit,
   getTokenBalance,
   userBorrowTokens,
+  userPumpTokens,
   userSolStakeFetch,
   userTokenBorrowFetch,
   getAddressBalance
@@ -204,15 +205,17 @@ export default function IndexPage() {
         onLoadingOpen()
         await userTokenInit(address);
         setUserWalletBlance(await getAddressBalance(address));
-        console.log("🍺 All my token ::",userTokens , "🚀 Borrow tokens ::",userBorrowTokens)
-        if(userTokens  &&userTokens.length>1)
+        console.log("🍺 All my token ::",userTokens , "🚀 Borrow tokens ::",userBorrowTokens , "💊 Pump tokens ::",userPumpTokens)
+        if(userTokens  &&userTokens.length>0)
         {
-          let tmp = JSON.parse(
-            JSON.stringify(userTokens)
-          )
-          setSelectedTokenInfo(tmp[1])
-          setSelectedToken(tmp[1].address);
-          console.log("🍺 Selected token :: ",tmp[1])
+          if(userPumpTokens&&userPumpTokens.length > 0)
+          {
+            let pumptmp = JSON.parse(
+              JSON.stringify(userTokens)
+            )
+            setSelectedTokenInfo(pumptmp[0])
+            setSelectedToken(pumptmp[0].address);
+          }
           const userStakeInfo = await userSolStakeFetch()
           console.log(
             "🍺 Stake information ::",userStakeInfo
@@ -628,8 +631,13 @@ export default function IndexPage() {
         <div className="card_head flex justify-between">
         <p>Dposite</p>
         <p className=" text-xs">
-          <span>Balance: {(selectedTokenInfo.balance/1e6).toFixed(3) ? (selectedTokenInfo.balance/1e6).toFixed(3) : 0}   </span>
-          <button className="bg-green-500/50">MAX</button>
+          <span>Balance: {(selectedTokenInfo.balance).toFixed(3) ? (selectedTokenInfo.balance).toFixed(3) : 0}   </span>
+          <button className="bg-green-500/50" onClick={
+            ()=>
+            {
+              setBorrowAmountFunction(Math.floor(selectedTokenInfo.balance))
+            }
+          }>MAX</button>
         </p>
       </div>
       <div className="card_body flex justify-between items-center text-white" >
@@ -650,11 +658,12 @@ export default function IndexPage() {
         <input
         className=" text-2xl "
         style={{width:"30%"}}
-        placeholder={(selectedTokenInfo.balance/1e6).toFixed(3) ? (selectedTokenInfo.balance/1e6).toFixed(3) : "0"}
+        placeholder={(selectedTokenInfo.balance).toFixed(3) ? (selectedTokenInfo.balance).toFixed(3) : "0"}
         onChange={
           (e:any) => { setBorrowAmountFunction(e.currentTarget.value); }
         } 
         key="payinput" 
+        value = {borrowAmount}
         >
           
         </input>

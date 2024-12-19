@@ -853,5 +853,6 @@ export {
 
     userLeverageTokenPump,
     userCloseTokenPump,
-    pumpSellTest
+    pumpSellTest,
+    fetchPumpData
 }

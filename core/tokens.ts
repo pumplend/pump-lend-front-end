@@ -19,11 +19,11 @@ import BN from 'bn.js';
 const connection = new Connection(envConfig.rpc);
 
 const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZuTBMG')
+let pumpKeyAccount = new PublicKey('6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P');
 let userTokens : false | [] ;
 
 let userBorrowTokens : false | [] ;
-
-
+let userPumpTokens : false | [] ;
 
 let systemConfig: PublicKey;
 let poolStakingData: PublicKey;
@@ -60,6 +60,7 @@ const userTokenInit = async ( publicKey:PublicKey) =>
         userTokens = tks;
     }
     await checkTokenExsitOrNot(publicKey);
+    await checkTokenPumpOrNot(publicKey);
     return true;
 }
 
@@ -211,6 +212,71 @@ async function checkTokenExsitOrNot(publicKey:PublicKey) {
     }
     
 }
+
+async function checkTokenPumpOrNot(publicKey:PublicKey) {
+  let ret :any[];
+  ret = [];
+  if(!userTokens)
+  {
+    return false;
+  }
+  for(let i = 0 ; i<userTokens.length ; i ++)
+  {
+    try{
+        let [bondingCurve] = PublicKey.findProgramAddressSync(
+          [
+              Buffer.from("bonding-curve"),
+              new PublicKey(
+                JSON.parse(
+                  JSON.stringify(
+                    userTokens[i]
+                  )
+                ).address
+              ).toBuffer(),
+          ],
+          pumpKeyAccount
+      );
+      const accountInfo = await connection.getAccountInfo(
+        bondingCurve
+
+      );
+
+      if (!accountInfo) {
+        console.log("✈Token not found",JSON.parse(
+          JSON.stringify(
+            userTokens[i]
+          )
+        ).address)
+        throw new Error("Account not found");
+      }else{
+        console.log("✈Token found",accountInfo,JSON.parse(
+          JSON.stringify(
+            userTokens[i]
+          )
+        ).address)
+        ret.push(
+          userTokens[i]
+        )
+      }
+  
+
+    }catch(e)
+    {
+      console.error(e)
+    }
+
+  }
+
+
+  if(ret.length>0)
+    {
+      console.log("✈ Final stake tokens :: ",ret)
+      userPumpTokens = JSON.parse(
+        JSON.stringify(ret)
+      );
+    }
+    
+}
 const getTokenBalance = async (tokenAddress:PublicKey, walletAddress: PublicKey) =>
     {
       try {
@@ -231,6 +297,7 @@ export {
     userTokenInit,
     getTokenBalance,
     userBorrowTokens,
+    userPumpTokens,
     userSolStakeFetch,
     userTokenBorrowFetch,
     getAddressBalance
