@@ -32,6 +32,7 @@ import * as abi from '@/core/pump_lend.json';
 import { serialize , Schema,deserialize, deserializeUnchecked } from "borsh";
 import { createHash } from 'crypto';
 import {envConfig} from "@/config/env"
+import { api_price_oracle } from "./request";
 const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZuTBMG')
 
   // PDA Accounts
@@ -324,6 +325,17 @@ const fetchUserBorrowData = async (_userBorrowData:PublicKey) => {
     }
   };
   
+  const solPriceFetch = async() =>{
+    try{
+      return Number(
+        (await api_price_oracle("solana"))['solana']['usd']
+      )
+
+    }catch(e)
+    {
+      return 0;
+    }
+  }
 
 export {
     testSoalanData,
@@ -332,5 +344,6 @@ export {
     fetchUserBorrowData,
     fetchPoolStakingData,
     fetchUserStakingData,
-    fetchSystemConfigData
+    fetchSystemConfigData,
+    solPriceFetch
 }

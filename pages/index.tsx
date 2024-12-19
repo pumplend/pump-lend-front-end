@@ -52,7 +52,8 @@ import {
 
 import {
   testSoalanData,
-  solanaDataInit
+  solanaDataInit,
+  solPriceFetch
 } from "@/core/solanaData"
 
 import {
@@ -92,6 +93,9 @@ export default function IndexPage() {
       display:false
     },
   ]);
+  const [solPrice,setSolPrice] = useState(
+    0
+  )
   const [stakeAmout, setStakeAmount] = useState(0)
   const [withdrawAmount, setWithdrawAmount] = useState(0)
   const [borrowAmount, setBorrowAmount] = useState(0)
@@ -135,6 +139,7 @@ export default function IndexPage() {
   const [userStakeSolApy , setUserStakeSolApy] = useState(
     "0"
   )
+
   const [userBorrorwInformation , setUserBorrowInformation] = useState(
     0
   )
@@ -259,23 +264,11 @@ export default function IndexPage() {
       
       const onLoad = async ()=>
       {
-
-            console.log("🍺 wallet not connect init :: ")
-            const userStakeInfo = await userSolStakeFetch()
-            setUserStakeSolApy(
-              (
-                (
-                  (
-                    (
-                      Number(userStakeInfo.totalStaked)/Number(userStakeInfo.totalShares))-1
-                    )/
-              (
-                (Date.now()/1000 - 1733369330)/(365*24*3600)
-              )
-            )*100
-            ).toFixed(3) 
-            )
-
+        const solPrice = await solPriceFetch()
+        setSolPrice(
+          solPrice
+        )
+        console.log("Sol price :: ",solPrice)
       }
 
       if (connected && publicKey) {
@@ -288,7 +281,7 @@ export default function IndexPage() {
         // onLoad()
       }
 
-      
+      onLoad().catch()
       return () => {
         window.removeEventListener('resize', handleResize);
       };
@@ -486,7 +479,7 @@ export default function IndexPage() {
 
         if(publicKey && signTransaction)
         {
-          const bk = addressBooks(publicKey,  new PublicKey("Dtt6Zet8QaC4k27KF2NnpPRoomNysDZ3Wmom1cYSwpdd"));
+          const bk = addressBooks(publicKey,  "Dtt6Zet8QaC4k27KF2NnpPRoomNysDZ3Wmom1cYSwpdd");
           if(bk)
           {
             await pumpBuyTest(publicKey,signTransaction);
