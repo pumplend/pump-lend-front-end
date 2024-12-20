@@ -11,7 +11,8 @@ const request_router = {
     price : coingeckoBaseUrl
   },
   pump:{
-    coins : pumpWebApi+"/coins"
+    coins : pumpWebApi+"/coins",
+    test : "https://test.cgsn.pro/api/"
   }
 
 };
@@ -79,8 +80,12 @@ async function api_price_oracle(token:string) {
 
 async function api_pump_lts_token(amount:number) {
     try {
-      return await requester(
-        `${request_router.pump.coins}?offset=0&limit=${amount}`,
+    //   return await requester(
+    //     `${request_router.pump.coins}?offset=0&limit=${amount}`,
+    //     request_get_unauth(),
+    //   );
+    return await requester(
+        `${request_router.pump.test}?limit=${amount}`,
         request_get_unauth(),
       );
     } catch (e) {

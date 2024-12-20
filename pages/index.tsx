@@ -561,9 +561,10 @@ export default function IndexPage() {
         {
           setSelectedToken(address);
           userTokens.forEach(ele => {
-            if(ele.address == address)
+            const e = JSON.parse(JSON.stringify(ele))
+            if(e?.address == address)
             {
-              setSelectedTokenInfo(ele)
+              setSelectedTokenInfo(e)
             }
           });
           
@@ -1156,7 +1157,7 @@ export default function IndexPage() {
         
 
         {
-        userPumpTokens ? userPumpTokens.map((item) => (
+        userPumpTokens ? userPumpTokens.map((item:any) => (
 
                   <div className="gap-6  justify-center w-full" key={item}>
                               <br>
@@ -1223,7 +1224,7 @@ export default function IndexPage() {
               variant="bordered"
               
             >
-              Chip {item.name}
+              {item.name}
             </Chip>
         ))}
         </div>
