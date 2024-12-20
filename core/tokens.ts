@@ -14,7 +14,7 @@ import {
   fetchUserStakingData,
   fetchSystemConfigData
 } from "@/core/solanaData"
-import {api_pump_lts_token} from "@/core/request";
+import {api_pump_lts_token , api_pump_search_token} from "@/core/request";
 // @ts-ignore
 import BN from 'bn.js';
 const connection = new Connection(envConfig.rpc);
@@ -303,6 +303,19 @@ const getPumpLtsTokenList = async () =>
     return data
   }
 }
+const getPumpLtsTokenSearch = async (searchdata : string) =>
+  {
+    const data = await api_pump_search_token(searchdata,10);
+    console.log("💊 LTS pump token ::",data)
+    if(!data)
+    {
+      return [];
+    }else{
+      return data
+    }
+  }
+  
+
     
 export {
     userTokens,
@@ -313,5 +326,6 @@ export {
     userSolStakeFetch,
     userTokenBorrowFetch,
     getAddressBalance,
-    getPumpLtsTokenList
+    getPumpLtsTokenList,
+    getPumpLtsTokenSearch
 }

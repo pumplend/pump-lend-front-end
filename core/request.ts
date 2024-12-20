@@ -4,15 +4,15 @@
 
 
 const coingeckoBaseUrl = `https://api.coingecko.com/api/v3/simple/price`;
-const pumpWebApi = `https://frontend-api-v2.pump.fun`
+const pumpWebApi = `https://test.cgsn.pro/api`
 const request_router = {
 
   app_indexer: {
     price : coingeckoBaseUrl
   },
   pump:{
-    coins : pumpWebApi+"/coins",
-    test : "https://test.cgsn.pro/api/"
+    coins : pumpWebApi+"/",
+    search : pumpWebApi+"/search",
   }
 
 };
@@ -80,12 +80,21 @@ async function api_price_oracle(token:string) {
 
 async function api_pump_lts_token(amount:number) {
     try {
-    //   return await requester(
-    //     `${request_router.pump.coins}?offset=0&limit=${amount}`,
-    //     request_get_unauth(),
-    //   );
     return await requester(
-        `${request_router.pump.test}?limit=${amount}`,
+        `${request_router.pump.coins}?limit=${amount}`,
+        request_get_unauth(),
+      );
+    } catch (e) {
+      console.error(e);
+  
+      return 0;
+    }
+  }
+
+  async function api_pump_search_token(search:string,amount:number) {
+    try {
+    return await requester(
+        `${request_router.pump.search}/${search}/${amount}`,
         request_get_unauth(),
       );
     } catch (e) {
@@ -98,5 +107,6 @@ async function api_pump_lts_token(amount:number) {
 export {
 
     api_price_oracle,
-    api_pump_lts_token
+    api_pump_lts_token,
+    api_pump_search_token
 };

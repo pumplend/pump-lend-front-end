@@ -65,7 +65,8 @@ import {
   userSolStakeFetch,
   userTokenBorrowFetch,
   getAddressBalance,
-  getPumpLtsTokenList
+  getPumpLtsTokenList,
+  getPumpLtsTokenSearch
 } from "@/core/tokens"
 
 import {
@@ -121,6 +122,7 @@ export default function IndexPage() {
       }
   }
   )
+  
 
   const [userStakeSolInformation, setUserStakeSolInformation] = useState(
     {
@@ -146,6 +148,11 @@ export default function IndexPage() {
 
   const [userBorrorwInformation , setUserBorrowInformation] = useState(
     0
+  )
+
+  
+  const [userSearchToken , setUserSearchToken] = useState(
+    "0"
   )
   const [userBorrowInformationArray, setUserBorrowInformationArray] = useState([
     {
@@ -194,6 +201,12 @@ export default function IndexPage() {
         }
     ]
   )
+
+  const [pumpSearchToken , setPumpSearchToken] = useState(
+    [
+    ]
+  )
+
 
   const [repayData, setRepayData] = useState([
     {
@@ -570,6 +583,17 @@ export default function IndexPage() {
           
         }
 
+      }
+
+      const searchTokenFunction = async (e:any)=>
+      {
+        if(userSearchToken && userSearchToken?.length > 0)
+        {
+          if (e.key === "Enter") {
+            setPumpSearchToken(await getPumpLtsTokenSearch(userSearchToken))
+          }
+         
+        }
       }
   return (
     <DefaultLayout>
@@ -1108,36 +1132,44 @@ export default function IndexPage() {
       <section className="flex flex-col gap-2">
         <Input
           labelPlacement="outside"
-          placeholder="Search by token address"
+          placeholder="Search by token address or name"
           startContent={<FaSearch />}
           type="text"
+          onChange={
+            (e:any) => { setUserSearchToken(e.currentTarget.value); }
+          } 
+          onKeyDown={searchTokenFunction}
         />
 
         <div className="w-full" id="token_search_result">
-        <div>Token Not Found</div>
-        <div className="gap-6  justify-center w-full">
-                <div
-                  className="w-full"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(4, 1fr)", 
-                    alignItems: "center", 
-                    justifyItems: "center", 
-                    gap: "1rem", 
-                  }}
-                >
+          {
+            pumpSearchToken.length>0 ? 
+
+            pumpSearchToken.map((item:any) => (
+              <div className="gap-6  justify-center w-full">
+              <div
+            className="w-full"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)", 
+              alignItems: "center", 
+              justifyItems: "center", 
+              gap: "1rem", 
+            }}
+          >
                   <div>
-                    <Avatar isBordered color="secondary" src={"https://pump.fun/logo.png"} />
+                    <Avatar isBordered color="secondary" src={item?.image_uri} />
                   </div>
 
-                  <div>
-                    <span className="text-default-900 font-semibold text-xs">${"PUMP COIN"}</span>
-                  </div>
+  
+                  <div  style={{ display: "flex", flexDirection: "column", alignItems: "left" }}>
+                    <span className="text-default-900 font-semibold text-xs">{item?.symbol}</span>
 
-                  <div>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                      <span className="text-success text-xs">{"BAL 1234"}</span>
+                      <span className="text-default-900 font-semibold text-xs">{item?.mint.slice(0, 10)}...</span>
+                    
                     </div>
+
+                  <div>
                   </div>
 
 
@@ -1147,9 +1179,30 @@ export default function IndexPage() {
                     </Button>
                   </div>
                 </div>
-        </div>
+            </div>
+            
+            ))
+
+            :                     <div
+            className="w-full"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(1, 1fr)", 
+              alignItems: "center", 
+              justifyItems: "center", 
+              gap: "1rem", 
+            }}
+          >
+              <div>
+              Not Token Found
+              </div>
+            </div>
+          }
+
+
         </div>
 
+          <br></br>
         <div style={{width:"100%"}} id="my_pump_token">
           {
             userPumpTokens ? <p className="grow text-center font-bold">My Pump Token</p> : null
@@ -1206,10 +1259,10 @@ export default function IndexPage() {
       }
 
         </div>
-        
+        <br></br>
         
 
-        <p className="grow text-center font-bold">Latest Borrow Token</p>
+        <p className="grow text-center font-bold">Latest PUMP Token</p>
         <div className="search-items flex flex-wrap gap-2">
           {pumpLtsTokens.map((item,index) => (
             <Chip
