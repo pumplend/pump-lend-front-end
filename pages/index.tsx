@@ -64,7 +64,8 @@ import {
   userPumpTokens,
   userSolStakeFetch,
   userTokenBorrowFetch,
-  getAddressBalance
+  getAddressBalance,
+  getPumpLtsTokenList
 } from "@/core/tokens"
 
 import {
@@ -154,6 +155,45 @@ export default function IndexPage() {
       lastUpdated :  BigInt(0),
     }
   ])
+
+  const [pumpLtsTokens , setPumpLtsTokens] = useState(
+    [
+      {
+        "mint": "",
+        "name": "s",
+        "symbol": "",
+        "description": "",
+        "image_uri": "",
+        "metadata_uri": "",
+        "twitter": null,
+        "telegram": null,
+        "bonding_curve": "",
+        "associated_bonding_curve": "",
+        "creator": "",
+        "created_timestamp": 0,
+        "raydium_pool": null,
+        "complete": false,
+        "virtual_sol_reserves": 0,
+        "virtual_token_reserves": 0,
+        "hidden": null,
+        "total_supply": 0,
+        "website": null,
+        "show_name": true,
+        "last_trade_timestamp": 0,
+        "king_of_the_hill_timestamp": null,
+        "market_cap": 0,
+        "reply_count": 1,
+        "last_reply": 0,
+        "nsfw": false,
+        "market_id": null,
+        "inverted": null,
+        "is_currently_live": false,
+        "username": null,
+        "profile_image": null,
+        "usd_market_cap": 0
+        }
+    ]
+  )
 
   const [repayData, setRepayData] = useState([
     {
@@ -274,6 +314,10 @@ export default function IndexPage() {
           solPrice
         )
         console.log("Sol price :: ",solPrice)
+
+        setPumpLtsTokens(
+          await getPumpLtsTokenList()
+        )
       }
 
       if (connected && publicKey) {
@@ -511,6 +555,21 @@ export default function IndexPage() {
             amount*1e9
           )
         }
+      const setSelectedTokenFunction = async (address:string)=>
+      {
+        if(userTokens)
+        {
+          setSelectedToken(address);
+          userTokens.forEach(ele => {
+            if(ele.address == address)
+            {
+              setSelectedTokenInfo(ele)
+            }
+          });
+          
+        }
+
+      }
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
@@ -1091,10 +1150,13 @@ export default function IndexPage() {
         </div>
 
         <div style={{width:"100%"}} id="my_pump_token">
-        <p className="grow text-center font-bold">My Pump Token</p>
+          {
+            userPumpTokens ? <p className="grow text-center font-bold">My Pump Token</p> : null
+          }
         
 
-        {[1, 2, 3].map((item) => (
+        {
+        userPumpTokens ? userPumpTokens.map((item) => (
 
                   <div className="gap-6  justify-center w-full" key={item}>
                               <br>
@@ -1113,25 +1175,34 @@ export default function IndexPage() {
                       <Avatar isBordered color="secondary" src={"https://pump.fun/logo.png"} />
                     </div>
   
-                    <div>
-                      <span className="text-default-900 font-semibold text-xs">${"PUMP COIN"}</span>
+                    <div  style={{ display: "flex", flexDirection: "column", alignItems: "left" }}>
+                    <span className="text-default-900 font-semibold text-xs">{item.info.symbol}</span>
+                      {/* <span className="text-default-900 font-semibold text-xs">{item.info.name}</span> */}
+
+                      <span className="text-default-900 font-semibold text-xs">{item.address.slice(0, 5)}...</span>
+                    
                     </div>
   
                     <div>
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <span className="text-success text-xs">{"BAL 1234"}</span>
+                        <span className="text-success text-xs">{Number(item.balance).toFixed(2)}</span>
                       </div>
                     </div>
   
   
                     <div style={{ display: "flex", gap: "0.5rem" }}>
-                      <Button color="success" onClick={userRepayButton}>
+                      <Button color="success" onClick={()=>{
+                        setSelectedTokenFunction(item.address)
+                      }}>
                         Select
                       </Button>
                     </div>
                   </div>
           </div>
-        ))}
+        )
+      )
+      : null
+      }
 
         </div>
         
@@ -1139,20 +1210,20 @@ export default function IndexPage() {
 
         <p className="grow text-center font-bold">Latest Borrow Token</p>
         <div className="search-items flex flex-wrap gap-2">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
+          {pumpLtsTokens.map((item,index) => (
             <Chip
-              key={item}
+              key={index}
               avatar={
                 <Avatar
                   className="w-6 h-6"
-                  src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+                  src={item.image_uri}
                 />
               }
               className="cursor-pointer"
               variant="bordered"
               
             >
-              Chip {item}
+              Chip {item.name}
             </Chip>
         ))}
         </div>

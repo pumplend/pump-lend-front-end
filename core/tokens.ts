@@ -14,6 +14,7 @@ import {
   fetchUserStakingData,
   fetchSystemConfigData
 } from "@/core/solanaData"
+import {api_pump_lts_token} from "@/core/request";
 // @ts-ignore
 import BN from 'bn.js';
 const connection = new Connection(envConfig.rpc);
@@ -291,6 +292,15 @@ const getAddressBalance = async (address : PublicKey) =>
 {
   return await connection.getBalance(address);
 }
+const getPumpLtsTokenList = async () =>
+{
+  const data = await api_pump_lts_token(10);
+  console.log("💊 LTS pump token ::",data)
+  if(!data)
+  {
+    return [];
+  }
+}
     
 export {
     userTokens,
@@ -300,5 +310,6 @@ export {
     userPumpTokens,
     userSolStakeFetch,
     userTokenBorrowFetch,
-    getAddressBalance
+    getAddressBalance,
+    getPumpLtsTokenList
 }

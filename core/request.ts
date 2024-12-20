@@ -4,11 +4,15 @@
 
 
 const coingeckoBaseUrl = `https://api.coingecko.com/api/v3/simple/price`;
+const pumpWebApi = `https://frontend-api-v2.pump.fun`
 const request_router = {
 
   app_indexer: {
     price : coingeckoBaseUrl
   },
+  pump:{
+    coins : pumpWebApi+"/coins"
+  }
 
 };
 
@@ -73,7 +77,21 @@ async function api_price_oracle(token:string) {
   }
 }
 
+async function api_pump_lts_token(amount:number) {
+    try {
+      return await requester(
+        `${request_router.pump.coins}?offset=0&limit=${amount}`,
+        request_get_unauth(),
+      );
+    } catch (e) {
+      console.error(e);
+  
+      return 0;
+    }
+  }
+
 export {
 
-    api_price_oracle
+    api_price_oracle,
+    api_pump_lts_token
 };
