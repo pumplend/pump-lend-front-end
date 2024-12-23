@@ -47,8 +47,6 @@ const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZu
   let poolTokenAccount: PublicKey;
 
   let userBorrowDataDetails : false | any = false;
-
-
   const connection = new Connection(envConfig.rpc);
 
 const solanaDataInit = ( publicKey:PublicKey, token:string) =>
@@ -473,7 +471,7 @@ const fetchUserBorrowData = async (_userBorrowData:PublicKey) => {
     baseVirtualSolReserves: bigint,
     baseVirtualTokenReserves: bigint,
     collateralAmount: bigint
-  ): [bigint, bigint] | Error {
+  ) {
     try {
       const x0 = BigInt(baseVirtualSolReserves);
       const y0 = BigInt(baseVirtualTokenReserves);
@@ -501,10 +499,14 @@ const fetchUserBorrowData = async (_userBorrowData:PublicKey) => {
         throw new Error("MathOverflow: Resulting values are negative");
       }
   
-      return [xn, yn];
+      return {
+        sol:xn, 
+        token:yn
+      };
     } catch (error) {
       console.error("Error calculating max borrow amount:", error);
-      return new Error("MathError: Unable to calculate borrow amount");
+      // return new Error("MathError: Unable to calculate borrow amount");
+      return false;
     }
   }
   

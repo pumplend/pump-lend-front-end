@@ -64,7 +64,7 @@ export const siteConfig = {
     twitter: "https://x.com/pumplendfun",
     telegramChannel:"https://t.me/+50XGEOayi543NzM1",
     docs: "https://nextui.org",
-    discord: "https://discord.gg/9b6yyZKmH4",
+    discord: "https://discord.gg/X6BdtCRM3W",
     sponsor: "https://patreon.com/jrgarciadev",
   },
 };

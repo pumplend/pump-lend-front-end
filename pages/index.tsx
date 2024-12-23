@@ -104,12 +104,20 @@ export default function IndexPage() {
   const [solPrice,setSolPrice] = useState(
     0
   )
+  // let pumpTokenCurveData : false | any = false;
+  const [pumpTokenCurveData , setPumpTokenCurveData] = useState(
+   {
+    virtualSolReserves:BigInt(0),
+    virtualTokenReserves:BigInt(0)
+   }
+  )
   const [stakeAmout, setStakeAmount] = useState(0)
   const [withdrawAmount, setWithdrawAmount] = useState(0)
   const [borrowAmount, setBorrowAmount] = useState(0)
   const [borrowOutAmount, setBorrowOutAmount] = useState(0)
   const [leverageAmount, setLeverageAmount] = useState(0)
   const [leverageOutAmount, setLeverageOutAmount] = useState(0)
+  const [leverageOutAmountUSD, setLeverageOutAmountUSD] = useState(0)
   const [repayChartDisplay, setRepayChartDisplay] = useState(false)
   
   const [selectedToken, setSelectedToken] = useState("")
@@ -557,6 +565,7 @@ export default function IndexPage() {
               "Bonding curve data :: ",
               curveData
             )
+            // setPumpTokenCurveData = curveData
             if(curveData)
             {
               const maxBorrowAbleData = await culcuateLeverageAbleToken(
@@ -602,9 +611,29 @@ export default function IndexPage() {
       const setLeverageAmountFunction = async (amount:number)=>
         {
           setLeverageAmount(amount);
-          setLeverageOutAmount(
-            amount*1e9
-          )
+          console.log("pumpTokenCurveData",pumpTokenCurveData)
+          if(pumpTokenCurveData)
+            {
+              const maxBorrowAbleData = await culcuateLeverageAbleToken(
+                amount*1e9,
+                {
+                  solReserves:pumpTokenCurveData.virtualSolReserves,
+                  tokenReserves:pumpTokenCurveData.virtualTokenReserves
+                }
+              )
+              
+              console.log("max Borrowable data ::",maxBorrowAbleData)
+              if(maxBorrowAbleData)
+              {
+                setLeverageOutAmount(
+                 Number( maxBorrowAbleData.token)
+                )
+                setLeverageOutAmountUSD(
+                 (( Number( maxBorrowAbleData.sol)/1e9)*solPrice)
+                )
+              }
+            }
+
         }
       const setSelectedTokenFunction = async (address:string)=>
       {
@@ -685,9 +714,36 @@ export default function IndexPage() {
           {
             solanaDataInit(publicKey,tokenAddress)
             await initFetchData();
+
+            addressBooks(publicKey,tokenAddress)
+            const curve = await fetchPumpData(
+              new PublicKey(tokenAddress)
+            )
+            console.log(
+              "🍺 Curve address :: ",curve
+            )
+            if(curve)
+            {
+              const curveData = await fetchTokenPumpCurveData(
+                curve.bondingCurve
+              )
+              console.log(
+                "Bonding curve data :: ",
+                curveData
+              )
+              // pumpTokenCurveData = curveData
+              if(curveData)
+              {
+                setPumpTokenCurveData(
+                  {
+                    virtualSolReserves:curveData.virtualSolReserves,
+                    virtualTokenReserves:curveData.virtualTokenReserves,
+                  }
+                )
+              }
           }
       }
-      
+    }
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
@@ -695,7 +751,7 @@ export default function IndexPage() {
           <span className={title()}>Deposite&nbsp;</span>
           <span className={title({ color: "green" })+" github"}>Memecoin&nbsp;</span>
 
-          <Button onClick={debugs}> Debug</Button>
+          {/* <Button onClick={debugs}> Debug</Button> */}
           {/* <span className={title({ color: "green" })}>Memecoin&nbsp;</span> */}
           {/* <br />
           <span className={title()}>
@@ -959,7 +1015,7 @@ export default function IndexPage() {
 
         </p>
         <p>
-          <span>${(leverageAmount*1e9*solPrice).toFixed(3)} </span>
+          <span>${(leverageAmount*solPrice).toFixed(3)} </span>
         </p>
       </div>
       <div className="trans-icon rounded-full h-6 w-full flex justify-center">
@@ -992,7 +1048,7 @@ export default function IndexPage() {
       <div className="card_foot flex justify-between  text-xs">
         <p>{selectedTokenInfo.info.name}</p>
         <p>
-          <span>$15 346 144 </span>
+          <span>${leverageOutAmountUSD.toFixed(3)} </span>
         </p>
       </div>
 
