@@ -864,17 +864,26 @@ export default function IndexPage() {
         <div className="card_head flex justify-between">
         <p>Dposite</p>
         <p className=" text-xs">
-          <span>Balance: {(selectedTokenInfo.balance).toFixed(3) ? (selectedTokenInfo.balance).toFixed(3) : 0}   </span>
+          <span style={{color:"gray"}}>Balance: {(selectedTokenInfo.balance).toFixed(3) ? (selectedTokenInfo.balance).toFixed(3) : 0}   </span>
+          &nbsp;
+          &nbsp;
+          &nbsp;
+          <button className="bg-green-500/50" onClick={()=>            {
+              setBorrowAmountFunction(Math.floor(selectedTokenInfo.balance)/2)
+            }}> &nbsp;50%&nbsp; </button>
+            &nbsp;
+            &nbsp;
+            &nbsp;
           <button className="bg-green-500/50" onClick={
             ()=>
             {
               setBorrowAmountFunction(Math.floor(selectedTokenInfo.balance))
             }
-          }>MAX</button>
+          }> &nbsp;MAX&nbsp; </button>
         </p>
       </div>
       <div className="card_body flex justify-between items-center text-white" >
-        <button className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-green-500/50 hover:bg-black" style={{minWidth:"25%"}}
+        <button className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-green-500/50 hover:bg-black" style={{minWidth:"15%"}}
         onClick={onTokenSelectOpen}
         >
           <Avatar
@@ -889,12 +898,12 @@ export default function IndexPage() {
 
 
         <input
-        className=" text-2xl "
-        style={{width:"30%"}}
+        className=" text-3xl "
+        style={{width:"70%",textAlign:"right" , backgroundColor:"transparent"}}
         placeholder={(selectedTokenInfo.balance).toFixed(3) ? (selectedTokenInfo.balance).toFixed(3) : "0"}
         onChange={
           (e:any) => { setBorrowAmountFunction(e.currentTarget.value); }
-        } 
+        }
         key="payinput" 
         value = {borrowAmount}
         >
@@ -902,7 +911,7 @@ export default function IndexPage() {
         </input>
       </div>
       <div className="card_foot flex justify-between  text-xs">
-        <p>{selectedTokenInfo.info.name}</p>
+        {/* <p>{selectedTokenInfo.info.name}</p> */}
       </div>
           <div className="trans-icon rounded-full h-6 w-full flex justify-center">
             <div className="w-6 h-6 flex justify-center bg-white items-center rounded-full shadow-md">
@@ -913,7 +922,7 @@ export default function IndexPage() {
         <p>Borrow</p>
       </div>
       <div className="card_body flex justify-between items-center text-white" >
-        <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-blue-500/50 hover:bg-black" style={{minWidth:"25%"}}>
+        <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-blue-500/50 hover:bg-black" style={{minWidth:"15%"}}>
           <Avatar
             className="w-6 h-6"
             src="/icon/sol.png"
@@ -921,14 +930,14 @@ export default function IndexPage() {
           <span className="text-medium ">SOL</span>
           
         </div>
-        <p className=" text-2xl">{(borrowOutAmount/1e9).toFixed(3)}</p>
+        <p className=" text-3xl">{(borrowOutAmount/1e9).toFixed(3)}</p>
       </div>
       <div className="card_foot flex justify-between">
         <p>
 
         </p>
         <p>
-          <span>${(borrowOutAmount*solPrice/1e9).toFixed(3)}</span>
+          <span style={{color:"gray"}}>~${(borrowOutAmount*solPrice/1e9).toFixed(3)}</span>
          
         </p>
       </div>
@@ -977,18 +986,29 @@ export default function IndexPage() {
       <div className="card_head flex justify-between">
         <p>Deposite</p>
         <p className=" text-xs">
-          <span>Balance: {(userWalletBlance/1e9).toFixed(3)} SOL  </span>
+          <span style={{color:"gray"}}>Balance: {(userWalletBlance/1e9).toFixed(3)} SOL  </span>
+          &nbsp;
+          &nbsp;
+          &nbsp;
+          <button className="bg-green-500/50" onClick={()=>{
+            setLeverageAmountFunction(
+              Math.floor((userWalletBlance/(2*1e6)))/1e3
+            )
+          }}> 50% </button>
+          &nbsp;
+          &nbsp;
+          &nbsp;
           <button className="bg-green-500/50" onClick={()=>{
             setLeverageAmountFunction(
               Math.floor((userWalletBlance/1e6))/1e3
             )
-          }}>MAX</button>
+          }}> MAX </button>
         </p>
       </div>
       
 
       <div className="card_body flex justify-between items-center text-white" >
-        <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-blue-500/50 hover:bg-black" style={{minWidth:"25%"}}>
+        <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-blue-500/50 hover:bg-black" style={{minWidth:"15%"}}>
           <Avatar
             className="w-6 h-6"
             src="/icon/sol.png"
@@ -998,8 +1018,8 @@ export default function IndexPage() {
         </div>
 
         <input
-        className=" text-2xl "
-        style={{width:"30%"}}
+        className=" text-3xl "
+        style={{width:"70%",textAlign:"right" , backgroundColor:"transparent"}}
         placeholder={(userWalletBlance/1e9).toFixed(3)}
         onChange={
           (e:any) => { setLeverageAmountFunction(e.currentTarget.value); }
@@ -1015,7 +1035,7 @@ export default function IndexPage() {
 
         </p>
         <p>
-          <span>${(leverageAmount*solPrice).toFixed(3)} </span>
+          <span className="text-xl" style={{color:"gray"}}>~${(leverageAmount*solPrice).toFixed(3)} </span>
         </p>
       </div>
       <div className="trans-icon rounded-full h-6 w-full flex justify-center">
@@ -1029,7 +1049,7 @@ export default function IndexPage() {
 
       </div>
       <div className="card_body flex justify-between items-center text-white" >
-        <button className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-green-500/50 hover:bg-black" style={{minWidth:"25%"}}
+        <button className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-green-500/50 hover:bg-black" style={{minWidth:"15%"}}
         onClick={onTokenSelectOpen}
         >
           <Avatar
@@ -1043,12 +1063,13 @@ export default function IndexPage() {
         </button>
 
 
-        <p className=" text-2xl">{(leverageOutAmount/1e6).toFixed(3)}</p>
+        <p className=" text-3xl">{(leverageOutAmount/1e6).toFixed(3)}</p>
       </div>
       <div className="card_foot flex justify-between  text-xs">
-        <p>{selectedTokenInfo.info.name}</p>
+        {/* <p>{selectedTokenInfo.info.name}</p> */}
+        <p></p>
         <p>
-          <span>${leverageOutAmountUSD.toFixed(3)} </span>
+          <span className="text-xl" style={{color:"gray"}}>${leverageOutAmountUSD.toFixed(3)} </span>
         </p>
       </div>
 
@@ -1187,7 +1208,7 @@ export default function IndexPage() {
 
 
       {/* Supply Modal */}
-      <Modal isOpen={isSupplyOpen} onClose={onSupplyClose}>
+      <Modal isOpen={isSupplyOpen} onClose={onSupplyClose} scrollBehavior={"inside"}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">Supply SOL</ModalHeader>
           <ModalBody>
@@ -1215,7 +1236,7 @@ export default function IndexPage() {
       </Modal>
 
       {/* Withdraw Modal */}
-      <Modal isOpen={isWithdrawOpen} onClose={onWithdrawClose}>
+      <Modal isOpen={isWithdrawOpen} onClose={onWithdrawClose} scrollBehavior={"inside"}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">Withdraw SOL</ModalHeader>
           <ModalBody>
@@ -1254,7 +1275,7 @@ export default function IndexPage() {
 
 
       {/* Token Select Modal */}
-      <Modal isOpen={isTokenSelectOpen} onClose={onTokenSelectClose}>
+      <Modal isOpen={isTokenSelectOpen} onClose={onTokenSelectClose} scrollBehavior={"inside"}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1"></ModalHeader>
           <ModalBody>
