@@ -595,6 +595,47 @@ export default function IndexPage() {
          
         }
       }
+
+      const updateSelectToken = async (type:boolean,e:any)=>
+      {
+        let tokenAddress = "";
+        let tokenInfo : any = {}
+        if(type)
+        {
+          //Already know the balance and details 
+          tokenAddress = e.address;
+          tokenInfo = e;
+        }else
+        {
+          let bal = 0 ;
+          if(publicKey)
+          {
+            try{
+              bal = Number(await getTokenBalance(new PublicKey(e.mint) , publicKey))
+            }catch(e)
+            {
+              console.error(e)
+            }
+          }
+          tokenAddress = e.mint;
+          tokenInfo =     {
+            "address": e.mint,
+            "balance": bal,
+            "associated_account": "",
+            "info": {
+                "decimals": 6,
+                "name": e.name,
+                "symbol": e.symbol,
+                "image": e.image_uri,
+                "metadata_uri": e.metadata_uri
+            }
+        }
+      }
+        setSelectedTokenInfo(tokenInfo);
+        setSelectedToken(tokenAddress);
+        onTokenSelectClose()
+      }
+      
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
@@ -1158,7 +1199,7 @@ export default function IndexPage() {
             }}
           >
                   <div>
-                    <Avatar isBordered color="secondary" src={item?.image_uri} />
+                    <Avatar isBordered color="default" src={item?.image_uri} />
                   </div>
 
   
@@ -1174,7 +1215,12 @@ export default function IndexPage() {
 
 
                   <div style={{ display: "flex", gap: "0.5rem" }}>
-                    <Button color="success" onClick={userRepayButton}>
+                    <Button color="success" onClick={
+                      ()=>
+                      {
+                        updateSelectToken(false,item);
+                      }
+                    }>
                       Select
                     </Button>
                   </div>
@@ -1226,7 +1272,7 @@ export default function IndexPage() {
                     }}
                   >
                     <div>
-                      <Avatar isBordered color="secondary" src={"https://pump.fun/logo.png"} />
+                      <Avatar isBordered color="default" src={"https://pump.fun/logo.png"} />
                     </div>
   
                     <div  style={{ display: "flex", flexDirection: "column", alignItems: "left" }}>
@@ -1246,7 +1292,8 @@ export default function IndexPage() {
   
                     <div style={{ display: "flex", gap: "0.5rem" }}>
                       <Button color="success" onClick={()=>{
-                        setSelectedTokenFunction(item.address)
+                        setSelectedTokenFunction(item.address);
+                        updateSelectToken(true,item);
                       }}>
                         Select
                       </Button>
@@ -1275,7 +1322,10 @@ export default function IndexPage() {
               }
               className="cursor-pointer"
               variant="bordered"
-              
+              onClick={()=>{
+                updateSelectToken(false,item)
+              }}
+
             >
               {item.name}
             </Chip>
