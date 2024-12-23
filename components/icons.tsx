@@ -14,7 +14,7 @@ export const Logo: React.FC<IconSvgProps> = ({
     style={{
       width : "100px",
       height :"100px",
-      backgroundColor: '#000',
+      backgroundColor: "transparent",
       paddingTop:"10%"
     }}
   >
