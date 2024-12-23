@@ -46,6 +46,9 @@ const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZu
   let userTokenAccount: PublicKey;
   let poolTokenAccount: PublicKey;
 
+  let userBorrowDataDetails : false | any = false;
+
+
   const connection = new Connection(envConfig.rpc);
 
 const solanaDataInit = ( publicKey:PublicKey, token:string) =>
@@ -103,6 +106,15 @@ const solanaDataInit = ( publicKey:PublicKey, token:string) =>
         true
       );
 
+      console.log("💊 Account List :: ",
+        systemConfig.toBase58(),
+        poolStakingData.toBase58(),
+        userStakingData.toBase58(),
+        userBorrowData.toBase58(),
+        userTokenAccount.toBase58(),
+        poolTokenAuthority.toBase58(),
+        poolTokenAccount.toBase58()
+    )
     return{
         systemConfig,
         poolStakingData,
@@ -150,6 +162,13 @@ const testSoalanData = async (
         await fetchUserStakingData(userStakingData)
     )
 
+}
+
+const initFetchData = async()=>{
+  try{
+
+    userBorrowDataDetails =  await fetchUserBorrowData(userBorrowData);
+  }catch(e){}
 }
 
 
@@ -337,6 +356,44 @@ const fetchUserBorrowData = async (_userBorrowData:PublicKey) => {
     }
   }
 
+/**
+ * Curve data culcuation .
+ */
+
+  const curveBaseToken = BigInt('1073000000000000')
+  const curveBaseSol = BigInt('30000000000')
+
+  const culcuateBorrowAbleToken = async (
+    amount:number
+  )=>
+  {
+    let newBorrowToken = BigInt(amount);
+
+    let borrowedToken = BigInt(0);
+    let borrowedSol = BigInt(0); 
+    try{
+      // const borrowData =  await fetchUserBorrowData(userBorrowData);
+      // if(borrowData)
+      // {
+      //   borrowedToken = borrowData.collateralAmount;
+      //   borrowedSol = borrowData.borrowedAmount;
+      // }
+      if(userBorrowDataDetails)
+      {
+        borrowedToken = userBorrowDataDetails.collateralAmount;
+        borrowedSol = userBorrowDataDetails.borrowedAmount;
+      }
+    }catch(e)
+    {
+
+    }
+    const newToken = borrowedToken+curveBaseToken;
+    const newSol = borrowedSol+curveBaseSol;
+
+    const dSol = newSol-((newSol*newToken)/(newToken+newBorrowToken))
+    return Number((Number(dSol)*0.7).toFixed(0));
+  }
+  
 export {
     testSoalanData,
     solanaDataInit,
@@ -345,5 +402,8 @@ export {
     fetchPoolStakingData,
     fetchUserStakingData,
     fetchSystemConfigData,
-    solPriceFetch
+    solPriceFetch,
+
+    initFetchData,
+    culcuateBorrowAbleToken
 }

@@ -53,7 +53,9 @@ import {
 import {
   testSoalanData,
   solanaDataInit,
-  solPriceFetch
+  solPriceFetch,
+  initFetchData,
+  culcuateBorrowAbleToken
 } from "@/core/solanaData"
 
 import {
@@ -115,7 +117,7 @@ export default function IndexPage() {
       "associated_account": "",
       "info": {
           "decimals": 9,
-          "name": "PUMP Coin",
+          "name": "PUMP Token",
           "symbol": "PUMP",
           "image": "",
           "metadata_uri": ""
@@ -268,6 +270,7 @@ export default function IndexPage() {
             )
             setSelectedTokenInfo(pumptmp[0])
             setSelectedToken(pumptmp[0].address);
+            await updateSolanaInitData(pumptmp[0].address)
           }
           const userStakeInfo = await userSolStakeFetch()
           console.log(
@@ -529,26 +532,26 @@ export default function IndexPage() {
         
       const debugs = async () => 
       {
-        // if(publicKey)
-        // {
-        //   await solanaDataInit(publicKey,selectedToken)
-        //   console.log(
-        //     await testSoalanData(publicKey)
-        //   )
-        // }
+        if(publicKey)
+        {
+          await solanaDataInit(publicKey,selectedToken)
+          console.log(
+            await testSoalanData(publicKey)
+          )
+        }
 
         // await userClosePositionButton()
 
-        if(publicKey && signTransaction)
-        {
-          const bk = addressBooks(publicKey,  "Dtt6Zet8QaC4k27KF2NnpPRoomNysDZ3Wmom1cYSwpdd");
-          if(bk)
-          {
-            await pumpBuyTest(publicKey,signTransaction);
-            // await pumpSellTest(publicKey,signTransaction);
+        // if(publicKey && signTransaction)
+        // {
+        //   const bk = addressBooks(publicKey,  "Dtt6Zet8QaC4k27KF2NnpPRoomNysDZ3Wmom1cYSwpdd");
+        //   if(bk)
+        //   {
+        //     await pumpBuyTest(publicKey,signTransaction);
+        //     // await pumpSellTest(publicKey,signTransaction);
             
-          }
-        }
+        //   }
+        // }
 
         // onTokenSelectOpen()
       
@@ -557,8 +560,9 @@ export default function IndexPage() {
       const setBorrowAmountFunction = async (amount:number)=>
       {
         setBorrowAmount(amount);
+        
         setBorrowOutAmount(
-          amount*1e6
+          await culcuateBorrowAbleToken(amount*1e6)
         )
       }
       const setLeverageAmountFunction = async (amount:number)=>
@@ -578,8 +582,10 @@ export default function IndexPage() {
             if(e?.address == address)
             {
               setSelectedTokenInfo(e)
+              
             }
           });
+          await updateSolanaInitData(address)
           
         }
 
@@ -633,7 +639,19 @@ export default function IndexPage() {
       }
         setSelectedTokenInfo(tokenInfo);
         setSelectedToken(tokenAddress);
+        await updateSolanaInitData(tokenAddress)
         onTokenSelectClose()
+      }
+
+      const updateSolanaInitData = async(
+        tokenAddress:string
+      ) =>
+      {
+        if(publicKey)
+          {
+            solanaDataInit(publicKey,tokenAddress)
+            await initFetchData();
+          }
       }
       
   return (
