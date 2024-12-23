@@ -15,6 +15,8 @@ import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 
+import { FaTelegram } from "react-icons/fa";
+
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import {
@@ -91,6 +93,14 @@ export const Navbar = () => {
           </Link>
           <Link isExternal href={siteConfig.links.discord} title="Discord">
             <DiscordIcon className="text-default-500" />
+          </Link>
+          <Link isExternal href={siteConfig.links.telegramChannel} title="Telegram">
+          <div
+        rel="noopener noreferrer"
+        style={{ fontSize: "24px", color: "#ffffff", textDecoration: "none" }}
+      >
+        <FaTelegram />
+      </div>
           </Link>
           <Link isExternal href={siteConfig.links.github} title="GitHub">
             <GithubIcon className="text-default-500" />

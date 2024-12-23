@@ -47,7 +47,8 @@ import {
   pumpBuyTest,
   pumpSellTest,
   userLeverageTokenPump,
-  userCloseTokenPump
+  userCloseTokenPump,
+  fetchPumpData
 } from "@/core/action"
 
 import {
@@ -55,7 +56,9 @@ import {
   solanaDataInit,
   solPriceFetch,
   initFetchData,
-  culcuateBorrowAbleToken
+  culcuateBorrowAbleToken,
+  fetchTokenPumpCurveData,
+  culcuateLeverageAbleToken
 } from "@/core/solanaData"
 
 import {
@@ -534,10 +537,41 @@ export default function IndexPage() {
       {
         if(publicKey)
         {
-          await solanaDataInit(publicKey,selectedToken)
-          console.log(
-            await testSoalanData(publicKey)
+          solanaDataInit(publicKey,selectedToken)
+          // console.log(
+          //   await testSoalanData(publicKey)
+          // )
+          addressBooks(publicKey,selectedToken)
+          const curve = await fetchPumpData(
+            new PublicKey(selectedToken)
           )
+          console.log(
+            "🍺 Curve address :: ",curve
+          )
+          if(curve)
+          {
+            const curveData = await fetchTokenPumpCurveData(
+              curve.bondingCurve
+            )
+            console.log(
+              "Bonding curve data :: ",
+              curveData
+            )
+            if(curveData)
+            {
+              const maxBorrowAbleData = await culcuateLeverageAbleToken(
+                1e9,
+                {
+                  solReserves:curveData.virtualSolReserves,
+                  tokenReserves:curveData.virtualTokenReserves
+                }
+              )
+
+              console.log("max Borrowable data ::",maxBorrowAbleData)
+            }
+            
+          }
+
         }
 
         // await userClosePositionButton()
