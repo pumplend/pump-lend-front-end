@@ -83,7 +83,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { PublicKey } from "@solana/web3.js";
-
+import { useRouter } from 'next/router';
 // @ts-ignore
 import BN from 'bn.js';
 export default function IndexPage() {
@@ -248,6 +248,8 @@ export default function IndexPage() {
     0
   )
   const { setVisible } = useWalletModal();
+  const router = useRouter();
+
   useEffect(() => {
         //Data init
         setRepayData([])
@@ -357,7 +359,55 @@ export default function IndexPage() {
         // onLoad()
       }
 
-      onLoad().catch()
+
+      const init = async ()=>
+        {
+          await onLoad().catch()
+          const q = new URLSearchParams(location.search);
+          
+          let _type = "";
+          let _src = "";
+          let _referral = "";
+          if( q.getAll("type") &&  q.getAll("type").length>0)
+          {
+            _type =  q.getAll("type")[0];
+          }
+          if( q.getAll("src") &&  q.getAll("src").length>0)
+          {
+            _src =  q.getAll("src")[0];
+          }
+          if( q.getAll("referral") &&  q.getAll("referral").length>0)
+          {
+            _referral =  q.getAll("referral")[0];
+          }
+
+        console.log("🔥 Fetch query ::",
+          {
+            _type,
+            _src,
+            _referral
+          }, q.getAll("type")
+        )
+
+        if(_type && _type == "l")
+        {
+          //Leverage 
+          changeType(data,1);
+        }
+
+        if(_src)
+        {
+          //Try search Token
+          await autoSearchAndSelectToken(_src);
+        }
+      
+        if(_referral)
+        {
+          //Set the local referral
+        }
+        }
+        init().catch()
+      // onLoad().catch()
       return () => {
         window.removeEventListener('resize', handleResize);
       };
@@ -665,6 +715,23 @@ export default function IndexPage() {
         }
       }
 
+      const autoSearchAndSelectToken = async (e:string) =>
+      {
+        console.log("🍺 Try search token ",e)
+        const tokenSearch = await getPumpLtsTokenSearch(e);
+        console.log("🍺 Try search token :: ",tokenSearch)
+        if(tokenSearch.length >0)
+        {
+          //Token exsit . take the first One . 
+          const token = tokenSearch[0]
+          console.log("🍺Token exsit ::",token)
+          // setSelectedToken(token.mint);
+          updateSelectToken(false,token)
+
+        }
+        return false;
+      }
+
       const updateSelectToken = async (type:boolean,e:any)=>
       {
         let tokenAddress = "";
@@ -744,6 +811,24 @@ export default function IndexPage() {
           }
       }
     }
+
+    const changeType = (data:any ,index:number) =>
+    {
+      let tmp = JSON.parse(
+        JSON.stringify(
+          data
+        )
+      )
+
+      for(let i = 0 ; i < tmp.length ; i++)
+      {
+        tmp[i].color = "default";
+        tmp[i].display = false;
+      }
+      tmp[index].color = "success";
+      tmp[index].display = true
+      setData(tmp);
+    }
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
@@ -820,24 +905,26 @@ export default function IndexPage() {
       <br></br>
       <div style={{width:"100%",minWidth:"300px"}} className="inline-block max-w-xl text-center justify-center item-center">
           <ButtonGroup>
-            {data.map((item:any, index:any) => (
+            {data.map((item:any, index:number) => (
               <Button key={index} color={item.color}
                 onClick={() => {
-                  let tmp = JSON.parse(
-                    JSON.stringify(
-                      data
-                    )
-                  )
+                  changeType(data,index)
+                  // let tmp = JSON.parse(
+                  //   JSON.stringify(
+                  //     data
+                  //   )
+                  // )
 
-                  for(let i = 0 ; i < tmp.length ; i++)
-                  {
-                    tmp[i].color = "default";
-                    tmp[i].display = false;
-                  }
-                  tmp[index].color = "success";
-                  tmp[index].display = true
-                  setData(tmp);
-                }}
+                  // for(let i = 0 ; i < tmp.length ; i++)
+                  // {
+                  //   tmp[i].color = "default";
+                  //   tmp[i].display = false;
+                  // }
+                  // tmp[index].color = "success";
+                  // tmp[index].display = true
+                  // setData(tmp);
+                }
+              }
               >
                 {item.name}
               </Button>
