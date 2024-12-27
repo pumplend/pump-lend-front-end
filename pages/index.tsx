@@ -277,7 +277,7 @@ export default function IndexPage() {
           if(userPumpTokens&&userPumpTokens.length > 0)
           {
             let pumptmp = JSON.parse(
-              JSON.stringify(userTokens)
+              JSON.stringify(userPumpTokens)
             )
             setSelectedTokenInfo(pumptmp[0])
             setSelectedToken(pumptmp[0].address);
@@ -1210,22 +1210,66 @@ export default function IndexPage() {
       {/* Supply Modal */}
       <Modal isOpen={isSupplyOpen} onClose={onSupplyClose} scrollBehavior={"inside"}>
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">Supply SOL</ModalHeader>
+          <ModalHeader className="flex w-full">
+            <div className="flex w-full justify-center items-center text-3xl">
+              Supply SOL
+            </div>
+          </ModalHeader>
           <ModalBody>
             <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-              <Image alt="chain logo" height={40} src="/icon/sol.png" width={40} />
+              <Image alt="chain logo" height={50} src="/icon/sol.png" width={50} />
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span className="text-xs">Your Supply</span>
-                <span className="text-success text-xs">{userSupply.your}</span>
+                <span className="text-l">Your Supply</span>
+                <span className="text-success text-xl">{userSupply.your}</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span className="text-xs">Supply APY</span>
-                <span className="text-success text-xs">{userStakeSolApy}%</span>
+                <span className="text-l">Supply APY</span>
+                <span className="text-success text-xl">{userStakeSolApy}%</span>
               </div>
             </div>
             <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-              <Input onChange={(e:any) => { setStakeAmount(e.currentTarget.value); }} key="payinput" description={"BAL : "+Number((userWalletBlance)/1e9).toFixed(3)+" SOL"}  label="Sol" labelPlacement="inside" placeholder="Enter sol amount to deposit" />
+
+            <input
+        className=" text-3xl "
+        style={{width:"100%",textAlign:"center" ,// backgroundColor:"transparent" ,
+          backgroundColor: "rgba(255, 255, 255, 0.3)", 
+          border: "1px solid #ccc",
+          borderRadius: "8px", 
+          padding: "8px" 
+
+        }}
+        placeholder={Number((userWalletBlance)/1e9) ?
+          Number((userWalletBlance)/1e9).toFixed(3)
+           : "0"}
+        onChange={(e:any) => { setStakeAmount(e.currentTarget.value); }}
+        key="payinput"
+        value={stakeAmout ? stakeAmout:""}
+        >
+          
+        </input>
+         </div>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+            <div className="text-sm">
+            {"BAL : "+Number((userWalletBlance)/1e9).toFixed(3)+" SOL"}
             </div>
+
+            <div className="text-sm">
+            <button className="bg-green-500/50" onClick={()=>            {
+              setStakeAmount(Math.floor(Number((userWalletBlance)/1e7))/200)
+            }}> &nbsp;50%&nbsp; </button>
+            &nbsp;
+            &nbsp;
+            &nbsp;
+          <button className="bg-green-500/50" onClick={
+            ()=>
+            {
+              setStakeAmount(Math.floor(Number((userWalletBlance)/1e7))/100)
+            }
+          }> &nbsp;MAX&nbsp; </button>
+            </div>
+            </div>
+
+
           </ModalBody>
           <ModalFooter>
             <Button color="success" onClick={userStakeButton} style={{ width: '100%' }}>
@@ -1238,21 +1282,64 @@ export default function IndexPage() {
       {/* Withdraw Modal */}
       <Modal isOpen={isWithdrawOpen} onClose={onWithdrawClose} scrollBehavior={"inside"}>
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">Withdraw SOL</ModalHeader>
+          <ModalHeader className="flex w-full">
+          <div className="flex w-full justify-center items-center text-3xl">
+            Withdraw SOL
+            </div>
+          </ModalHeader>
           <ModalBody>
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-              <Image alt="chain logo" height={40} src="/icon/sol.png" width={40} />
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+              <Image alt="chain logo" height={50} src="/icon/sol.png" width={50} />
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span className="text-xs">Your Supply</span>
-                <span className="text-success text-xs">{userSupply.your}</span>
+                <span className="text-l">Your Supply</span>
+                <span className="text-success text-xl">{userSupply.your}</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span className="text-xs">Supply APY</span>
-                <span className="text-success text-xs">{userStakeSolApy}%</span>
+                <span className="text-l">Supply APY</span>
+                <span className="text-success text-xl">{userStakeSolApy}%</span>
               </div>
             </div>
             <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-              <Input onChange={(e:any) => { setWithdrawAmount(e.currentTarget.value); }} key="payinput" description={"Withdrable : "+userSupply.your +" SOL"} label="Sol" labelPlacement="inside" placeholder="Enter sol amount to withdraw" />
+            <input
+        className=" text-3xl "
+        style={{width:"100%",textAlign:"center" ,// backgroundColor:"transparent" ,
+          backgroundColor: "rgba(255, 255, 255, 0.3)", 
+          border: "1px solid #ccc",
+          borderRadius: "8px", 
+          padding: "8px" 
+
+        }}
+        placeholder={userSupply.your ?
+          userSupply.your
+           : "0"}
+           onChange={(e:any) => { setWithdrawAmount(e.currentTarget.value); }}
+        key="payinput"
+        value={withdrawAmount ? withdrawAmount:""}
+        >
+          
+        </input>
+              {/* <Input onChange={(e:any) => { setWithdrawAmount(e.currentTarget.value); }} key="payinput" description={"Withdrable : "+userSupply.your +" SOL"} label="Sol" labelPlacement="inside" placeholder="Enter sol amount to withdraw" /> */}
+            </div>
+
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+            <div className="text-sm">
+            {"Locked : "+userSupply.your+" SOL"}
+            </div>
+
+            <div className="text-sm">
+            <button className="bg-green-500/50" onClick={()=>            {
+              setWithdrawAmount(Math.floor(Number(userSupply.your)*100)/200)
+            }}> &nbsp;50%&nbsp; </button>
+            &nbsp;
+            &nbsp;
+            &nbsp;
+          <button className="bg-green-500/50" onClick={
+            ()=>
+            {
+              setWithdrawAmount(Math.floor(Number(userSupply.your)*100)/100)
+            }
+          }> &nbsp;MAX&nbsp; </button>
+            </div>
             </div>
           </ModalBody>
           <ModalFooter>
