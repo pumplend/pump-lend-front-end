@@ -1069,7 +1069,7 @@ export default function IndexPage() {
         {/* <p>{selectedTokenInfo.info.name}</p> */}
         <p></p>
         <p>
-          <span className="text-xl" style={{color:"gray"}}>${leverageOutAmountUSD.toFixed(3)} </span>
+          <span className="text-xl" style={{color:"gray"}}>~${leverageOutAmountUSD.toFixed(3)} </span>
         </p>
       </div>
 
@@ -1403,46 +1403,61 @@ export default function IndexPage() {
             pumpSearchToken.length>0 ? 
 
             pumpSearchToken.map((item:any) => (
-              <div className="gap-6  justify-center w-full">
-              <div
-            className="w-full"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)", 
-              alignItems: "center", 
-              justifyItems: "center", 
-              gap: "1rem", 
-            }}
-          >
-                  <div>
-                    <Avatar isBordered color="default" src={item?.image_uri} />
-                  </div>
 
-  
-                  <div  style={{ display: "flex", flexDirection: "column", alignItems: "left" }}>
-                    <span className="text-default-900 font-semibold text-xs">{item?.symbol}</span>
-
-                      <span className="text-default-900 font-semibold text-xs">{item?.mint.slice(0, 10)}...</span>
-                    
-                    </div>
-
-                  <div>
-                  </div>
-
-
-                  <div style={{ display: "flex", gap: "0.5rem" }}>
-                    <Button color="success" onClick={
-                      ()=>
-                      {
-                        updateSelectToken(false,item);
-                      }
-                    }>
-                      Select
-                    </Button>
-                  </div>
-                </div>
-            </div>
             
+<div
+  className="gap-6 justify-center w-full rounded-lg shadow-md button-container"
+  style={{
+   
+    padding: "1rem",
+    borderRadius: "12px",
+  }}
+  onClick={() => {
+    updateSelectToken(false, item);
+  }}
+>
+  <div
+    className="w-full"
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(3, 1fr)",
+      alignItems: "center",
+      justifyItems: "center",
+      gap: "1rem",
+    }}
+  >
+    <div>
+      <Avatar isBordered color="default" src={item?.image_uri} />
+    </div>
+
+
+      <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "left",
+      }}
+    >
+    <span className="text-default-900 font-semibold text-xs">
+        {item?.symbol}
+      </span>
+    </div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "left",
+      }}
+    >
+      <span className="text-default-900 font-semibold text-xs">
+        {item?.mint.slice(0, 15)}...
+      </span>
+    </div>
+  </div>
+</div>
+
+
+
             ))
 
             :                     <div
@@ -1474,14 +1489,25 @@ export default function IndexPage() {
         {
         userPumpTokens ? userPumpTokens.map((item:any) => (
 
-                  <div className="gap-6  justify-center w-full" key={item}>
-                              <br>
-                              </br>
+          <div
+          className="gap-6 justify-center w-full rounded-lg shadow-md button-container"
+          style={{
+           
+            padding: "1rem",
+            borderRadius: "12px",
+          }}
+          onClick={()=>{
+            setSelectedTokenFunction(item.address);
+            updateSelectToken(true,item);
+          }}
+        >
+
+                              
                   <div
                     className="w-full"
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "repeat(4, 1fr)", 
+                      gridTemplateColumns: "repeat(3, 1fr)", 
                       alignItems: "center", 
                       justifyItems: "center", 
                       gap: "1rem", 
@@ -1490,30 +1516,27 @@ export default function IndexPage() {
                     <div>
                       <Avatar isBordered color="default" src={"https://pump.fun/logo.png"} />
                     </div>
-  
-                    <div  style={{ display: "flex", flexDirection: "column", alignItems: "left" }}>
+                    
+                    {/* <div  style={{ display: "flex", flexDirection: "column", alignItems: "left" }}>
                     <span className="text-default-900 font-semibold text-xs">{item.info.symbol}</span>
-                      {/* <span className="text-default-900 font-semibold text-xs">{item.info.name}</span> */}
 
                       <span className="text-default-900 font-semibold text-xs">{item.address.slice(0, 5)}...</span>
+                    
+                    </div> */}
+  
+                    <div  style={{ display: "flex", flexDirection: "column", alignItems: "left" }}>
+                    <span className="text-default-900 font-semibold text-l">{item.info.symbol}</span>
+
+                      <span className="text-default-900 font-semibold text-xs text-gray-500">{item.address.slice(0, 15)}...</span>
                     
                     </div>
   
                     <div>
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <span className="text-success text-xs">{Number(item.balance).toFixed(2)}</span>
+                        <span className="text-success text-l">{Number(item.balance).toFixed(2)}</span>
                       </div>
                     </div>
   
-  
-                    <div style={{ display: "flex", gap: "0.5rem" }}>
-                      <Button color="success" onClick={()=>{
-                        setSelectedTokenFunction(item.address);
-                        updateSelectToken(true,item);
-                      }}>
-                        Select
-                      </Button>
-                    </div>
                   </div>
           </div>
         )
