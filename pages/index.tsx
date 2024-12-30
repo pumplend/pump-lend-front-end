@@ -38,6 +38,8 @@ import { FaArrowLeft } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import { Chip } from "@nextui-org/chip";
 
+import { trySetReferral , tryLoadReferral } from "@/core/storage";
+
 import {
   addressBooks , 
   userStakeSol , 
@@ -396,7 +398,7 @@ export default function IndexPage() {
           //Leverage 
           changeType(data,1);
         }
-        
+
         if(_src)
         {
           //Try search Token
@@ -406,7 +408,17 @@ export default function IndexPage() {
         if(_referral)
         {
           //Set the local referral
+          let _ref = "";
+          try{
+            const ref = new PublicKey(_referral)
+            _ref = ref.toBase58()
+          }catch(e)
+          {
+            console.error(e)
+          }
+          trySetReferral(_ref)
         }
+        console.log("Ref ::",tryLoadReferral())
         }
         init().catch()
       // onLoad().catch()

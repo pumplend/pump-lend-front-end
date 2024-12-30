@@ -15,7 +15,7 @@ import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 
-import { FaTelegram } from "react-icons/fa";
+import { FaTelegram , FaTwitter , FaDiscord } from "react-icons/fa";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -40,11 +40,15 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  Snippet
 } from "@nextui-org/react";
 
 
 export const Navbar = () => {
+  const { publicKey,connected ,signTransaction } = useWallet();
+
   const { isOpen: isAboutOpen, onOpen: onAboutOpen, onClose: onAboutClose } = useDisclosure();
+  const { isOpen: isRefOpen, onOpen: onRefOpen, onClose: onRefClose } = useDisclosure();
 
   const searchInput = (
     <Input
@@ -90,9 +94,22 @@ export const Navbar = () => {
               >
                 [How it works]
               </div>
+              &nbsp;&nbsp;&nbsp;
+              <div
+                className={clsx(
+                  linkStyles({ color: "foreground" }),
+                  "data-[active=true]:text-primary data-[active=true]:font-medium",
+                )}
+                color="foreground"
+                onClick={
+                  onRefOpen
+                }
+              >
+                [Referral]
+              </div>
             </NavbarItem>
 
-          {siteConfig.navItems.map((item) => (
+          {/* {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink
                 className={clsx(
@@ -105,7 +122,7 @@ export const Navbar = () => {
                 {item.label}
               </NextLink>
             </NavbarItem>
-          ))}
+          ))} */}
         </div>
       </NavbarContent>
 
@@ -206,6 +223,39 @@ export const Navbar = () => {
         </ModalContent>
       </Modal>
 
+
+            {/* Ref Modal */}
+            <Modal isOpen={isRefOpen} onClose={onRefClose} scrollBehavior={"inside"} size="3xl">
+        <ModalContent>
+          <ModalHeader className="flex w-full">
+          <div className="flex w-full justify-center items-center text-3xl">
+          [Share & Referral]
+            </div>
+          </ModalHeader>
+          <ModalBody>
+          <div className="flex w-full justify-center items-center">
+              
+            <Snippet color="success" symbol=""> 
+            {publicKey?'https://pumplend.fun/?referral='+publicKey.toBase58():"https://pumplend.fun/"}
+            </Snippet>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+          <div>
+            <Button color="default">
+              <FaTwitter/>
+            </Button>
+            <Button color="secondary">
+              <FaDiscord/>
+            </Button>
+            <Button color="primary">
+              <FaTelegram />
+            </Button>
+          </div>
+        </ModalFooter>
+        </ModalContent>
+
+      </Modal>
     </NextUINavbar>
   );
 };
