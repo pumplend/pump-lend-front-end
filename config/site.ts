@@ -5,59 +5,11 @@ export const siteConfig = {
   description: "First lending protocol base on pump.",
   navItems: [
     {
-      label: "[How it works]",
-      href: "/",
-    },
-    // {
-    //   label: "Docs",
-    //   href: "/docs",
-    // },
-    {
       label: "[Referral]",
-      href: "/pricing",
+      href: "/referral",
     },
-    // {
-    //   label: "Blog",
-    //   href: "/blog",
-    // },
-    // {
-    //   label: "About",
-    //   href: "/about",
-    // },
   ],
   navMenuItems: [
-    // {
-    //   label: "Profile",
-    //   href: "/profile",
-    // },
-    // {
-    //   label: "Dashboard",
-    //   href: "/dashboard",
-    // },
-    // {
-    //   label: "Projects",
-    //   href: "/projects",
-    // },
-    // {
-    //   label: "Team",
-    //   href: "/team",
-    // },
-    // {
-    //   label: "Calendar",
-    //   href: "/calendar",
-    // },
-    // {
-    //   label: "Settings",
-    //   href: "/settings",
-    // },
-    // {
-    //   label: "Help & Feedback",
-    //   href: "/help-feedback",
-    // },
-    // {
-    //   label: "Logout",
-    //   href: "/logout",
-    // },
   ],
   links: {
     github: "https://github.com/pumplend",

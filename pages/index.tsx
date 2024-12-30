@@ -244,6 +244,8 @@ export default function IndexPage() {
 
   const { isOpen: isTokenSelectOpen, onOpen: onTokenSelectOpen, onClose: onTokenSelectClose } = useDisclosure();
 
+
+
   const [userWalletBlance , setUserWalletBlance] = useState(
     0
   )
@@ -394,7 +396,7 @@ export default function IndexPage() {
           //Leverage 
           changeType(data,1);
         }
-
+        
         if(_src)
         {
           //Try search Token
@@ -1701,6 +1703,9 @@ export default function IndexPage() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+
+
       </div>
       </section>
     </DefaultLayout>

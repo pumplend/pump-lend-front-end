@@ -31,10 +31,21 @@ import {
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { Image } from "@nextui-org/image";
 
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/react";
 
 
 export const Navbar = () => {
+  const { isOpen: isAboutOpen, onOpen: onAboutOpen, onClose: onAboutClose } = useDisclosure();
+
   const searchInput = (
     <Input
       aria-label="Search"
@@ -66,6 +77,21 @@ export const Navbar = () => {
           </NextLink>
         </NavbarBrand>
         <div className="hidden lg:flex gap-4 justify-start ml-2">
+        <NavbarItem >
+              <div
+                className={clsx(
+                  linkStyles({ color: "foreground" }),
+                  "data-[active=true]:text-primary data-[active=true]:font-medium",
+                )}
+                color="foreground"
+                onClick={
+                  onAboutOpen
+                }
+              >
+                [How it works]
+              </div>
+            </NavbarItem>
+
           {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink
@@ -154,6 +180,32 @@ export const Navbar = () => {
           ))}
         </div>
       </NavbarMenu>
+
+
+
+
+
+      
+            {/* About Modal */}
+            <Modal isOpen={isAboutOpen} onClose={onAboutClose} scrollBehavior={"inside"}>
+        <ModalContent>
+          <ModalHeader className="flex w-full">
+          <div className="flex w-full justify-center items-center text-3xl">
+          <Image alt="chain logo" height={50} src="/logo.png" width={50} />[How it works ?]
+            </div>
+          </ModalHeader>
+          <ModalBody>
+          <div style={{ width: '100%' }}>
+              
+              <a className="text-xl">Pumplend is the first solana memecoin lending & spot-leverage protocol</a>
+              <p>
+                You can leverage buy memecoin or lend sol from it .
+              </p>
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
     </NextUINavbar>
   );
 };
