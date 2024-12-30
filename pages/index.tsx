@@ -832,9 +832,13 @@ export default function IndexPage() {
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
-        <div className="inline-block max-w-xl text-center justify-center">
-          <span className={title()}>Deposite&nbsp;</span>
+        {//<div className="inline-block max-w-xl text-center justify-center">
+        }
+          {/**
+           * <span className={title()}>Deposite&nbsp;</span>
           <span className={title({ color: "green" })+" github"}>Memecoin&nbsp;</span>
+
+          **/}
 
           {/* <Button onClick={debugs}> Debug</Button> */}
           {/* <span className={title({ color: "green" })}>Memecoin&nbsp;</span> */}
@@ -842,11 +846,12 @@ export default function IndexPage() {
           <span className={title()}>
             Release SOL 
           </span> */}
-        </div>
+        {//</div>
+}
       <br></br>
       
 
-      <div className="maincard">
+      <div className="maincard" style={{minWidth : windowSize.width*0.32}}>
       <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full" style={{ width:"100%" }}>
   <CardBody className="py-5 gap-4">
     <div className="flex gap-2.5 justify-center">
@@ -1438,11 +1443,36 @@ export default function IndexPage() {
       </Modal>
 
             {/* Loading Modal */}
-        <Modal isOpen={isLoadingOpen} onClose={onLoadingClose} hideCloseButton={true} isDismissable={false} isKeyboardDismissDisabled={true}>
+        <Modal isOpen={isLoadingOpen} onClose={onLoadingClose} hideCloseButton={true} isDismissable={false} isKeyboardDismissDisabled={true} style={{backgroundColor:"transparent", marginTop:"-20%"}}>
         <ModalContent>
          
           <ModalBody>
-            <Spinner  style={{height:"300px"}} color="warning" label="Account Loading ..." />
+            <div className="items-center text-center w-full justify-center">
+            <div className="spinner-box">
+            <div className="blue-orbit leo">
+            </div>
+
+            <div className="green-orbit leo">
+            </div>
+            
+            <div className="red-orbit leo">
+            </div>
+            
+            <div className="white-orbit w1 leo">
+            </div><div className="white-orbit w2 leo">
+            </div><div className="white-orbit w3 leo">
+            </div>
+          </div>
+
+            <div className="text-3xl">
+            Account Loading ...
+            </div>
+            </div>
+            
+
+            {/* <Spinner  style={{height:"300px"}} color="warning" label="Account Loading ..." /> */}
+
+
           </ModalBody>
         </ModalContent>
       </Modal>
