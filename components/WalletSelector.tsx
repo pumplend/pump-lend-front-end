@@ -11,7 +11,7 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { OKXUniversalConnectUI } from "@okxconnect/ui";
 
-import { WalletTgSdk } from '@uxuycom/web3-tg-sdk';
+// import { WalletTgSdk } from '@uxuycom/web3-tg-sdk';
 
 import {
   Modal,
