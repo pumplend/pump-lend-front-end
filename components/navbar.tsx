@@ -26,6 +26,9 @@ import {
   HeartFilledIcon,
   SearchIcon,
   Logo,
+  OkxIcon,
+  TonspackIcon,
+  UXUYIcon,
 } from "@/components/icons";
 
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -47,6 +50,8 @@ import {
 import { useState, useEffect } from "react";
 import { OKXUniversalProvider } from "@okxconnect/universal-provider";
 import { OKXUniversalConnectUI } from "@okxconnect/ui";
+
+import { globalWallet } from "@/core/wallet"
 export const Navbar = () => {
   const { publicKey,connected ,signTransaction } = useWallet();
 
@@ -54,46 +59,92 @@ export const Navbar = () => {
   const { isOpen: isRefOpen, onOpen: onRefOpen, onClose: onRefClose } = useDisclosure();
 
   const { isOpen: isWalletConnectorOpen, onOpen: onWalletConnectorOpen, onClose: onWalletConnectorClose } = useDisclosure();
-
+  
+  const [ walletConnected , setWalletConnected] = useState(false);
+  const [walletConnectedType , setWalletConnectedType] = useState(0);
+  const [walletConnectedAddress , setWalletConnectedAddress] = useState("");
+  
+  
   useEffect(() => {
     // okxWallet()
-  })
-  const okxWallet = async ()=>
+    if(connected && publicKey)
+    {
+      console.log("connected wallet-adapter wallet")
+      setWalletConnected(true);
+      setWalletConnectedType(0);
+      setWalletConnectedAddress(publicKey.toBase58());
+    }
+
+    if(!connected && walletConnectedType ==0 )
+    {
+      setWalletConnected(false);
+    }
+
+    if (window.okxwallet && window.okxwallet.solana) {
+      window.okxwallet.solana.on("connect", () =>{
+        console.log("connected browser extension wallet")
+       setWalletConnected(true);
+       setWalletConnectedType(1);
+       setWalletConnectedAddress(window.okxwallet.solana.publicKey.toString());
+       onWalletConnectorClose()
+       // setWalletConnectedAddress(publicKey.toBase58());
+      
+     });
+ 
+    }
+
+  }, [connected,publicKey]);
+
+  const walletBtn = ()=>{
+    if(!walletConnected)
+    {
+      return (
+        <Button onClick={connectWallet}> Connect Wallet </Button>
+      )
+    }else{
+      if(walletConnectedType == 0)
+      {
+        //Wallet adapter
+        return (
+          <WalletMultiButton className="btn btn-ghost" style={{height:"85%" , backgroundColor:"green"}} />
+        )
+      }else{
+        if(walletConnectedType == 1)
+        {
+          return (
+            <Button startContent={<OkxIcon/>} onClick={disconnectWallet}> {walletConnectedAddress.slice(0, 10)} ...</Button>
+          )
+        }
+
+        if(walletConnectedType == 3)
+          {
+            return (
+              <Button startContent={<UXUYIcon/>} onClick={disconnectWallet}> {walletConnectedAddress.slice(0, 10)} ...</Button>
+            )
+          }
+              if(walletConnectedType == 4 )
+        {
+          return (
+            <Button startContent={<TonspackIcon/>} onClick={disconnectWallet}> {walletConnectedAddress.slice(0, 10)} ...</Button>
+          )
+        }
+        return (
+          <Button  onClick={connectWallet}> {walletConnectedAddress.slice(0, 10)} ...</Button>
+        )
+      }
+    }
+  }
+
+  const disconnectWallet = async ()=>
+  {
+    setWalletConnected(false);
+    setWalletConnectedType(0);
+    setWalletConnectedAddress("");
+  }
+
+  const connectWallet = async ()=>
   {
     onWalletConnectorOpen()
-  //   if(!window.okxwallet)
-  //   {
-
-  //     const universalUi = await OKXUniversalConnectUI.init({
-  //       dappMetaData: {
-  //           icon: "https://static.okx.com/cdn/assets/imgs/247/58E63FEA47A2B7D7.png",
-  //           name: "OKX Connect Demo"
-  //       },
-  //       actionsConfiguration: {
-  //           returnStrategy: 'tg://resolve',
-  //           modals:"all",
-  //           tmaReturnUrl:'back'
-  //       },
-  //       language: "en_US",
-  //   });
-  
-  //   var session = await universalUi.openModal({
-  //     namespaces: {
-  //         solana: {
-  //             chains: ["solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp", // solana mainnet
-  //             //  "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",// solana testnet
-  //             //  "sonic:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",// sonic testnet
-  //             ],
-  //         }
-  //     }
-  // })
-  //   }else{
-  //     console.log( "🍺 Browser okx wallet ::",window.okxwallet ,window.okxwallet.solana )
-  //     window.okxwallet.solana.connect()
-  //     window.okxwallet.solana.on("connect", () => console.log("connected!"));
-  //   }
-
-
   }
   const searchInput = (
     <Input
@@ -208,8 +259,10 @@ export const Navbar = () => {
             
           </Button>
 
-          <Button onClick={okxWallet}> OKX wallet </Button>
-          <WalletMultiButton className="btn btn-ghost" style={{height:"85%" , backgroundColor:"green"}} />
+          {
+          walletBtn()
+          }
+          {/* <WalletMultiButton className="btn btn-ghost" style={{height:"85%" , backgroundColor:"green"}} /> */}
         </NavbarItem>
       </NavbarContent>
 

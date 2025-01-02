@@ -39,7 +39,7 @@ import { FaSearch } from "react-icons/fa";
 import { Chip } from "@nextui-org/chip";
 
 import { trySetReferral , tryLoadReferral } from "@/core/storage";
-
+import { globalWallet } from "@/core/wallet"
 import {
   addressBooks , 
   userStakeSol , 
@@ -357,6 +357,9 @@ export default function IndexPage() {
         console.log(
           "🍺 Wallet connect status ::",publicKey,connected
         )
+        globalWallet.connected = true;
+        globalWallet.address = publicKey.toBase58();
+        
         onConnect(publicKey).catch(console.error);
       }else{
         onDisconnect().catch(console.error);
