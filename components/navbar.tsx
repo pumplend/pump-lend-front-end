@@ -80,12 +80,12 @@ export const Navbar = () => {
       setWalletConnected(false);
     }
 
-    if (window.okxwallet && window.okxwallet.solana) {
-      window.okxwallet.solana.on("connect", () =>{
+    if ((window as any)?.okxwallet && (window as any)?.okxwallet.solana) {
+      (window as any)?.okxwallet.solana.on("connect", () =>{
         console.log("connected browser extension wallet")
        setWalletConnected(true);
        setWalletConnectedType(1);
-       setWalletConnectedAddress(window.okxwallet.solana.publicKey.toString());
+       setWalletConnectedAddress((window as any)?.okxwallet.solana.publicKey.toString());
        onWalletConnectorClose()
        // setWalletConnectedAddress(publicKey.toBase58());
       
@@ -359,7 +359,7 @@ export const Navbar = () => {
 
 
           {/* Wallet Connector */}
-      <Modal isOpen={isWalletConnectorOpen} onClose={onWalletConnectorClose} scrollBehavior={"inside"} size="l">
+      <Modal isOpen={isWalletConnectorOpen} onClose={onWalletConnectorClose} scrollBehavior={"inside"} size="lg">
         <ModalContent>
           <ModalHeader className="flex w-full">
           <div className="flex w-full justify-center items-center text-3xl">

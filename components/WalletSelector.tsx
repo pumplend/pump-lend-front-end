@@ -29,7 +29,7 @@ export default function WalletSelector() {
   const { isOpen: isTgopen, onOpen: onTgOpen, onClose: onTgClose } = useDisclosure();
   
   const okxWalletConnect = async ()=>{
-      if(!window.okxwallet)
+      if(!(window as any)?.okxwallet)
       {
   
         const universalUi = await OKXUniversalConnectUI.init({
@@ -57,10 +57,9 @@ export default function WalletSelector() {
         }
     })
       }else{
-        console.log( "🍺 Browser okx wallet ::",window.okxwallet ,window.okxwallet.solana )
-        window.okxwallet.solana.disconnect()
-        window.okxwallet.solana.connect()
-        
+        // console.log( "🍺 Browser okx wallet ::",(window as any)?.okxwallet ,(window as any)?.okxwallet.solana )
+        (window as any)?.okxwallet.solana.disconnect()
+        (window as any)?.okxwallet.solana.connect()
       }
       }
 
@@ -127,7 +126,7 @@ export default function WalletSelector() {
 
 
 
-      <Modal isOpen={isTgopen} onClose={onTgClose} scrollBehavior={"inside"} size="l">
+      <Modal isOpen={isTgopen} onClose={onTgClose} scrollBehavior={"inside"} size="lg">
         <ModalContent>
           <ModalHeader className="flex w-full">
           <div className="flex w-full justify-center items-center text-3xl">
