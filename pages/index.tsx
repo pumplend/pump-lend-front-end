@@ -846,13 +846,13 @@ export default function IndexPage() {
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
-        {//<div className="inline-block max-w-xl text-center justify-center">
-        }
-          {/**
-           * <span className={title()}>Deposite&nbsp;</span>
+        <div className="inline-block max-w-xl text-center justify-center">
+        
+          
+          <span className={title()}>Deposite&nbsp;</span>
           <span className={title({ color: "green" })+" github"}>Memecoin&nbsp;</span>
 
-          **/}
+         
 
           {/* <Button onClick={debugs}> Debug</Button> */}
           {/* <span className={title({ color: "green" })}>Memecoin&nbsp;</span> */}
@@ -860,8 +860,8 @@ export default function IndexPage() {
           <span className={title()}>
             Release SOL 
           </span> */}
-        {//</div>
-}
+        </div>
+
       <br></br>
       
 
