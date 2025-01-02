@@ -19,7 +19,7 @@ import {api_pump_lts_token , api_pump_search_token} from "@/core/request";
 import BN from 'bn.js';
 const connection = new Connection(envConfig.rpc);
 
-const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZuTBMG')
+const programIdDefault = new PublicKey('6m6ixFjRGq7HYAPsu8YtyEauJm8EE8pzA3mqESt5cGYf')
 let pumpKeyAccount = new PublicKey('6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P');
 let userTokens : false | [] ;
 

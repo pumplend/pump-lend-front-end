@@ -33,7 +33,7 @@ import * as abi from '@/core/pump_lend.json';
 import { serialize , Schema,deserialize, deserializeUnchecked } from "borsh";
 import { createHash } from 'crypto';
 import {envConfig} from "@/config/env"
-const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZuTBMG')
+const programIdDefault = new PublicKey('6m6ixFjRGq7HYAPsu8YtyEauJm8EE8pzA3mqESt5cGYf')
 
   // PDA Accounts
   let systemConfig: PublicKey;
@@ -151,6 +151,7 @@ const userStakeSol = async (
       const instruction = new TransactionInstruction({
         keys: [
             { pubkey: publicKey, isSigner: true, isWritable: true },
+            { pubkey: publicKey, isSigner: false, isWritable: true },
             { pubkey: poolStakingData, isSigner: false, isWritable: true },
             { pubkey: userStakingData, isSigner: false, isWritable: true },
             { pubkey: poolTokenAuthority, isSigner: false, isWritable: true },
@@ -211,6 +212,7 @@ const userWithdrawSol = async (
       const instruction = new TransactionInstruction({
         keys: [
             { pubkey: publicKey, isSigner: true, isWritable: true },
+            { pubkey: publicKey, isSigner: false, isWritable: true },
             { pubkey: poolStakingData, isSigner: false, isWritable: true },
             { pubkey: userStakingData, isSigner: false, isWritable: true },
             { pubkey: poolTokenAuthority, isSigner: false, isWritable: true },
@@ -492,6 +494,8 @@ const userCloseTokenPump = async (
   )
   const instruction = new TransactionInstruction({
       keys: [
+          { pubkey: publicKey, isSigner: true, isWritable: true },
+          { pubkey: publicKey, isSigner: true, isWritable: true },
           { pubkey: publicKey, isSigner: true, isWritable: true },
           { pubkey: publicKey, isSigner: true, isWritable: true },
           { pubkey: poolStakingData, isSigner: false, isWritable: true },

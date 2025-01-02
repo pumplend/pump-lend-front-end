@@ -33,7 +33,7 @@ import { serialize , Schema,deserialize, deserializeUnchecked } from "borsh";
 import { createHash } from 'crypto';
 import {envConfig} from "@/config/env"
 import { api_price_oracle } from "./request";
-const programIdDefault = new PublicKey('Bn1a31GcgB7qquETPGHGjZ1TaRimjsLCkJZ5GYZuTBMG')
+const programIdDefault = new PublicKey('6m6ixFjRGq7HYAPsu8YtyEauJm8EE8pzA3mqESt5cGYf')
 
   // PDA Accounts
   let systemConfig: PublicKey;
