@@ -9,11 +9,24 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import { OKXUniversalConnectUI } from "@okxconnect/ui";
+
+import { WalletTgSdk } from '@uxuycom/web3-tg-sdk';
+
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  Snippet
+} from "@nextui-org/react";
 
 export default function WalletSelector() {
 
   const { setVisible } = useWalletModal();
-
+  const { isOpen: isTgopen, onOpen: onTgOpen, onClose: onTgClose } = useDisclosure();
   
   const okxWalletConnect = async ()=>{
       if(!window.okxwallet)
@@ -21,8 +34,8 @@ export default function WalletSelector() {
   
         const universalUi = await OKXUniversalConnectUI.init({
           dappMetaData: {
-              icon: "https://static.okx.com/cdn/assets/imgs/247/58E63FEA47A2B7D7.png",
-              name: "OKX Connect Demo"
+              icon: "https://pumplend.fun/logo.png",
+              name: "PUMPLEND"
           },
           actionsConfiguration: {
               returnStrategy: 'tg://resolve',
@@ -52,6 +65,43 @@ export default function WalletSelector() {
       }
 
 
+    const UXUYWalletConnec = async ()=>
+    {
+      // const { solana } = new WalletTgSdk({
+      //     metaData: {
+      //         icon: "https://pumplend.fun/logo.png",
+      //         name: "PUMPLEND",
+      //         hostname: "PUMPLEND"
+      //     }
+      // });
+
+      // await solana.connect(
+      //   {onlyIfTrusted:false},false
+      // );
+    }
+
+    const TelegramWallets = ()=> {
+      return (
+        <div className="w-ful flex-col gap-20 p-4 rounded-2xl">
+        <Button  startContent={<UXUYIcon />}  className="w-full text-xl" onClick={()=>{
+          UXUYWalletConnec()
+        }}>
+        UXUY Wallet
+        </Button>
+        &nbsp;
+        <Button  startContent={<OkxIcon />} className="w-full text-xl" onClick={async ()=>{
+          await okxWalletConnect()
+        }}>
+        OKX Wallets
+        </Button>
+        &nbsp;
+        <Button  startContent={<TonspackIcon />}  className="w-full text-xl">
+        Tonspack Wallets
+        </Button>
+        </div>
+      )
+    }
+
   return (
 
     <div className="w-ful flex-col gap-20 p-4 rounded-2xl">
@@ -67,9 +117,33 @@ export default function WalletSelector() {
         OKX Wallets
         </Button>
         &nbsp;
-        <Button  startContent={<UXUYIcon />} endContent={<TonspackIcon/>} className="w-full text-xl">
+        <Button  startContent={<UXUYIcon />} endContent={<TonspackIcon/>} className="w-full text-xl" onClick={()=>{
+          onTgOpen()
+        }}>
         Telegram Wallets
         </Button>
+
+
+
+
+
+      <Modal isOpen={isTgopen} onClose={onTgClose} scrollBehavior={"inside"} size="l">
+        <ModalContent>
+          <ModalHeader className="flex w-full">
+          <div className="flex w-full justify-center items-center text-3xl">
+          Connect Telegram Wallet
+            </div>
+          </ModalHeader>
+          <ModalBody>
+            {
+              TelegramWallets()
+            }
+          </ModalBody>
+        </ModalContent> 
+
+      </Modal>
+
+
     </div>
   );
 }
