@@ -34,6 +34,7 @@ import { serialize , Schema,deserialize, deserializeUnchecked } from "borsh";
 import { createHash } from 'crypto';
 import {envConfig} from "@/config/env"
 const programIdDefault = new PublicKey('6m6ixFjRGq7HYAPsu8YtyEauJm8EE8pzA3mqESt5cGYf')
+const vault = new PublicKey('zzntY4AtoZhQE8UnfUoiR4HKK2iv8wjW4fHVTCzKnn6')
 
   // PDA Accounts
   let systemConfig: PublicKey;
@@ -293,7 +294,10 @@ const userBorrowToken = async (
             { pubkey: ASSOCIATED_TOKEN_PROGRAM_ID, isSigner: false, isWritable: true },
             { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
             { pubkey: pumpKeyAccount, isSigner: false, isWritable: false },
+
             { pubkey: bondingCurve, isSigner: false, isWritable: true },
+            { pubkey: publicKey, isSigner: false, isWritable: true },
+            { pubkey: vault, isSigner: false, isWritable: true },
           ],
         programId: programIdDefault,
         data: data
@@ -342,6 +346,7 @@ const userRepayToken = async (
       const instruction = new TransactionInstruction({
         keys: [
             { pubkey: publicKey, isSigner: true, isWritable: true },
+            { pubkey: publicKey, isSigner: false, isWritable: true },
             { pubkey: poolStakingData, isSigner: false, isWritable: true },
             { pubkey: userBorrowData, isSigner: false, isWritable: true },
             { pubkey: poolTokenAuthority, isSigner: false, isWritable: true },
@@ -444,6 +449,8 @@ const userLeverageTokenPump = async (
           { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
           { pubkey: pumpData.rent, isSigner: false, isWritable: true },
           { pubkey: pumpData.eventAuthority, isSigner: false, isWritable: true },
+          { pubkey: publicKey, isSigner: true, isWritable: true },
+          { pubkey: vault, isSigner: true, isWritable: true },
         ],
       programId: programIdDefault,
       data: data

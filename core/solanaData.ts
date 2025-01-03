@@ -166,6 +166,7 @@ const initFetchData = async()=>{
   try{
 
     userBorrowDataDetails =  await fetchUserBorrowData(userBorrowData);
+    console.log("BorrowDataInfo :: ",userBorrowDataDetails,userBorrowDataDetails.referrer.toBase58())
   }catch(e){}
 }
 
@@ -245,11 +246,13 @@ const fetchUserBorrowData = async (_userBorrowData:PublicKey) => {
 
       // Parse the account data using the structure in idl.json
       const collateralAmount = BigInt(data.readBigUInt64LE(8));
-      const borrowedAmount = BigInt(data.readBigUInt64LE(16));
-      const lastUpdated = BigInt(data.readBigInt64LE(24));
+      const depositSolAmount = BigInt(data.readBigUInt64LE(16));
+      const borrowedAmount = BigInt(data.readBigUInt64LE(24));
+      const referrer = new PublicKey(data.slice(32, 64));
+      const lastUpdated = BigInt(data.readBigInt64LE(64)); 
 
       return {
-        collateralAmount,borrowedAmount,lastUpdated
+        collateralAmount,depositSolAmount,borrowedAmount,referrer,lastUpdated
       }
     } catch (err: any) {
       console.error(err)
