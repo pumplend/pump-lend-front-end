@@ -475,6 +475,7 @@ const fetchUserBorrowData = async (_userBorrowData:PublicKey) => {
     baseVirtualTokenReserves: bigint,
     collateralAmount: bigint
   ) {
+    // console.log("🚀 getMaxBorrowAmountByAMM ::",reserves,baseVirtualSolReserves,baseVirtualTokenReserves,collateralAmount,REMAINING_COLLATERAL_AMOUNT)
     try {
       const x0 = BigInt(baseVirtualSolReserves);
       const y0 = BigInt(baseVirtualTokenReserves);
