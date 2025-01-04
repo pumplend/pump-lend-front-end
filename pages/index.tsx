@@ -88,7 +88,10 @@ import { PublicKey } from "@solana/web3.js";
 import { useRouter } from 'next/router';
 // @ts-ignore
 import BN from 'bn.js';
+import { eventBus } from "@/core/events";
+import { Pumplend } from "@pumplend/pumplend-sdk"
 export default function IndexPage() {
+  const lend = new Pumplend("devnet")
   const { publicKey,connected ,signTransaction } = useWallet();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([
@@ -255,6 +258,12 @@ export default function IndexPage() {
   const router = useRouter();
 
   useEffect(() => {
+    //Event tester
+    eventBus.on("wallet_connected", (e:any)=>
+    {
+      console.log("New Event ::",e)
+    });
+
         //Data init
         setRepayData([])
         //Window size function

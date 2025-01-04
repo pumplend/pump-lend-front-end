@@ -27,6 +27,8 @@ import {
   
 } from "@solana/spl-token";
 import BigNumber from 'bignumber.js';
+
+import { globalWallet ,signTxn} from "@/core/wallet"
 // @ts-ignore
 import BN from 'bn.js';
 import * as abi from '@/core/pump_lend.json';
@@ -169,8 +171,8 @@ const userStakeSol = async (
     const { blockhash } = await connection.getLatestBlockhash();
     transaction.recentBlockhash = blockhash;
     console.log("🚀 final txn :: ",transaction)
-    const signedTransaction = await signTransaction(transaction);
-
+    // const signedTransaction = await signTransaction(transaction);
+    const signedTransaction = await signTxn(transaction);
     try {
         const txid = await connection.sendRawTransaction(signedTransaction.serialize());
         console.log('Transaction sent with ID:', txid);

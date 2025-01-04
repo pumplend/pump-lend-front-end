@@ -12,6 +12,7 @@ import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { OKXUniversalConnectUI } from "@okxconnect/ui";
 
 // import { WalletTgSdk } from '@uxuycom/web3-tg-sdk';
+import { eventBus } from "@/core/events";
 
 import {
   Modal,
@@ -29,6 +30,7 @@ export default function WalletSelector() {
   const { isOpen: isTgopen, onOpen: onTgOpen, onClose: onTgClose } = useDisclosure();
   
   const okxWalletConnect = async ()=>{
+    
       if(!(window as any)?.okxwallet)
       {
   
@@ -60,6 +62,14 @@ export default function WalletSelector() {
         // console.log( "🍺 Browser okx wallet ::",(window as any)?.okxwallet ,(window as any)?.okxwallet.solana )
         try{
           (window as any)?.okxwallet.solana.disconnect()
+          window.okxwallet.solana.on(
+            "connect", () => {
+              eventBus.emit("wallet_connected", { 
+                type : 1 , //OKX wallet extension type
+                data : (window as any)?.okxwallet.solana
+               });
+            }
+          );
         }catch(e)
         {e}
         

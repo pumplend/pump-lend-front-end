@@ -33,6 +33,9 @@ import { serialize , Schema,deserialize, deserializeUnchecked } from "borsh";
 import { createHash } from 'crypto';
 import {envConfig} from "@/config/env"
 import { api_price_oracle } from "./request";
+import { Pumplend } from "@pumplend/pumplend-sdk"
+
+const lend = new Pumplend("devnet");
 const programIdDefault = new PublicKey('6m6ixFjRGq7HYAPsu8YtyEauJm8EE8pzA3mqESt5cGYf')
 
   // PDA Accounts
@@ -56,54 +59,21 @@ const solanaDataInit = ( publicKey:PublicKey, token:string) =>
     {
         return false;
     }
-    systemConfig = PublicKey.findProgramAddressSync(
-        [
-          Buffer.from("system_config")
-        ],
-        programIdDefault
-      )[0];
 
-    poolStakingData = PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("pool_staking_data")
-      ],
-      programIdDefault
-    )[0];
-
-    userStakingData = PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("user_staking_data"),
-        publicKey.toBuffer()
-      ],
-      programIdDefault
-    )[0];
-
-    userBorrowData = PublicKey.findProgramAddressSync(
-        [
-          Buffer.from("user_borrow_data"),
-          tokenMint.toBuffer(),
-          publicKey.toBuffer()
-        ],
-        programIdDefault
-      )[0];
-    userTokenAccount = getAssociatedTokenAddressSync(
-        tokenMint,
-        publicKey,
-        true
-    )
-
-    poolTokenAuthority = PublicKey.findProgramAddressSync(
-        [
-          Buffer.from("pool_token_authority")
-        ],
-        programIdDefault
-      )[0];
-    poolTokenAccount = getAssociatedTokenAddressSync(
-        tokenMint,
-        poolTokenAuthority,
-        true
-      );
-
+    const protocolInfo = lend.tryGetUserAccounts(publicKey);
+    const userTokenAccounts = lend.tryGetUserTokenAccounts(publicKey,tokenMint)
+    if(!userTokenAccounts)
+    {
+      return false;
+    }
+    systemConfig = protocolInfo.systemConfig;
+    poolStakingData = protocolInfo.poolStakingData;
+    userStakingData = protocolInfo.userStakingData;
+    userBorrowData = userTokenAccounts.userBorrowData;
+    userTokenAccount = lend.tryGetUserTokenAccount(publicKey,tokenMint);
+    
+    poolTokenAuthority = protocolInfo.poolTokenAuthority;
+    poolTokenAccount = userTokenAccounts.poolTokenAccount;
       console.log("💊 Account List :: ",
         systemConfig.toBase58(),
         poolStakingData.toBase58(),

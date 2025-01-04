@@ -52,8 +52,11 @@ import { OKXUniversalProvider } from "@okxconnect/universal-provider";
 import { OKXUniversalConnectUI } from "@okxconnect/ui";
 
 import { globalWallet } from "@/core/wallet"
+
+import { eventBus } from "@/core/events";
+import { PublicKey } from "@solana/web3.js";
 export const Navbar = () => {
-  const { publicKey,connected ,signTransaction } = useWallet();
+  const { publicKey,connected ,signTransaction , signMessage } = useWallet();
 
   const { isOpen: isAboutOpen, onOpen: onAboutOpen, onClose: onAboutClose } = useDisclosure();
   const { isOpen: isRefOpen, onOpen: onRefOpen, onClose: onRefClose } = useDisclosure();
@@ -64,34 +67,76 @@ export const Navbar = () => {
   const [walletConnectedType , setWalletConnectedType] = useState(0);
   const [walletConnectedAddress , setWalletConnectedAddress] = useState("");
   
-  
-  useEffect(() => {
-    // okxWallet()
-    if(connected && publicKey)
+  const walletChange = (e:any)=>
+  {
+    globalWallet.type = e.type;
+    switch(e.type)
     {
-      console.log("connected wallet-adapter wallet")
-      setWalletConnected(true);
-      setWalletConnectedType(0);
-      setWalletConnectedAddress(publicKey.toBase58());
+      
+      case 0 : //Wallet adapter wallet
+        walletAdapterConnected(e.data)
+        globalWallet.fn['signMsg'] = signMessage;
+        globalWallet.fn['signTxn'] = signTransaction;
+        break;
+      case 1 : //OKX extension wallet
+        okxExtensionWalletConnected()
+        globalWallet.fn['provider'] = (window as any)?.okxwallet.solana;
+        break;
+      case 2: //OKX uniwallet adapter
+      break;
+      default:
+        return false;
     }
+  }
+  
+  const okxExtensionWalletConnected = ()=>
+  {
+    setWalletConnected(true);
+    setWalletConnectedType(1);
+    setWalletConnectedAddress((window as any)?.okxwallet.solana.publicKey.toString());
+    onWalletConnectorClose()
+  }
+  const walletAdapterConnected = (pk:PublicKey) =>
+  {
+    
+    setWalletConnected(true);
+    setWalletConnectedType(0);
+    setWalletConnectedAddress(pk.toBase58());
+  }
 
+  useEffect(() => {
+
+    if(connected)
+    {
+      //Wallet adapter connected
+      eventBus.emit("wallet_connected", { 
+        type : 0 , //OKX wallet extension type
+        data : publicKey
+       });
+    }
     if(!connected && walletConnectedType ==0 )
     {
-      setWalletConnected(false);
+      console.log("wallet_disconnected ")
+      eventBus.emit("wallet_disconnected", { 
+        type : 0 , 
+       });
     }
+    eventBus.on("wallet_connected", (e:any)=>
+      {
+        //Wallet connect event check
+        if(e && e.detail)
+        {
+          walletChange(e.detail);
+        }
+      });
 
-    if ((window as any)?.okxwallet && (window as any)?.okxwallet.solana) {
-      (window as any)?.okxwallet.solana.on("connect", () =>{
-        console.log("connected browser extension wallet")
-       setWalletConnected(true);
-       setWalletConnectedType(1);
-       setWalletConnectedAddress((window as any)?.okxwallet.solana.publicKey.toString());
-       onWalletConnectorClose()
-     });
- 
-    }
+    eventBus.on("wallet_disconnected", (e:any)=>
+        {
+          disconnectWallet()
+          globalWallet.connected = false;
+        });
 
-  }, [connected,publicKey]);
+  }, [connected,publicKey,walletConnectedType]);
 
   const walletBtn = ()=>{
     if(!walletConnected)
