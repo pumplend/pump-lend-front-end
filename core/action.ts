@@ -53,7 +53,9 @@ const vault = new PublicKey('zzntY4AtoZhQE8UnfUoiR4HKK2iv8wjW4fHVTCzKnn6')
 
   const connection = new Connection(envConfig.rpc);
 
-const addressBooks = ( publicKey:PublicKey , token:string) =>
+const addressBooks = ( publicKey:PublicKey , token:string =tokenMint.toBase58()
+
+) =>
 {
     tokenMint = new PublicKey(token)
     if(!publicKey)
@@ -125,7 +127,6 @@ const addressBooks = ( publicKey:PublicKey , token:string) =>
 const userStakeSol = async ( 
     amount:number,
     publicKey:PublicKey,
-    signTransaction: (transaction: Transaction) => Promise<Transaction>
 )=>
 {
     

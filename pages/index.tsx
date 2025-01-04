@@ -528,13 +528,14 @@ export default function IndexPage() {
 
   const userStakeButton = async ()=>
   {
-    if(publicKey && signTransaction)
+    console.log(globalWallet)
+    if(globalWallet.connected)
       {
         
-        const addbook = addressBooks(publicKey,selectedToken)
+        const addbook = addressBooks(new PublicKey(globalWallet.address),selectedToken)
         if(addbook)
         {
-          await userStakeSol(stakeAmout,publicKey,signTransaction);
+          await userStakeSol(stakeAmout,new PublicKey(globalWallet.address));
           // await testStake(stakeAmout,publicKey,signTransaction);
           
         }

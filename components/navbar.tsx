@@ -67,20 +67,26 @@ export const Navbar = () => {
   const [walletConnectedType , setWalletConnectedType] = useState(0);
   const [walletConnectedAddress , setWalletConnectedAddress] = useState("");
   
-  const walletChange = (e:any)=>
+  const walletChange =async (e:any)=>
   {
     globalWallet.type = e.type;
     switch(e.type)
     {
       
       case 0 : //Wallet adapter wallet
+      if(!publicKey)
+      {
+        return false;
+      }
         walletAdapterConnected(e.data)
         globalWallet.fn['signMsg'] = signMessage;
         globalWallet.fn['signTxn'] = signTransaction;
+        globalWallet.address = new PublicKey(publicKey)
         break;
       case 1 : //OKX extension wallet
         okxExtensionWalletConnected()
         globalWallet.fn['provider'] = (window as any)?.okxwallet.solana;
+        globalWallet.address = new PublicKey((window as any)?.okxwallet.solana.publicKey.toString())
         break;
       case 2: //OKX uniwallet adapter
       break;
@@ -121,12 +127,13 @@ export const Navbar = () => {
         type : 0 , 
        });
     }
-    eventBus.on("wallet_connected", (e:any)=>
+    eventBus.on("wallet_connected", async (e:any)=>
       {
         //Wallet connect event check
+        globalWallet.connected = true;
         if(e && e.detail)
         {
-          walletChange(e.detail);
+          await walletChange(e.detail);
         }
       });
 

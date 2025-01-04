@@ -1,10 +1,10 @@
-import { Transaction } from "@solana/web3.js";
+import { PublicKey, Transaction } from "@solana/web3.js";
 
 let fn :any = {}
 let globalWallet = {
     connected : false,
     type:0,
-    address:"",
+    address:new PublicKey(0),
     fn:fn
 }
 
