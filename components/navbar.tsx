@@ -87,8 +87,6 @@ export const Navbar = () => {
        setWalletConnectedType(1);
        setWalletConnectedAddress((window as any)?.okxwallet.solana.publicKey.toString());
        onWalletConnectorClose()
-       // setWalletConnectedAddress(publicKey.toBase58());
-      
      });
  
     }
@@ -99,7 +97,7 @@ export const Navbar = () => {
     if(!walletConnected)
     {
       return (
-        <Button onClick={connectWallet}> Connect Wallet </Button>
+        <Button onClick={connectWallet} className="text-lg"> Connect Wallet </Button>
       )
     }else{
       if(walletConnectedType == 0)

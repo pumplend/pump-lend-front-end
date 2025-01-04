@@ -58,7 +58,11 @@ export default function WalletSelector() {
     })
       }else{
         // console.log( "🍺 Browser okx wallet ::",(window as any)?.okxwallet ,(window as any)?.okxwallet.solana )
-        (window as any)?.okxwallet.solana.disconnect()
+        try{
+          (window as any)?.okxwallet.solana.disconnect()
+        }catch(e)
+        {e}
+        
         (window as any)?.okxwallet.solana.connect()
       }
       }
