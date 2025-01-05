@@ -128,15 +128,15 @@ export default function IndexPage() {
   const [selectedToken, setSelectedToken] = useState("")
   const [selectedTokenInfo, setSelectedTokenInfo] = useState(
     {
-      "address": "",
-      "balance": 1000000,
+      "address": "6kHQWXdSVc7xFGVYCTynjcBTx1CawFAcQmyp6ou1pump",
+      "balance": 0,
       "associated_account": "",
       "info": {
           "decimals": 9,
-          "name": "PUMP Token",
-          "symbol": "PUMP",
-          "image": "",
-          "metadata_uri": ""
+          "name": "YuMi",
+          "symbol": "TM",
+          "image": "https://ipfs.io/ipfs/QmZuUgHgbWnoCDZXANRS45D1B7wbaaa5o4fUuTWK6wCdqY",
+          "metadata_uri": "https://ipfs.io/ipfs/QmRizHbeGYTujVGVeuME2KnMYiCTxu55e2TFWRVqtvy6jY"
       }
   }
   )
@@ -286,7 +286,32 @@ export default function IndexPage() {
         onLoadingOpen()
         await userTokenInit(address);
         setUserWalletBlance(await getAddressBalance(address));
+        const userStakeInfo = await userSolStakeFetch(globalWallet.address)
+        console.log(
+          "🍺 Stake information ::",userStakeInfo
+        )
+        setUserStakeSolInformation(userStakeInfo)
+        setUserBorrowInformation(
+          Number( userStakeInfo.totalBorrowed)
+        )
+        setUserStakeSolApy(
+          (
+            (
+              (
+                (
+                  Number(userStakeInfo.totalStaked)/Number(userStakeInfo.totalShares))-1
+                )/
+          (
+            (Date.now()/1000 - 1733369330)/(365*24*3600)
+          )
+        )*100
+        ).toFixed(3) 
+        )
+        stakeDisplay(userStakeInfo);
+
+
         console.log("🍺 All my token ::",userTokens , "🚀 Borrow tokens ::",userBorrowTokens , "💊 Pump tokens ::",userPumpTokens)
+        
         if(userTokens  &&userTokens.length>0)
         {
           if(userPumpTokens&&userPumpTokens.length > 0)
@@ -298,28 +323,8 @@ export default function IndexPage() {
             setSelectedToken(pumptmp[0].address);
             await updateSolanaInitData(pumptmp[0].address)
           }
-          const userStakeInfo = await userSolStakeFetch()
-          console.log(
-            "🍺 Stake information ::",userStakeInfo
-          )
-          setUserStakeSolInformation(userStakeInfo)
-          setUserBorrowInformation(
-            Number( userStakeInfo.totalBorrowed)
-          )
-          setUserStakeSolApy(
-            (
-              (
-                (
-                  (
-                    Number(userStakeInfo.totalStaked)/Number(userStakeInfo.totalShares))-1
-                  )/
-            (
-              (Date.now()/1000 - 1733369330)/(365*24*3600)
-            )
-          )*100
-          ).toFixed(3) 
-          )
-          stakeDisplay(userStakeInfo);
+          
+
           if(userBorrowTokens && userBorrowTokens.length>0)
           {
             const borrowInformationArray = await userTokenBorrowFetch(address,userBorrowTokens);
@@ -336,6 +341,8 @@ export default function IndexPage() {
            
           }
 
+        }else{
+          //No default token .select the project token as default
         }
         
         onLoadingClose()
@@ -345,9 +352,6 @@ export default function IndexPage() {
       const onDisconnect = async () => {
         setRepayChartDisplay(false);
       };
-
-
-
       
       const onLoad = async ()=>
       {
@@ -518,7 +522,7 @@ export default function IndexPage() {
           addbook.poolTokenAccount.toBase58(),
 
         )
-        await userStakeSol(stakeAmout,publicKey,signTransaction);
+        await userStakeSol(stakeAmout,publicKey);
       }
 
     }else{

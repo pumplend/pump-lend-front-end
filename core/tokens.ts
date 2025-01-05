@@ -15,6 +15,7 @@ import {
   fetchSystemConfigData
 } from "@/core/solanaData"
 import {api_pump_lts_token , api_pump_search_token} from "@/core/request";
+import { Pumplend } from "@pumplend/pumplend-sdk"
 // @ts-ignore
 import BN from 'bn.js';
 const connection = new Connection(envConfig.rpc);
@@ -30,6 +31,8 @@ let systemConfig: PublicKey;
 let poolStakingData: PublicKey;
 let userStakingData: PublicKey;
 
+
+const lend = new Pumplend("devnet")
 poolStakingData = PublicKey.findProgramAddressSync(
   [
     Buffer.from("pool_staking_data")
@@ -65,10 +68,10 @@ const userTokenInit = async ( publicKey:PublicKey) =>
     return true;
 }
 
-const userSolStakeFetch = async() =>
+const userSolStakeFetch = async(userAdd:PublicKey) =>
 {
-  const pool = await fetchPoolStakingData(poolStakingData);
-  const user = await fetchUserStakingData(userStakingData);
+  const pool = await lend.tryGetPoolStakingData(connection);
+  const user = await lend.tryGetUserStakingData(connection,userAdd)
   let ret = {
     totalStaked:BigInt(0),
     totalShares:BigInt(0),
