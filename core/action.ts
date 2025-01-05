@@ -27,6 +27,7 @@ import {
   
 } from "@solana/spl-token";
 import BigNumber from 'bignumber.js';
+import { Pumplend } from "@pumplend/pumplend-sdk"
 
 import { globalWallet ,signTxn} from "@/core/wallet"
 // @ts-ignore
@@ -37,6 +38,8 @@ import { createHash } from 'crypto';
 import {envConfig} from "@/config/env"
 const programIdDefault = new PublicKey('6m6ixFjRGq7HYAPsu8YtyEauJm8EE8pzA3mqESt5cGYf')
 const vault = new PublicKey('zzntY4AtoZhQE8UnfUoiR4HKK2iv8wjW4fHVTCzKnn6')
+
+const lend = new Pumplend("devnet")
 
   // PDA Accounts
   let systemConfig: PublicKey;
@@ -130,50 +133,15 @@ const userStakeSol = async (
 )=>
 {
     
-    console.log(
-        "🎦 User stake sol :",
-        systemConfig.toBase58(),
-        poolStakingData.toBase58(),
-        userStakingData.toBase58(),
-        userBorrowData.toBase58(),
-        userTokenAccount.toBase58(),
-        poolTokenAuthority.toBase58(),
-        poolTokenAccount.toBase58(),
-      )
-
-      const stakeAmountInLamports = new BN(amount * LAMPORTS_PER_SOL);
-
-      const args = new StakeArgs({ amount: stakeAmountInLamports });
-      const stakeBuffer = serialize(StakeArgsSchema, args);
-
-    const data = Buffer.concat(
-        [
-            new Uint8Array(sighash("global","stake")),
-            stakeBuffer
-        ]
-    )
-      const instruction = new TransactionInstruction({
-        keys: [
-            { pubkey: publicKey, isSigner: true, isWritable: true },
-            { pubkey: publicKey, isSigner: false, isWritable: true },
-            { pubkey: poolStakingData, isSigner: false, isWritable: true },
-            { pubkey: userStakingData, isSigner: false, isWritable: true },
-            { pubkey: poolTokenAuthority, isSigner: false, isWritable: true },
-            { pubkey: systemConfig, isSigner: false, isWritable: true },
-            { pubkey: SystemProgram.programId, isSigner: false, isWritable: false }
-          ],
-        programId: programIdDefault,
-        data: data
-    });
-
-    const transaction = new Transaction().add(instruction);
-    transaction.feePayer = publicKey;
-
+    const tx = await lend.stake(amount * LAMPORTS_PER_SOL,publicKey,publicKey)
+    if(!tx)
+    {
+      console.error('Transaction generated failed:');
+      return false;
+    }
     const { blockhash } = await connection.getLatestBlockhash();
-    transaction.recentBlockhash = blockhash;
-    console.log("🚀 final txn :: ",transaction)
-    // const signedTransaction = await signTransaction(transaction);
-    const signedTransaction = await signTxn(transaction);
+    tx.recentBlockhash = blockhash;
+    const signedTransaction = await signTxn(tx);
     try {
         const txid = await connection.sendRawTransaction(signedTransaction.serialize());
         console.log('Transaction sent with ID:', txid);

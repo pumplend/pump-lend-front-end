@@ -23,9 +23,8 @@ import {
   useDisclosure,
   Snippet
 } from "@nextui-org/react";
-
+import { OKXSolanaProvider } from "@okxconnect/solana-provider";
 export default function WalletSelector() {
-
   const { setVisible } = useWalletModal();
   const { isOpen: isTgopen, onOpen: onTgOpen, onClose: onTgClose } = useDisclosure();
   
@@ -33,7 +32,8 @@ export default function WalletSelector() {
     
       if(!(window as any)?.okxwallet)
       {
-  
+        const w = OKXUniversalConnectUI.getWallets()
+        console.log("OKX wallet ::",w)
         const universalUi = await OKXUniversalConnectUI.init({
           dappMetaData: {
               icon: "https://pumplend.fun/logo.png",
@@ -51,15 +51,25 @@ export default function WalletSelector() {
         namespaces: {
             solana: {
                 chains: [
-                  "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp", // solana mainnet
-                //  "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",// solana testnet
+                "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp", // solana mainnet
+                // "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",// solana testnet
                 //  "sonic:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",// sonic testnet
                 ],
             }
         }
     })
+    const status = universalUi.connected();
+    if(status)
+    {
+      eventBus.emit("wallet_connected", { 
+        type : 2 , //OKX UNI wallet extension type
+        data : universalUi
+       });
+    }
+
+
       }else{
-        // console.log( "🍺 Browser okx wallet ::",(window as any)?.okxwallet ,(window as any)?.okxwallet.solana )
+       
         try{
           (window as any)?.okxwallet.solana.disconnect()
           window.okxwallet.solana.on(

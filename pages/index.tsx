@@ -362,7 +362,7 @@ export default function IndexPage() {
         )
       }
 
-      eventBus.on("connected", async (e:any)=>
+      eventBus.on("confirm_connected", async (e:any)=>
         {
           //Wallet connect modal
           console.log(
@@ -528,17 +528,9 @@ export default function IndexPage() {
 
   const userStakeButton = async ()=>
   {
-    console.log(globalWallet)
     if(globalWallet.connected)
       {
-        
-        const addbook = addressBooks(new PublicKey(globalWallet.address),selectedToken)
-        if(addbook)
-        {
-          await userStakeSol(stakeAmout,new PublicKey(globalWallet.address));
-          // await testStake(stakeAmout,publicKey,signTransaction);
-          
-        }
+        await userStakeSol(stakeAmout,new PublicKey(globalWallet.address));
         onSupplyClose();
       }else{
         setVisible(true)

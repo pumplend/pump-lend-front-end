@@ -55,6 +55,8 @@ import { globalWallet } from "@/core/wallet"
 
 import { eventBus } from "@/core/events";
 import { PublicKey } from "@solana/web3.js";
+
+import { OKXSolanaProvider } from "@okxconnect/solana-provider";
 export const Navbar = () => {
   const { publicKey,connected ,signTransaction , signMessage } = useWallet();
 
@@ -89,16 +91,35 @@ export const Navbar = () => {
         globalWallet.address = new PublicKey((window as any)?.okxwallet.solana.publicKey.toString())
         break;
       case 2: //OKX uniwallet adapter
+      
+
+      let okxSolanaProvider = new OKXSolanaProvider(e.data)
+      const add = okxSolanaProvider.getAccount();
+      if(!add)
+      {
+        return false;
+      }
+      console.log("OKX uni wallet ::",add)
+      okxUniWalletConnected(add.address)
+      globalWallet.fn['provider'] = okxSolanaProvider;
+      globalWallet.address = new PublicKey(add?.address)
       break;
       default:
         return false;
     }
 
-    eventBus.emit("connected", { 
+    eventBus.emit("confirm_connected", { 
       type : e.type , 
      });
   }
   
+  const okxUniWalletConnected = (address:string)=>
+    {
+      setWalletConnected(true);
+      setWalletConnectedType(2);
+      setWalletConnectedAddress(address);
+      onWalletConnectorClose()
+    }
   const okxExtensionWalletConnected = ()=>
   {
     setWalletConnected(true);
@@ -163,7 +184,7 @@ export const Navbar = () => {
           <WalletMultiButton className="btn btn-ghost" style={{height:"85%" , backgroundColor:"green"}} />
         )
       }else{
-        if(walletConnectedType == 1)
+        if(walletConnectedType == 1 ||walletConnectedType == 2 )
         {
           return (
             <Button startContent={<OkxIcon/>} onClick={disconnectWallet}> {walletConnectedAddress.slice(0, 10)} ...</Button>
