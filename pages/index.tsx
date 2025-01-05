@@ -362,18 +362,18 @@ export default function IndexPage() {
         )
       }
 
-      if (connected && publicKey) {
-        console.log(
-          "🍺 Wallet connect status ::",publicKey,connected
-        )
-        globalWallet.connected = true;
-        globalWallet.address = publicKey.toBase58();
-        
-        onConnect(publicKey).catch(console.error);
-      }else{
-        onDisconnect().catch(console.error);
-        // onLoad()
-      }
+      eventBus.on("connected", async (e:any)=>
+        {
+          //Wallet connect modal
+          console.log(
+            "🍺 Wallet connect status ::",globalWallet
+          )
+          onConnect(globalWallet.address).catch(console.error);
+        });
+      eventBus.on("wallet_disconnected", (e:any)=>
+        {
+          onDisconnect().catch(console.error);
+        });
 
 
       const init = async ()=>

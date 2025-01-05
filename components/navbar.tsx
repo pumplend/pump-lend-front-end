@@ -93,6 +93,10 @@ export const Navbar = () => {
       default:
         return false;
     }
+
+    eventBus.emit("connected", { 
+      type : e.type , 
+     });
   }
   
   const okxExtensionWalletConnected = ()=>
