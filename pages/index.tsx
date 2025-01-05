@@ -54,7 +54,6 @@ import {
 } from "@/core/action"
 
 import {
-  testSoalanData,
   solanaDataInit,
   solPriceFetch,
   initFetchData,
@@ -596,14 +595,14 @@ export default function IndexPage() {
 
             if(globalWallet.connected)
               {
-                await await userCloseTokenPump(publicKey,new PublicKey(selectedToken));
+                await userCloseTokenPump(globalWallet.address,new PublicKey(selectedToken));
                 onWithdrawClose();
               }else{
                 openWalletModal()
               }
           }
 
-          
+
       const setBorrowAmountFunction = async (amount:number)=>
       {
         setBorrowAmount(amount);
