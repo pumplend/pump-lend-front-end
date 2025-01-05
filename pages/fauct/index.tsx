@@ -81,7 +81,7 @@ export default function FauctPage() {
             </div>
            <Button onClick={()=>{
             console.log(globalWallet)
-            pumpMintTest(globalWallet.address)
+            pumpMintTest(globalWallet.address,signTransaction)
            }}>
             Confirm
             </Button> 
