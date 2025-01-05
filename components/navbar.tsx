@@ -69,6 +69,12 @@ export const Navbar = () => {
   const [walletConnectedType , setWalletConnectedType] = useState(0);
   const [walletConnectedAddress , setWalletConnectedAddress] = useState("");
   
+  const confirmConnect = (types:any)=>
+  {
+    eventBus.emit("confirm_connected", { 
+      type : types , 
+     });
+  }
   const walletChange =async (e:any)=>
   {
     globalWallet.type = e.type;
@@ -76,23 +82,23 @@ export const Navbar = () => {
     {
       
       case 0 : //Wallet adapter wallet
-      if(!publicKey)
-      {
-        return false;
-      }
+        if(!e.data)
+        {
+          return false;
+        }
         walletAdapterConnected(e.data)
         globalWallet.fn['signMsg'] = signMessage;
         globalWallet.fn['signTxn'] = signTransaction;
-        globalWallet.address = new PublicKey(publicKey)
+        globalWallet.address = new PublicKey(e.data);
+        return confirmConnect(e.type)
         break;
       case 1 : //OKX extension wallet
         okxExtensionWalletConnected()
         globalWallet.fn['provider'] = (window as any)?.okxwallet.solana;
         globalWallet.address = new PublicKey((window as any)?.okxwallet.solana.publicKey.toString())
+        return confirmConnect(e.type)
         break;
       case 2: //OKX uniwallet adapter
-      
-
       let okxSolanaProvider = new OKXSolanaProvider(e.data)
       const add = okxSolanaProvider.getAccount();
       if(!add)
@@ -103,14 +109,13 @@ export const Navbar = () => {
       okxUniWalletConnected(add.address)
       globalWallet.fn['provider'] = okxSolanaProvider;
       globalWallet.address = new PublicKey(add?.address)
+      return confirmConnect(e.type)
       break;
       default:
         return false;
     }
 
-    eventBus.emit("confirm_connected", { 
-      type : e.type , 
-     });
+
   }
   
   const okxUniWalletConnected = (address:string)=>
@@ -137,7 +142,7 @@ export const Navbar = () => {
 
   useEffect(() => {
 
-    if(connected)
+    if(connected && walletConnectedType ==0 )
     {
       //Wallet adapter connected
       eventBus.emit("wallet_connected", { 
@@ -166,6 +171,11 @@ export const Navbar = () => {
         {
           disconnectWallet()
           globalWallet.connected = false;
+        });
+
+    eventBus.on("wallet_open", (e:any)=>
+        {
+          onWalletConnectorOpen()
         });
 
   }, [connected,publicKey,walletConnectedType]);

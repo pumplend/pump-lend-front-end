@@ -112,15 +112,23 @@ const userTokenBorrowFetch = async(publicKey:PublicKey,tks:any[]) =>
           programIdDefault
         )[0];
   
-        const bd = await fetchUserBorrowData(
-          bda
+        const bd = await lend.tryGetUserBorrowData(
+          connection,
+         
+          new PublicKey(tks[i].address),
+          publicKey,
         )
+        // const bd = await fetchUserBorrowData(
+        //   bda
+        // )
         if(bd)
         {
           const retSeed = {
             token: tks[i].address,
             borrowedAmount : bd.borrowedAmount,
+            depositSolAmount :bd.depositSolAmount,
             collateralAmount : bd.collateralAmount,
+            referrer : bd.referrer,
             lastUpdated : bd.lastUpdated
           }
           ret.push(retSeed)

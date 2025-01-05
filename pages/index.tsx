@@ -258,11 +258,6 @@ export default function IndexPage() {
   const router = useRouter();
 
   useEffect(() => {
-    //Event tester
-    eventBus.on("wallet_connected", (e:any)=>
-    {
-      console.log("New Event ::",e)
-    });
 
         //Data init
         setRepayData([])
@@ -286,6 +281,10 @@ export default function IndexPage() {
         onLoadingOpen()
         await userTokenInit(address);
         setUserWalletBlance(await getAddressBalance(address));
+
+        /**
+         * Handel Stake information fetch and display
+         */
         const userStakeInfo = await userSolStakeFetch(globalWallet.address)
         console.log(
           "🍺 Stake information ::",userStakeInfo
@@ -312,6 +311,9 @@ export default function IndexPage() {
 
         console.log("🍺 All my token ::",userTokens , "🚀 Borrow tokens ::",userBorrowTokens , "💊 Pump tokens ::",userPumpTokens)
         
+        /**
+         * Handel Token information fetch and display
+         */
         if(userTokens  &&userTokens.length>0)
         {
           if(userPumpTokens&&userPumpTokens.length > 0)
@@ -399,6 +401,7 @@ export default function IndexPage() {
           if( q.getAll("referral") &&  q.getAll("referral").length>0)
           {
             _referral =  q.getAll("referral")[0];
+            setReferralAddress(_referral)
           }
 
         console.log("🔥 Fetch query ::",
@@ -467,6 +470,7 @@ export default function IndexPage() {
   const repayDisplay = async ( borrowInformationArray:any)=>
   {
 
+   
     if(!userBorrowTokens || userBorrowTokens.length != borrowInformationArray.length)
     {
       return;
@@ -498,36 +502,37 @@ export default function IndexPage() {
   }
   
 
-  const connectWalletTest =  async () =>
-  {
-    
-    console.log(
-      publicKey
-    )
-
-    if(publicKey && signTransaction)
+  const openWalletModal = ()=>{
+    eventBus.emit("wallet_open", { 
+      
+     });
+  }
+  const getReferralAddress = async ()=>{
+    const ref = localStorage.getItem("ref");
+    try{
+      if(ref && new PublicKey(ref))
+        {
+          return new PublicKey(ref);
+        }
+    }catch(e)
     {
-      console.log("already connect ::",publicKey.toBase58())
-
-      const addbook = addressBooks(publicKey,selectedToken)
-      if(addbook)
-      {
-        console.log(
-          addbook.systemConfig.toBase58(),
-          addbook.poolStakingData.toBase58(),
-          addbook.userStakingData.toBase58(),
-          addbook.userBorrowData.toBase58(),
-          addbook.userTokenAccount.toBase58(),
-          addbook.poolTokenAuthority.toBase58(),
-          addbook.poolTokenAccount.toBase58(),
-
-        )
-        await userStakeSol(stakeAmout,publicKey);
-      }
-
-    }else{
-
+      console.error(e)
     }
+    return publicKey;
+  }
+  const setReferralAddress = async (referral:string)=>
+  {
+    const ref = localStorage.getItem("ref");
+    try{
+      if(ref && new PublicKey(ref))
+        {
+          return true ;
+        }
+    }catch(e)
+    {
+      console.error(e)
+    }
+    return localStorage.setItem("ref",referral);
   }
 
   const userStakeButton = async ()=>
@@ -537,142 +542,68 @@ export default function IndexPage() {
         await userStakeSol(stakeAmout,new PublicKey(globalWallet.address));
         onSupplyClose();
       }else{
-        setVisible(true)
+        openWalletModal()
       }
   }
 
   const userWithdrawButton = async ()=>
     {
-      if(publicKey && signTransaction)
+      if(globalWallet.connected)
         {
-          const addbook = addressBooks(publicKey,selectedToken)
-          if(addbook)
-          {
-            const shares = (withdrawAmount*1e9*(Number(userStakeSolInformation.totalShares)/Number(userStakeSolInformation.totalStaked))).toFixed(0)
-            await userWithdrawSol(Number(shares),publicKey,signTransaction);
-          }
+          await userWithdrawSol(Number(withdrawAmount),globalWallet.address);
           onWithdrawClose();
         }else{
-          setVisible(true)
+          openWalletModal()
         }
     }
 
   const userBorrowButton = async ()=>
     {
-      if(publicKey && signTransaction)
+      if(globalWallet.connected)
         {
-          const addbook = addressBooks(publicKey,selectedToken)
-          if(addbook)
-          {
-            await userBorrowToken(borrowAmount,publicKey,signTransaction);
-          }
+          await userBorrowToken(borrowAmount,globalWallet.address,new PublicKey(selectedToken));
+          onWithdrawClose();
         }else{
-          setVisible(true)
+          openWalletModal()
         }
     }
 
     const userRepayButton = async ()=>
       {
-        if(publicKey && signTransaction)
+        if(globalWallet.connected)
           {
-            const addbook = addressBooks(publicKey,selectedToken)
-            if(addbook)
-            {
-              await userRepayToken(publicKey,signTransaction);
-            }
+            await userRepayToken(globalWallet.address,new PublicKey(selectedToken));
+            onWithdrawClose();
           }else{
-            setVisible(true)
+            openWalletModal()
           }
       }
 
 
       const userLeverageButton = async ()=>
         {
-          if(publicKey && signTransaction)
+          if(globalWallet.connected)
             {
-              const addbook = addressBooks(publicKey,selectedToken)
-              if(addbook)
-              {
-                await userLeverageTokenPump(leverageAmount,publicKey,signTransaction);
-              }
+              await userLeverageTokenPump(leverageAmount,globalWallet.address,new PublicKey(selectedToken));
+              onWithdrawClose();
             }else{
-              setVisible(true)
+              openWalletModal()
             }
         }
 
         const  userClosePositionButton = async ()=>
           {
-            if(publicKey && signTransaction)
+
+            if(globalWallet.connected)
               {
-                const addbook = addressBooks(publicKey,selectedToken)
-                if(addbook)
-                {
-                  await userCloseTokenPump(publicKey,signTransaction);
-                }
+                await await userCloseTokenPump(publicKey,new PublicKey(selectedToken));
+                onWithdrawClose();
               }else{
-                setVisible(true)
+                openWalletModal()
               }
           }
-        
-      const debugs = async () => 
-      {
-        if(publicKey)
-        {
-          solanaDataInit(publicKey,selectedToken)
-          // console.log(
-          //   await testSoalanData(publicKey)
-          // )
-          addressBooks(publicKey,selectedToken)
-          const curve = await fetchPumpData(
-            new PublicKey(selectedToken)
-          )
-          console.log(
-            "🍺 Curve address :: ",curve
-          )
-          if(curve)
-          {
-            const curveData = await fetchTokenPumpCurveData(
-              curve.bondingCurve
-            )
-            console.log(
-              "Bonding curve data :: ",
-              curveData
-            )
-            // setPumpTokenCurveData = curveData
-            if(curveData)
-            {
-              const maxBorrowAbleData = await culcuateLeverageAbleToken(
-                1e9,
-                {
-                  solReserves:curveData.virtualSolReserves,
-                  tokenReserves:curveData.virtualTokenReserves
-                }
-              )
 
-              console.log("max Borrowable data ::",maxBorrowAbleData)
-            }
-            
-          }
-
-        }
-
-        // await userClosePositionButton()
-
-        // if(publicKey && signTransaction)
-        // {
-        //   const bk = addressBooks(publicKey,  "Dtt6Zet8QaC4k27KF2NnpPRoomNysDZ3Wmom1cYSwpdd");
-        //   if(bk)
-        //   {
-        //     await pumpBuyTest(publicKey,signTransaction);
-        //     // await pumpSellTest(publicKey,signTransaction);
-            
-        //   }
-        // }
-
-        // onTokenSelectOpen()
-      
-      }
-
+          
       const setBorrowAmountFunction = async (amount:number)=>
       {
         setBorrowAmount(amount);

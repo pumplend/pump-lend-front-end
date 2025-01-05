@@ -18,7 +18,7 @@ const signMsg = async(data : Uint8Array)=>
                 return globalWallet.fn.signMsg(data)
             }
             break;
-        case 1:
+        case 1: case 2:
             if(globalWallet.fn?.provider)
                 {
                     return globalWallet.fn.provider.signMessage(data)
@@ -41,7 +41,7 @@ const signTxn = async(data : Transaction)=>
                     return globalWallet.fn?.signTxn(data)
                 }
                 break;
-            case 1:
+            case 1: case 2:
                 if(globalWallet.fn?.provider)
                 {
                     return globalWallet.fn.provider.signTransaction(data)
