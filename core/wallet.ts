@@ -39,6 +39,8 @@ const signTxn = async(data : Transaction)=>
                 if(globalWallet.fn?.signTxn)
                 {
                     return globalWallet.fn?.signTxn(data)
+                }else{
+                    console.error("error can't find sign txn" , globalWallet.fn?.signTxn)
                 }
                 break;
             case 1: case 2:

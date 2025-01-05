@@ -9,6 +9,7 @@ import { Keypair,LAMPORTS_PER_SOL, PublicKey,
     clusterApiUrl,
     TransactionInstruction,
     Struct,
+    ComputeBudgetProgram,
     SendTransactionError,
  } from "@solana/web3.js";
 import {
@@ -503,6 +504,154 @@ try {
 }
 
 
+class PumpMintArgs extends Struct {
+  name: string;
+  symbol: string;
+  uri: string;
+
+  constructor(fields: { name: string; symbol: string; uri: string }) {
+    super(fields);
+    this.name = fields.name;
+    this.symbol = fields.symbol;
+    this.uri = fields.uri;
+  }
+}
+
+const PumpMintArgsSchema = new Map([
+  [
+    PumpMintArgs,
+    {
+      kind: "struct",
+      fields: [
+        ["name", "string"],
+        ["symbol", "string"],
+        ["uri", "string"],
+      ],
+    },
+  ],
+]);
+const pumpMintTest = async (
+  publicKey: PublicKey,
+) => {
+  const args = {
+      name: "PUMPLENDTEST💊",
+      symbol: "PLT",
+      uri: "https://ipfs.io/ipfs/QmTMacXhTKiPAeJkEUKrTmw74SMB4gYfmUsaej7KpfLj7w",
+  };
+  const MPL_TOKEN_METADATA = new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s");
+  const token_mint_authority = new PublicKey("TSLvdd1pWpHVjahSpsvCXUbgwsL3JAcvokwaKt1eokM");
+  
+  const GLOBAL = new PublicKey("4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf");
+
+  const mint_account = publicKey;
+  let [bondingCurve] = PublicKey.findProgramAddressSync(
+      [
+          Buffer.from("bonding-curve"),
+          mint_account.toBuffer()
+      ],
+      pumpKeyAccount
+  );
+  let [associatedBondingCurve] = PublicKey.findProgramAddressSync(
+      [
+          bondingCurve.toBuffer(),
+          new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA").toBuffer(),
+          mint_account.toBuffer(),
+      ],
+      ASSOCIATED_TOKEN_PROGRAM_ID
+  );
+
+  // const bonding_curve = new PublicKey("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8");
+  let [metadata, metadataBump] = PublicKey.findProgramAddressSync(
+      [Buffer.from("metadata"), MPL_TOKEN_METADATA.toBuffer(), mint_account.toBuffer()],
+      pumpKeyAccount
+  );
+
+
+  const feeRecipient = new PublicKey("68yFSZxzLWJXkxxRGydZ63C6mHx1NLEDWmwN9Lb5yySg");
+  const global = new PublicKey("4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf");
+  const rent = new PublicKey("SysvarRent111111111111111111111111111111111");
+  const eventAuthority = new PublicKey("Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1");
+
+  const mint = mint_account;
+  const mintAuthority = token_mint_authority;
+  const mplTokenMetadata = MPL_TOKEN_METADATA;
+  const user = publicKey;
+  const systemProgram = SystemProgram.programId;
+  const tokenProgram = TOKEN_PROGRAM_ID;
+  const associatedTokenProgram = ASSOCIATED_TOKEN_PROGRAM_ID;
+  const program = pumpKeyAccount;
+  const dataBuffer = serialize(PumpMintArgsSchema, args);
+
+  const createBuffer = Buffer.concat([
+    new Uint8Array(sighash("global", "create")),
+    dataBuffer
+  ]);
+
+  console.log(
+    {
+      keys: [
+        { pubkey: mint, isSigner: true, isWritable: false },
+        { pubkey: mintAuthority, isSigner: false, isWritable: true },
+        { pubkey: bondingCurve, isSigner: false, isWritable: false },
+        { pubkey: associatedBondingCurve, isSigner: false, isWritable: false },
+        { pubkey: global, isSigner: false, isWritable: false },
+        { pubkey: mplTokenMetadata, isSigner: false, isWritable: true },
+        { pubkey: metadata, isSigner: false, isWritable: true },
+        { pubkey: user, isSigner: true, isWritable: false },
+        { pubkey: systemProgram, isSigner: false, isWritable: true },
+        { pubkey: tokenProgram, isSigner: false, isWritable: true },
+        { pubkey: associatedTokenProgram, isSigner: false, isWritable: true },
+        { pubkey: rent, isSigner: false, isWritable: true },
+        { pubkey: eventAuthority, isSigner: false, isWritable: true },
+        { pubkey: program, isSigner: false, isWritable: true },
+      ],
+      programId: program,
+      data: createBuffer,
+    }
+  )
+  const instruction = new TransactionInstruction({
+    keys: [
+      { pubkey: mint, isSigner: false, isWritable: true },
+      { pubkey: mintAuthority, isSigner: false, isWritable: true },
+      { pubkey: bondingCurve, isSigner: false, isWritable: true },
+      { pubkey: associatedBondingCurve, isSigner: false, isWritable: true },
+      { pubkey: global, isSigner: false, isWritable: true },
+      { pubkey: mplTokenMetadata, isSigner: false, isWritable: true },
+      { pubkey: metadata, isSigner: false, isWritable: true },
+      { pubkey: user, isSigner: true, isWritable: false },
+      { pubkey: systemProgram, isSigner: false, isWritable: false },
+      { pubkey: tokenProgram, isSigner: false, isWritable: false },
+      { pubkey: associatedTokenProgram, isSigner: false, isWritable: false },
+      { pubkey: rent, isSigner: false, isWritable: false },
+      { pubkey: eventAuthority, isSigner: false, isWritable: true },
+      { pubkey: program, isSigner: false, isWritable: false },
+    ],
+    programId: program,
+    data: createBuffer,
+  });
+  const transaction = new Transaction();
+  transaction.add(
+    ComputeBudgetProgram.requestUnits({
+      units: 4000000,
+      additionalFee: 1e8, 
+    })
+  );
+  transaction.add(instruction);
+  transaction.feePayer = publicKey;
+  const { blockhash } = await connection.getLatestBlockhash();
+  transaction.recentBlockhash = blockhash;
+  const signedTransaction = await signTxn(transaction);
+  console.log(signedTransaction)
+  try {
+    const txid = await connection.sendRawTransaction(signedTransaction.serialize());
+    console.log("Transaction sent with ID:", txid);
+  } catch (error) {
+    console.error("Transaction failed:", error);
+  }
+};
+
+
+
 
 const fetchPumpData = async(token:PublicKey)=>
 {
@@ -564,5 +713,6 @@ export {
     userLeverageTokenPump,
     userCloseTokenPump,
     pumpSellTest,
-    fetchPumpData
+    fetchPumpData,
+    pumpMintTest
 }

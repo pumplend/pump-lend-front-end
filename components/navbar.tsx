@@ -288,7 +288,19 @@ export const Navbar = () => {
               >
                 [Referral]
               </div>
-            </NavbarItem>
+              &nbsp;&nbsp;&nbsp;
+              <NextLink
+                className={clsx(
+                  linkStyles({ color: "foreground" }),
+                  "data-[active=true]:text-primary data-[active=true]:font-medium",
+                )}
+                color="foreground"
+                href={"fauct"}
+              >
+                [Devnet Fauct]
+              </NextLink>
+          </NavbarItem>
+            
 
           {/* {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href}>
