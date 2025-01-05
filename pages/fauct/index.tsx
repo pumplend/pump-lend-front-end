@@ -7,10 +7,11 @@ import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
 import DefaultLayout from "@/layouts/default";
-import { Button } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { useState, useEffect } from "react";
 import {
   Modal,
   ModalContent,
@@ -21,13 +22,15 @@ import {
 } from "@nextui-org/react";
 
 import {
-  pumpMintTest
+  pumpMintAndBuy
 } from "@/core/action"
 import { globalWallet } from "@/core/wallet";
 
 export default function FauctPage() {
   const { publicKey,connected ,signTransaction , signMessage } = useWallet();
   const { isOpen: isMintOpen, onOpen: onMintOpen, onClose: onMintClose } = useDisclosure();
+  const [buyAmount, setBuyAmount] = useState("0")
+  
 
   return (
     <DefaultLayout>
@@ -57,14 +60,14 @@ export default function FauctPage() {
           </Button>
         </div>
 
-        <div className="flex gap-3">
+        {/* <div className="flex gap-3">
         <Button>
             Buy
           </Button>
           <Button>
             Sell
           </Button>
-        </div>
+        </div> */}
 
 
 
@@ -77,11 +80,23 @@ export default function FauctPage() {
           </ModalHeader>
           <ModalBody>
             <div>
-              Hello World
+              Random mint a new token in pump .
             </div>
-           <Button onClick={()=>{
+            <Input
+            onChange={
+              (e:any)=>{
+                setBuyAmount(e.currentTarget.value)
+              }
+            }
+            type="number"
+            placeholder="Input the token amount you wants to buy init ."
+            >
+            
+            </Input>
+           <Button onClick={async ()=>{
             console.log(globalWallet)
-            pumpMintTest(globalWallet.address,signTransaction)
+            await pumpMintAndBuy(globalWallet.address,Number(buyAmount));
+            onMintClose()
            }}>
             Confirm
             </Button> 

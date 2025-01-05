@@ -87,8 +87,8 @@ export const Navbar = () => {
           return false;
         }
         walletAdapterConnected(e.data)
-        globalWallet.fn['signMsg'] = signMessage;
-        globalWallet.fn['signTxn'] = signTransaction;
+        globalWallet.fn['signMsg'] = e.fn.signMessage;
+        globalWallet.fn['signTxn'] = e.fn.signTransaction;
         globalWallet.address = new PublicKey(e.data);
         return confirmConnect(e.type)
         break;
@@ -147,7 +147,11 @@ export const Navbar = () => {
       //Wallet adapter connected
       eventBus.emit("wallet_connected", { 
         type : 0 , //OKX wallet extension type
-        data : publicKey
+        data : publicKey,
+        fn:{
+          signMessage:signMessage,
+          signTransaction:signTransaction
+        }
        });
     }
     if(!connected && walletConnectedType ==0 )
