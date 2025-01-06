@@ -12,6 +12,10 @@ export const siteConfig = {
   navMenuItems: [
   ],
   links: {
+    
+    website: "https://testnet.pumplend.fun/",
+    bot:"https://t.me/pumplend_bot",
+    webapp:"https://t.me/pumplend_bot/test",
     github: "https://github.com/pumplend",
     twitter: "https://x.com/pumplendfun",
     telegramChannel:"https://t.me/+50XGEOayi543NzM1",

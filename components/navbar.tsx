@@ -57,6 +57,8 @@ import { eventBus } from "@/core/events";
 import { PublicKey } from "@solana/web3.js";
 
 import { OKXSolanaProvider } from "@okxconnect/solana-provider";
+
+import {twitterReferral , telegramShare} from "@/core/referral"
 export const Navbar = () => {
   const { publicKey,connected ,signTransaction , signMessage } = useWallet();
 
@@ -414,17 +416,32 @@ export const Navbar = () => {
             <Modal isOpen={isAboutOpen} onClose={onAboutClose} scrollBehavior={"inside"}>
         <ModalContent>
           <ModalHeader className="flex w-full">
-          <div className="flex w-full justify-center items-center text-3xl">
+          <div className="flex w-full justify-center items-center text-3xl" style={{color:"green"}}>
           <Image alt="chain logo" height={50} src="/logo.png" width={50} />[How it works ?]
             </div>
           </ModalHeader>
           <ModalBody>
-          <div style={{ width: '100%' }}>
+          <div className=" items-center justify-center  w-full">
               
-              <a className="text-xl">Pumplend is the first solana memecoin lending & spot-leverage protocol</a>
-              <p>
-                You can leverage buy memecoin or lend sol from it .
+             
+              <p className="text-sm">
+              &nbsp;&nbsp; Pumplend is a lending protocol built for pump, enabling users to fully tap into the liquidity of the pump bonding curve. User can use tokens from pump as collateral to borrow SOL or leverage SOL to go long on your favorite memes.
               </p>
+              <div className="flex w-full justify-center items-center">
+                <a className="text-xl" style={{color:"green"}}>Borrow ?</a>
+             </div>
+              <p>&nbsp;&nbsp; Step 1: Step 1: Select a pump coin you want to use as collateral.</p>
+              <p>&nbsp;&nbsp; Step 2: Borrow out SOL.</p>
+              <p>&nbsp;&nbsp; Step 3: Repay the SOL and interest to redeem your pump tokens.</p>
+
+              <br></br>
+              <div className="flex w-full justify-center items-center">
+                <a className="text-xl" style={{color:"green"}}>Make Long !</a>
+             </div>
+              <p>&nbsp;&nbsp; Step 1: Choose a pump coin you want to long.</p>
+              <p>&nbsp;&nbsp; Step 2: Use SOL to open a long position.</p>
+              <p>&nbsp;&nbsp; Step 3: Sell and obtain SOL.</p>
+             
             </div>
           </ModalBody>
         </ModalContent>
@@ -449,13 +466,27 @@ export const Navbar = () => {
           </ModalBody>
           <ModalFooter>
           <div>
-            <Button color="default">
+            <Button color="default" onClick={()=>{
+              let add ="";
+              if(globalWallet.connected)
+              {
+                add = globalWallet.address.toBase58()
+              }
+              twitterReferral(add)
+            }}>
               <FaTwitter/>
             </Button>
             <Button color="secondary">
               <FaDiscord/>
             </Button>
-            <Button color="primary">
+            <Button color="primary" onClick={()=>{
+              let add ="";
+              if(globalWallet.connected)
+              {
+                add = globalWallet.address.toBase58()
+              }
+              telegramShare(add)
+            }}>
               <FaTelegram />
             </Button>
           </div>

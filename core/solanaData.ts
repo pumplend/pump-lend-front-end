@@ -389,9 +389,34 @@ const fetchUserBorrowData = async (_userBorrowData:PublicKey) => {
     const borrowData =  await lend.tryGetUserBorrowData(connection,token,user);
     const curve = await lend.tryGetPumpTokenCurveData(connection,token)
     console.log(borrowData,curve,token,amount)
-    return lend.pumplend_culcuate_max_leverage(borrowData,amount,curve)
+    
+    const ret = lend.pumplend_culcuate_max_leverage(borrowData,amount,curve)
+    console.log(ret)
+    if(!ret)
+    {
+      if(curve && curve.realSolReserves > 0 && curve.realTokenReserves!=BigInt(0))
+      {
+        return {
+          sol : Number((3.3*amount).toFixed(0)),
+          token : culcuateInitCurveBorrowAbleAmount(3.3*amount)
+        }
+      }
+    }
+    return ret;
   }
+  const culcuateInitCurveBorrowAbleAmount = (
+    amount:number,
+  ) =>
+  {
+    let newBuySol = BigInt(amount);
+    let borrowedToken = BigInt(0);
+    let borrowedSol = BigInt(0); 
+    const newToken = borrowedToken+curveBaseToken;
+    const newSol = borrowedSol+curveBaseSol;
 
+    const dToken = (newToken) - ((newSol*newToken))/(newSol+newBuySol)
+    return Number(dToken).toFixed(0);
+  }
 
 export {
     testSoalanData,
