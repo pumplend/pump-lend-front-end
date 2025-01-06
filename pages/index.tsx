@@ -227,10 +227,13 @@ export default function IndexPage() {
 
   const [repayData, setRepayData] = useState([
     {
+      address:"",
       name: "Rastapepe",
       picture: "https://ipfs.io/ipfs/QmQeSMMH2icVbm3rumZnC21z6YdzD3axJYZ47QpYLcrWPi",
       amount: "2",
       amountToken: "1000000",
+      amountSol:"",
+      lastUpdated:""
     },
   ]);
 
@@ -245,6 +248,7 @@ export default function IndexPage() {
   const { isOpen: isSupplyOpen, onOpen: onSupplyOpen, onClose: onSupplyClose } = useDisclosure();
   const { isOpen: isWithdrawOpen, onOpen: onWithdrawOpen, onClose: onWithdrawClose } = useDisclosure();
   const { isOpen: isLoadingOpen, onOpen: onLoadingOpen, onClose: onLoadingClose } = useDisclosure();
+  const { isOpen: isPendingOpen, onOpen: onPendingOpen, onClose: onPendingClose } = useDisclosure();
 
   const { isOpen: isTokenSelectOpen, onOpen: onTokenSelectOpen, onClose: onTokenSelectClose } = useDisclosure();
 
@@ -485,10 +489,13 @@ export default function IndexPage() {
       }
       
       let seed = {
-        name: tokens[i].info?.name,
-        picture: img,
+        address:tokens[i].address as string,
+        name: tokens[i].info?.name as string,
+        picture: img as string,
         amount: (Number(borrowInformationArray[i].borrowedAmount)/1e9).toFixed(3),
         amountToken: (Number(borrowInformationArray[i].collateralAmount)/1e6).toFixed(3),
+        amountSol : (Number(borrowInformationArray[i].depositSolAmount)/1e9).toFixed(3),
+        lastUpdated : Number(borrowInformationArray[i].lastUpdated).toFixed(0)
       }
       borrowTokens.push(seed);
     }
@@ -534,12 +541,27 @@ export default function IndexPage() {
     return localStorage.setItem("ref",referral);
   }
 
+  const txnSendReload = () =>
+  {
+    onPendingOpen()
+    setTimeout(
+      async ()=>
+      {
+        onPendingClose()
+        eventBus.emit("confirm_connected", { 
+          
+         });
+      },
+      10000
+    )
+  }
   const userStakeButton = async ()=>
   {
     if(globalWallet.connected)
       {
         await userStakeSol(stakeAmout,new PublicKey(globalWallet.address));
         onSupplyClose();
+        txnSendReload()
       }else{
         openWalletModal()
       }
@@ -549,8 +571,11 @@ export default function IndexPage() {
     {
       if(globalWallet.connected)
         {
-          await userWithdrawSol(Number(withdrawAmount),globalWallet.address);
+          const shares = (withdrawAmount*1e9*(Number(userStakeSolInformation.totalShares)/Number(userStakeSolInformation.totalStaked))).toFixed(0)
+          await userWithdrawSol(Number(shares),globalWallet.address);
+          
           onWithdrawClose();
+          txnSendReload()
         }else{
           openWalletModal()
         }
@@ -561,54 +586,55 @@ export default function IndexPage() {
       if(globalWallet.connected)
         {
           await userBorrowToken(borrowAmount,globalWallet.address,new PublicKey(selectedToken));
-          onWithdrawClose();
+          txnSendReload()
         }else{
           openWalletModal()
         }
     }
 
-    const userRepayButton = async ()=>
+    const userRepayButton = async (address:string)=>
       {
         if(globalWallet.connected)
           {
-            await userRepayToken(globalWallet.address,new PublicKey(selectedToken));
-            onWithdrawClose();
+            console.log("repay::",address)
+            await userRepayToken(globalWallet.address,new PublicKey(address));
+            txnSendReload()
           }else{
             openWalletModal()
           }
       }
 
 
-      const userLeverageButton = async ()=>
+    const userLeverageButton = async ()=>
         {
           if(globalWallet.connected)
             {
               await userLeverageTokenPump(leverageAmount,globalWallet.address,new PublicKey(selectedToken));
-              onWithdrawClose();
+              txnSendReload()
             }else{
               openWalletModal()
             }
-        }
+      }
 
-        const  userClosePositionButton = async ()=>
+    const  userClosePositionButton = async (address:string)=>
           {
 
             if(globalWallet.connected)
               {
-                await userCloseTokenPump(globalWallet.address,new PublicKey(selectedToken));
-                onWithdrawClose();
+                await userCloseTokenPump(globalWallet.address,new PublicKey(address));
+                txnSendReload()
               }else{
                 openWalletModal()
               }
-          }
+      }
 
 
-      const setBorrowAmountFunction = async (amount:number)=>
+    const setBorrowAmountFunction = async (amount:number)=>
       {
         setBorrowAmount(amount);
         
         setBorrowOutAmount(
-          await culcuateBorrowAbleToken(amount*1e6)
+          await culcuateBorrowAbleToken(amount*1e6,new PublicKey(selectedToken),new PublicKey(globalWallet.address))
         )
       }
       const setLeverageAmountFunction = async (amount:number)=>
@@ -618,11 +644,7 @@ export default function IndexPage() {
           if(pumpTokenCurveData)
             {
               const maxBorrowAbleData = await culcuateLeverageAbleToken(
-                amount*1e9,
-                {
-                  solReserves:pumpTokenCurveData.virtualSolReserves,
-                  tokenReserves:pumpTokenCurveData.virtualTokenReserves
-                }
+                amount*1e9,new PublicKey(selectedToken),new PublicKey(globalWallet.address)
               )
               
               console.log("max Borrowable data ::",maxBorrowAbleData)
@@ -988,7 +1010,7 @@ export default function IndexPage() {
       </div>
 
           <div className="text-center text-gray-500 text-xs">
-          Borrow APH : 0.0416 %
+          Borrow Hourly Percentage Rate : 0.0416 %
           </div>
           <div className="bottom-14 right-0 w-full p-4">
           <Button className="w-full colorfulbuttons" color="success" onClick={userBorrowButton}>
@@ -1161,7 +1183,7 @@ export default function IndexPage() {
     className="w-full"
     style={{
       display: "grid",
-      gridTemplateColumns: "repeat(5, 1fr)", 
+      gridTemplateColumns: "repeat(6, 1fr)", 
       alignItems: "center", 
       justifyItems: "center", 
       gap: "1rem",
@@ -1177,7 +1199,7 @@ export default function IndexPage() {
 
     <div>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <span className="text-default-900 font-semibold">Colladge</span>
+        <span className="text-default-900 font-semibold">Collateral</span>
       </div>
     </div>
 
@@ -1185,6 +1207,9 @@ export default function IndexPage() {
       <span className="text-default-900 font-semibold">Debt</span>
     </div>
 
+    <div>
+      <span className="text-default-900 font-semibold">Liquidation</span>
+    </div>
     <div>
       <span className="text-default-900 font-semibold">Actions</span>
     </div>
@@ -1199,7 +1224,7 @@ export default function IndexPage() {
   className="w-full"
   style={{
     display: "grid",
-    gridTemplateColumns: "repeat(5, 1fr)", 
+    gridTemplateColumns: "repeat(6, 1fr)", 
     alignItems: "center", 
     justifyItems: "center", 
     gap: "1rem", 
@@ -1216,6 +1241,10 @@ export default function IndexPage() {
   <div>
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
       <span className="text-success text-xs">{item.amountToken}</span>
+      {
+        Number(item.amountSol) ?  <span className="text-success text-xs">{item.amountSol} SOL</span> : null
+      }
+     
     </div>
   </div>
 
@@ -1223,11 +1252,32 @@ export default function IndexPage() {
     {item.amount} SOL
   </div>
 
+  <div>
+   
+    {
+      Math.floor(
+        ((24*60*60 + Number(item.lastUpdated))-(Date.now()/1000))/3600
+      )
+    }
+    H
+    {
+       ((((24*60*60 + Number(item.lastUpdated))-(Date.now()/1000))/3600 - Math.floor(
+        ((24*60*60 + Number(item.lastUpdated))-(Date.now()/1000))/3600
+      ))*60).toFixed(0)
+    }
+    M
+  </div>
+
   <div style={{ display: "flex", gap: "0.5rem" }}>
-    <Button color="danger" onClick={userClosePositionButton}>
+    <Button color="danger" onClick={()=>{
+      userClosePositionButton(item.address)
+    }
+      }>
       Close
     </Button>
-    <Button color="success" onClick={userRepayButton}>
+    <Button color="success" onClick={()=>{
+      userRepayButton(item.address)
+    }}>
       Repay
     </Button>
   </div>
@@ -1324,7 +1374,7 @@ export default function IndexPage() {
         </ModalContent>
       </Modal>
 
-      {/* Withdraw Modal */}
+      {/* Account loading Modal */}
       <Modal isOpen={isWithdrawOpen} onClose={onWithdrawClose} scrollBehavior={"inside"}>
         <ModalContent>
           <ModalHeader className="flex w-full">
@@ -1354,7 +1404,8 @@ export default function IndexPage() {
           padding: "8px" 
 
         }}
-        placeholder={userSupply.your ?
+        placeholder={
+          userSupply.your ?
           userSupply.your
            : "0"}
            onChange={(e:any) => { setWithdrawAmount(e.currentTarget.value); }}
@@ -1429,6 +1480,97 @@ export default function IndexPage() {
           </ModalBody>
         </ModalContent>
       </Modal>
+
+            {/* Transaction pending Modal */}
+            <Modal isOpen={isPendingOpen} onClose={onPendingClose} hideCloseButton={true} isDismissable={false} isKeyboardDismissDisabled={true} style={{backgroundColor:"transparent", marginTop:"-20%"}}>
+        <ModalContent>
+         
+          <ModalBody>
+
+            
+            <div className="w-full items-center justify-center text-center" >
+            <Spinner size="lg" color="warning"/>
+              <div className="text-3xl">
+                Transaction pending ...
+              </div>
+            
+            </div>
+
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      
+      <Modal isOpen={isWithdrawOpen} onClose={onWithdrawClose} scrollBehavior={"inside"}>
+        <ModalContent>
+          <ModalHeader className="flex w-full">
+          <div className="flex w-full justify-center items-center text-3xl">
+            Withdraw SOL
+            </div>
+          </ModalHeader>
+          <ModalBody>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+              <Image alt="chain logo" height={50} src="/icon/sol.png" width={50} />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span className="text-l">Your Supply</span>
+                <span className="text-success text-xl">{userSupply.your}</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span className="text-l">Supply APY</span>
+                <span className="text-success text-xl">{userStakeSolApy}%</span>
+              </div>
+            </div>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+            <input
+        className=" text-3xl "
+        style={{width:"100%",textAlign:"center" ,// backgroundColor:"transparent" ,
+          backgroundColor: "rgba(255, 255, 255, 0.3)", 
+          border: "1px solid #ccc",
+          borderRadius: "8px", 
+          padding: "8px" 
+
+        }}
+        placeholder={userSupply.your ?
+          userSupply.your
+           : "0"}
+           onChange={(e:any) => { setWithdrawAmount(e.currentTarget.value); }}
+        key="payinput"
+        value={withdrawAmount ? withdrawAmount:""}
+        >
+          
+        </input>
+              {/* <Input onChange={(e:any) => { setWithdrawAmount(e.currentTarget.value); }} key="payinput" description={"Withdrable : "+userSupply.your +" SOL"} label="Sol" labelPlacement="inside" placeholder="Enter sol amount to withdraw" /> */}
+            </div>
+
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+            <div className="text-sm">
+            {"Locked : "+userSupply.your+" SOL"}
+            </div>
+
+            <div className="text-sm">
+            <button className="bg-green-500/50" onClick={()=>            {
+              setWithdrawAmount(Math.floor(Number(userSupply.your)*100)/200)
+            }}> &nbsp;50%&nbsp; </button>
+            &nbsp;
+            &nbsp;
+            &nbsp;
+          <button className="bg-green-500/50" onClick={
+            ()=>
+            {
+              setWithdrawAmount(Math.floor(Number(userSupply.your)*100)/100)
+            }
+          }> &nbsp;MAX&nbsp; </button>
+            </div>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="success" onClick={userWithdrawButton} style={{ width: '100%' }}>
+              Withdraw
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+
 
 
       {/* Token Select Modal */}

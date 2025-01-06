@@ -364,143 +364,34 @@ const fetchUserBorrowData = async (_userBorrowData:PublicKey) => {
   const curveBaseSol = BigInt('30000000000')
 
   const culcuateBorrowAbleToken = async (
-    amount:number
+    amount:number,
+    token:PublicKey,
+    user:PublicKey
   )=>
   {
-    let newBorrowToken = BigInt(amount);
-
-    let borrowedToken = BigInt(0);
-    let borrowedSol = BigInt(0); 
-    try{
-      // const borrowData =  await fetchUserBorrowData(userBorrowData);
-      // if(borrowData)
-      // {
-      //   borrowedToken = borrowData.collateralAmount;
-      //   borrowedSol = borrowData.borrowedAmount;
-      // }
-      if(userBorrowDataDetails)
-      {
-        borrowedToken = userBorrowDataDetails.collateralAmount;
-        borrowedSol = userBorrowDataDetails.borrowedAmount;
-      }
-    }catch(e)
-    {
-
-    }
-    const newToken = borrowedToken+curveBaseToken;
-    const newSol = borrowedSol+curveBaseSol;
-
-    const dSol = newSol-((newSol*newToken)/(newToken+newBorrowToken))
-    return Number((Number(dSol)*0.7).toFixed(0));
+    const borrowData =  await lend.tryGetUserBorrowData(connection,token,user);
+    return lend.pumplend_culcuate_max_borrow(
+      borrowData
+     ,
+      amount
+      ,
+      await lend.tryGetPoolStakingData(connection)
+    )
   }
   
 
   const culcuateLeverageAbleToken = async (
     amount:number,
-    curve:any
+    token:PublicKey,
+    user:PublicKey
   )=>
   {
-    let newBorrowSol = BigInt(amount);
-
-    let borrowedToken = BigInt(0);
-    let borrowedSol = BigInt(0); 
-    try{
-      if(userBorrowDataDetails)
-      {
-        borrowedToken = userBorrowDataDetails.collateralAmount;
-        borrowedSol = userBorrowDataDetails.borrowedAmount;
-      }
-    }catch(e)
-    {
-
-    }
-    const newToken = borrowedToken+curveBaseToken;
-    const newSol = borrowedSol+curveBaseSol;
-
-    const dToken = getMaxBorrowAmountByAMM(
-      {
-        solReserves:curve.solReserves,
-        tokenReserves:curve.tokenReserves,
-      },
-      newSol,
-      newToken,
-      newBorrowSol
-    )
-
-    return dToken;
+    const borrowData =  await lend.tryGetUserBorrowData(connection,token,user);
+    const curve = await lend.tryGetPumpTokenCurveData(connection,token)
+    console.log(borrowData,curve,token,amount)
+    return lend.pumplend_culcuate_max_leverage(borrowData,amount,curve)
   }
 
-
-  type Reserves = {
-    solReserves: bigint; // Solana reserves in BigInt
-    tokenReserves: bigint; // Token reserves in BigInt
-  };
-  
-  const REMAINING_COLLATERAL_AMOUNT = BigInt(1000); // Replace with actual value
-  
-  // Function to calculate max borrow amount by AMM
-  export function getMaxBorrowAmountByAMM(
-    reserves: Reserves,
-    baseVirtualSolReserves: bigint,
-    baseVirtualTokenReserves: bigint,
-    collateralAmount: bigint
-  ) {
-    // console.log("🚀 getMaxBorrowAmountByAMM ::",reserves,baseVirtualSolReserves,baseVirtualTokenReserves,collateralAmount,REMAINING_COLLATERAL_AMOUNT)
-    try {
-      const x0 = BigInt(baseVirtualSolReserves);
-      const y0 = BigInt(baseVirtualTokenReserves);
-      const x1 = BigInt(reserves.solReserves);
-      const y1 = BigInt(reserves.tokenReserves);
-      const k = BigInt(collateralAmount) - BigInt(REMAINING_COLLATERAL_AMOUNT);
-  
-      const a = ((y1 - y0) * BigInt(7)) / BigInt(10);
-      const b =
-        ((x0 * y1 * BigInt(7)) / BigInt(10)) - x1 * y0 + k * y1 - k * y0;
-      const c = k * x0 * y1;
-  
-      const b_4ac = b * b - a * c * BigInt(4);
-  
-      if (b_4ac < BigInt(0)) {
-        throw new Error("MathOverflow: Negative square root");
-      }
-  
-      const b_4ac_sqrt = sqrtBigInt(b_4ac);
-  
-      const xn = (-b - b_4ac_sqrt) / (a * BigInt(2));
-      const yn = y1 - (x1 * y1) / (x1 + xn);
-  
-      if (xn < BigInt(0) || yn < BigInt(0)) {
-        throw new Error("MathOverflow: Resulting values are negative");
-      }
-  
-      return {
-        sol:xn, 
-        token:yn
-      };
-    } catch (error) {
-      console.error("Error calculating max borrow amount:", error);
-      // return new Error("MathError: Unable to calculate borrow amount");
-      return false;
-    }
-  }
-  
-  // Helper function to calculate the square root of a BigInt
-  function sqrtBigInt(value: bigint): bigint {
-    if (value < BigInt(0)) {
-      throw new Error("Cannot calculate square root of a negative number");
-    }
-  
-    let x = value;
-    let y = (x + BigInt(1)) / BigInt(2);
-  
-    while (y < x) {
-      x = y;
-      y = (x + value / x) / BigInt(2);
-    }
-  
-    return x;
-  }
-  
 
 export {
     testSoalanData,

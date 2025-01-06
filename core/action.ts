@@ -158,7 +158,7 @@ const userWithdrawSol = async (
   
 )=>
 {
-    const tx = await lend.withdraw(amount * LAMPORTS_PER_SOL,publicKey,publicKey)
+    const tx = await lend.withdraw(amount ,publicKey,publicKey)
     if(!tx)
     {
       console.error('Transaction generated failed:');
