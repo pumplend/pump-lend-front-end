@@ -5,6 +5,12 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  exportPathMap: async function () {
+    return {
+      '/': { page: '/' },
+      '/fauct': { page: '/fauct' },
+    };
+  },
 }
 
 module.exports = nextConfig
