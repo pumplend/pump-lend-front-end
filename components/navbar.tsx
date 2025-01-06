@@ -260,7 +260,7 @@ export const Navbar = () => {
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+      <NavbarContent className="basis-1/5 sm:basis-full" justify="start" style={{display:siteConfig.isHeadless}}>
         <NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
@@ -328,6 +328,7 @@ export const Navbar = () => {
       <NavbarContent
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
+        style={{display:siteConfig.isHeadless}}
       >
         <NavbarItem className="hidden sm:flex gap-2">
           <Link isExternal href={siteConfig.links.twitter} title="Twitter">
@@ -369,7 +370,7 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end" style={{display:siteConfig.isHeadless}}>
         {/* <Link isExternal href={siteConfig.links.github}>
           <GithubIcon className="text-default-500" />
         </Link> */}
@@ -383,7 +384,7 @@ export const Navbar = () => {
 
       </NavbarContent>
 
-      <NavbarMenu>
+      <NavbarMenu style={{display:siteConfig.isHeadless}}>
         {/* {searchInput} */}
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navMenuItems.map((item, index) => (
@@ -406,14 +407,8 @@ export const Navbar = () => {
           ))}
         </div>
       </NavbarMenu>
-
-
-
-
-
-      
             {/* About Modal */}
-            <Modal isOpen={isAboutOpen} onClose={onAboutClose} scrollBehavior={"inside"}>
+      <Modal isOpen={isAboutOpen} onClose={onAboutClose} scrollBehavior={"inside"}>
         <ModalContent>
           <ModalHeader className="flex w-full">
           <div className="flex w-full justify-center items-center text-3xl" style={{color:"green"}}>
@@ -446,10 +441,8 @@ export const Navbar = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
-
-
             {/* Ref Modal */}
-            <Modal isOpen={isRefOpen} onClose={onRefClose} scrollBehavior={"inside"} size="3xl">
+      <Modal isOpen={isRefOpen} onClose={onRefClose} scrollBehavior={"inside"} size="3xl">
         <ModalContent>
           <ModalHeader className="flex w-full">
           <div className="flex w-full justify-center items-center text-3xl">
@@ -494,8 +487,6 @@ export const Navbar = () => {
         </ModalContent>
 
       </Modal>
-
-
           {/* Wallet Connector */}
       <Modal isOpen={isWalletConnectorOpen} onClose={onWalletConnectorClose} scrollBehavior={"inside"} size="lg">
         <ModalContent>

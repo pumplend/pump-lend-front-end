@@ -33,7 +33,7 @@ import { BiInfoCircle } from "react-icons/bi";
 import { IoWalletOutline } from "react-icons/io5";
 import TradeCard from "@/components/TradeCard";
 import ReceiveCard from "@/components/ReceiveCard";
-
+import { siteConfig } from "@/config/site";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import { Chip } from "@nextui-org/chip";
@@ -807,7 +807,7 @@ export default function IndexPage() {
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
-        <div className="inline-block max-w-xl text-center justify-center">
+        <div className="inline-block max-w-xl text-center justify-center" style={{display:siteConfig.isHeadless}}>
         
           
           <span className={title()}>Deposite&nbsp;</span>
