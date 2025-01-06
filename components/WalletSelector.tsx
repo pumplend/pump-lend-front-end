@@ -72,7 +72,7 @@ export default function WalletSelector() {
        
         try{
           (window as any)?.okxwallet.solana.disconnect()
-          window.okxwallet.solana.on(
+          (window as any)?.okxwallet.solana.on(
             "connect", () => {
               eventBus.emit("wallet_connected", { 
                 type : 1 , //OKX wallet extension type
@@ -90,6 +90,7 @@ export default function WalletSelector() {
 
     const UXUYWalletConnec = async ()=>
     {
+      window.alert("We are working on it .")
       // const { solana } = new WalletTgSdk({
       //     metaData: {
       //         icon: "https://pumplend.fun/logo.png",
@@ -118,7 +119,9 @@ export default function WalletSelector() {
         OKX Wallets
         </Button>
         &nbsp;
-        <Button  startContent={<TonspackIcon />}  className="w-full text-xl">
+        <Button  startContent={<TonspackIcon />}  className="w-full text-xl" onClick={()=>{
+          window.alert("We are working on it .")
+        }}>
         Tonspack Wallets
         </Button>
         </div>

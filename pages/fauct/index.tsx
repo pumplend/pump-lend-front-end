@@ -25,12 +25,16 @@ import {
   pumpMintAndBuy
 } from "@/core/action"
 import { globalWallet } from "@/core/wallet";
-
+import { eventBus } from "@/core/events";
 export default function FauctPage() {
   const { publicKey,connected ,signTransaction , signMessage } = useWallet();
   const { isOpen: isMintOpen, onOpen: onMintOpen, onClose: onMintClose } = useDisclosure();
   const [buyAmount, setBuyAmount] = useState("0")
-  
+    const openWalletModal = ()=>{
+      eventBus.emit("wallet_open", { 
+        
+       });
+    }
 
   return (
     <DefaultLayout>
@@ -94,9 +98,14 @@ export default function FauctPage() {
             
             </Input>
            <Button onClick={async ()=>{
-            console.log(globalWallet)
-            await pumpMintAndBuy(globalWallet.address,Number(buyAmount));
-            onMintClose()
+            if(globalWallet.connected)
+            {
+              await pumpMintAndBuy(globalWallet.address,Number(buyAmount));
+              onMintClose()
+            }else{
+              openWalletModal()
+            }
+
            }}>
             Confirm
             </Button> 
