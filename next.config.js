@@ -8,7 +8,7 @@ const nextConfig = {
   exportPathMap: async function () {
     return {
       '/': { page: '/' },
-      '/fauct': { page: '/fauct' },
+      '/faucet': { page: '/faucet' },
     };
   },
 }

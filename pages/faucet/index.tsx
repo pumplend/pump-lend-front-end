@@ -26,7 +26,7 @@ import {
 } from "@/core/action"
 import { globalWallet } from "@/core/wallet";
 import { eventBus } from "@/core/events";
-export default function FauctPage() {
+export default function FaucetPage() {
   const { publicKey,connected ,signTransaction , signMessage } = useWallet();
   const { isOpen: isMintOpen, onOpen: onMintOpen, onClose: onMintClose } = useDisclosure();
   const { isOpen: isSuccessOpen, onOpen: onSuccessOpen, onClose: onSuccessClose } = useDisclosure();
@@ -42,7 +42,7 @@ export default function FauctPage() {
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
         <div className="inline-block max-w-xl text-center justify-center">
           <span className={title()}>Devnet&nbsp;</span>
-          <span className={title({ color: "violet" })}>Fauct&nbsp;</span>
+          <span className={title({ color: "violet" })}>Faucet&nbsp;</span>
           <div className={subtitle({ class: "mt-4" })}>
             You can deploy new pump token or buy/sell via devnet.
           </div>
@@ -58,7 +58,7 @@ export default function FauctPage() {
             })}
             href={"https://faucet.solana.com/"}
           >
-            ① Devnet SOL Fauct
+            ① Devnet SOL Faucet
           </Link>
           <Button color="success" onClick = {onMintOpen}>
             ② Buy Test Token
