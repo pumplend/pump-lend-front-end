@@ -59,6 +59,7 @@ import { PublicKey } from "@solana/web3.js";
 import { OKXSolanaProvider } from "@okxconnect/solana-provider";
 
 import {twitterReferral , telegramShare} from "@/core/referral"
+import { useRouter } from 'next/router';
 export const Navbar = () => {
   const { publicKey,connected ,signTransaction , signMessage } = useWallet();
 
@@ -73,11 +74,14 @@ export const Navbar = () => {
   
   const confirmConnect = (types:any)=>
   {
-    eventBus.emit("confirm_connected", { 
-      type : types , 
-     });
+    if(isHomePageLive())
+    {
+      eventBus.emit("confirm_connected", { 
+        type : types , 
+       });
+    }
   }
-  const walletChange =async (e:any)=>
+  const walletChange =(e:any)=>
   {
     globalWallet.type = e.type;
     switch(e.type)
@@ -142,10 +146,24 @@ export const Navbar = () => {
     setWalletConnectedAddress(pk.toBase58());
   }
 
-  useEffect(() => {
+  const router = useRouter();
 
+  const isHomePageLive = ()=>
+    {
+      console.log("🍺 isHomePageLive",router.pathname)
+      if(router.pathname!= "/" )
+      {
+        return false;
+      }
+      return true;
+    }
+
+  useEffect(() => {
+    setWalletConnected(true);
+    console.log("💣 Wallet status ::",globalWallet ,walletConnected)
     if(connected && walletConnectedType ==0 )
     {
+      console.log("Emit wallet adapter connection ::",connected , globalWallet)
       //Wallet adapter connected
       eventBus.emit("wallet_connected", { 
         type : 0 , //OKX wallet extension type
@@ -169,7 +187,9 @@ export const Navbar = () => {
         globalWallet.connected = true;
         if(e && e.detail)
         {
-          await walletChange(e.detail);
+          walletChange(e.detail);
+        }else{
+          console.log("Wallet connector error :: ",e)
         }
       });
 
@@ -184,7 +204,9 @@ export const Navbar = () => {
           onWalletConnectorOpen()
         });
 
-  }, [connected,publicKey,walletConnectedType]);
+    console.log("Final wallet connect status ::",walletConnected)
+
+  }, [connected,publicKey,walletConnectedType,walletConnected]);
 
   const walletBtn = ()=>{
     if(!walletConnected)
@@ -228,6 +250,7 @@ export const Navbar = () => {
 
   const disconnectWallet = async ()=>
   {
+    console.log("Emite Disconnected")
     setWalletConnected(false);
     setWalletConnectedType(0);
     setWalletConnectedAddress("");
@@ -364,7 +387,8 @@ export const Navbar = () => {
           </Button>
 
           {
-          walletBtn()
+            walletConnected? walletBtn():walletBtn()
+          
           }
           {/* <WalletMultiButton className="btn btn-ghost" style={{height:"85%" , backgroundColor:"green"}} /> */}
         </NavbarItem>
@@ -378,7 +402,7 @@ export const Navbar = () => {
         {/* <NavbarMenuToggle /> */}
         <div style={{maxWidth:"100%"}}>
         {
-          walletBtn()
+           walletConnected? walletBtn():walletBtn()
         }
         </div>
 

@@ -115,6 +115,8 @@ export default function IndexPage() {
     virtualTokenReserves:BigInt(0)
    }
   )
+
+  const [walletConnectedLock, setWalletConnectedLock] = useState(false)
   const [stakeAmout, setStakeAmount] = useState(0)
   const [withdrawAmount, setWithdrawAmount] = useState(0)
   const [borrowAmount, setBorrowAmount] = useState(0)
@@ -261,7 +263,7 @@ export default function IndexPage() {
   const router = useRouter();
 
   useEffect(() => {
-
+        let walletConnectedLocks = false;
         //Data init
         setRepayData([])
         //Window size function
@@ -280,7 +282,17 @@ export default function IndexPage() {
       window.addEventListener('resize', handleResize);
 
       //Onload functions
-      const onConnect = async (address:PublicKey) => {
+      const onConnect = async (address:PublicKey,foreceReload?:boolean) => {
+        if(foreceReload)
+        {
+          walletConnectedLocks =false;
+        }
+        if(walletConnectedLocks)
+        {
+          return false
+        }else{
+          walletConnectedLocks=true
+        }
         onLoadingOpen()
         await userTokenInit(address);
         setUserWalletBlance(await getAddressBalance(address));
@@ -379,6 +391,11 @@ export default function IndexPage() {
           )
           onConnect(globalWallet.address).catch(console.error);
         });
+
+        eventBus.on("reload_connected", async (e:any)=>
+          {
+            onConnect(globalWallet.address,true).catch(console.error);
+          });
       eventBus.on("wallet_disconnected", (e:any)=>
         {
           onDisconnect().catch(console.error);
@@ -448,7 +465,7 @@ export default function IndexPage() {
         window.removeEventListener('resize', handleResize);
       };
     
-  }, [connected,publicKey]);
+  }, [isLoading]);
 
   const stakeDisplay = (userStakeInfo:any) =>
   {
@@ -548,7 +565,7 @@ export default function IndexPage() {
       async ()=>
       {
         onPendingClose()
-        eventBus.emit("confirm_connected", { 
+        eventBus.emit("reload_connected", { 
           
          });
       },
@@ -1143,7 +1160,7 @@ export default function IndexPage() {
 
 
           <div className="text-center text-gray-500 text-xs">
-          Borrow APH : 0.0416 %
+          Borrow Hourly Percentage Rate : 0.0416 %
           </div>
           <div className="bottom-14 right-0 w-full p-4">
           <Button className="w-full colorfulbuttons" color="success" onClick={userLeverageButton}>
