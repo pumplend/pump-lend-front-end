@@ -246,6 +246,7 @@ const userLeverageTokenPump = async (
   token:PublicKey
 )=>
 {
+  console.log('amount ::',amount * LAMPORTS_PER_SOL)
   const tx = await lend.leverage_pump(amount * LAMPORTS_PER_SOL,token,publicKey,publicKey)
   if(!tx)
   {
