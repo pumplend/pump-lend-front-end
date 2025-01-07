@@ -23,5 +23,5 @@ export const siteConfig = {
     discord: "https://discord.gg/X6BdtCRM3W",
     sponsor: "https://patreon.com/jrgarciadev",
   },
-  isHeadless:"none"
+  isHeadless:""
 };

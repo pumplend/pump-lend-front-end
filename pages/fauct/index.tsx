@@ -29,6 +29,7 @@ import { eventBus } from "@/core/events";
 export default function FauctPage() {
   const { publicKey,connected ,signTransaction , signMessage } = useWallet();
   const { isOpen: isMintOpen, onOpen: onMintOpen, onClose: onMintClose } = useDisclosure();
+  const { isOpen: isSuccessOpen, onOpen: onSuccessOpen, onClose: onSuccessClose } = useDisclosure();
   const [buyAmount, setBuyAmount] = useState("0")
     const openWalletModal = ()=>{
       eventBus.emit("wallet_open", { 
@@ -57,10 +58,10 @@ export default function FauctPage() {
             })}
             href={"https://faucet.solana.com/"}
           >
-            Devnet SOL Fauct
+            ① Devnet SOL Fauct
           </Link>
           <Button color="success" onClick = {onMintOpen}>
-            Launch new token
+            ② Buy Test Token
           </Button>
         </div>
 
@@ -79,36 +80,81 @@ export default function FauctPage() {
         <ModalContent>
           <ModalHeader className="flex w-full">
           <div className="flex w-full justify-center items-center text-3xl">
-          Mint New Token
+          Buy New Token
             </div>
           </ModalHeader>
           <ModalBody>
             <div>
-              Random mint a new token in pump .
+              Random buy a new token in pump . How much you want : 
             </div>
-            <Input
+            {/* <Input
             onChange={
               (e:any)=>{
                 setBuyAmount(e.currentTarget.value)
               }
             }
             type="number"
-            placeholder="Input the token amount you wants to buy init ."
+            placeholder="Input the token amount you wants to buy , 20000000 ."
             >
             
-            </Input>
+            </Input> */}
            <Button onClick={async ()=>{
             if(globalWallet.connected)
             {
-              await pumpMintAndBuy(globalWallet.address,Number(buyAmount));
+              await pumpMintAndBuy(globalWallet.address,Number(10000000));
               onMintClose()
+              onSuccessOpen()
             }else{
               openWalletModal()
             }
 
            }}>
-            Confirm
+            10M
             </Button> 
+            <Button onClick={async ()=>{
+            if(globalWallet.connected)
+            {
+              await pumpMintAndBuy(globalWallet.address,Number(20000000));
+              onMintClose()
+              onSuccessOpen()
+            }else{
+              openWalletModal()
+            }
+
+           }}>
+            20M
+            </Button> 
+            <Button onClick={async ()=>{
+            if(globalWallet.connected)
+            {
+              await pumpMintAndBuy(globalWallet.address,Number(30000000));
+              onMintClose()
+              onSuccessOpen()
+            }else{
+              openWalletModal()
+            }
+
+           }}>
+            30M
+            </Button> 
+            
+          </ModalBody>
+        </ModalContent>
+
+      </Modal>
+
+
+      <Modal isOpen={isSuccessOpen} onClose={onSuccessClose} scrollBehavior={"inside"} size="lg">
+        <ModalContent>
+          <ModalHeader className="flex w-full">
+          <div className="flex w-full justify-center items-center text-3xl">
+          Transaction Pending...
+            </div>
+          </ModalHeader>
+          <ModalBody>
+            <div>
+              Now please wait for 2 minute and your will recive the token in your wallet .
+            </div>
           </ModalBody>
         </ModalContent>
 

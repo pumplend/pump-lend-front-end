@@ -826,7 +826,7 @@ export default function IndexPage() {
       <br></br>
       
 
-      <div className="maincard" style={{minWidth : windowSize.width*0.32}}>
+      <div className="maincard" style={{minWidth : windowSize.width*0.32 , display:siteConfig.isHeadless}}>
       <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full" style={{ width:"100%" }}>
   <CardBody className="py-5 gap-4">
     <div className="flex gap-2.5 justify-center">
