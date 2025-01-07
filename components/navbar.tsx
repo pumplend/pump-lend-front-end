@@ -324,9 +324,9 @@ export const Navbar = () => {
                   "data-[active=true]:text-primary data-[active=true]:font-medium",
                 )}
                 color="foreground"
-                href={"fauct"}
+                href={"faucet"}
               >
-                [Devnet Fauct]
+                [Devnet Faucet]
               </NextLink>
           </NavbarItem>
             
