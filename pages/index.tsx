@@ -227,7 +227,7 @@ export default function IndexPage() {
   )
 
 
-  const [repayData, setRepayData] = useState<any>([
+  const [repayData, setRepayData] = useState([
     {
       address:"",
       name: "Rastapepe",
