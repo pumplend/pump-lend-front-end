@@ -95,15 +95,15 @@ export default function IndexPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([
     {
-      name:"💰 Borrow",
-      color:"success",
-      display:true
-    },
-    {
       name:"📈 Long",
       color:"default",
       display:false
     },
+    {
+      name:"💰 Borrow",
+      color:"success",
+      display:true
+    }
   ]);
   const [solPrice,setSolPrice] = useState(
     0
@@ -255,8 +255,8 @@ export default function IndexPage() {
 
   const { isOpen: isTokenSelectOpen, onOpen: onTokenSelectOpen, onClose: onTokenSelectClose } = useDisclosure();
 
-
-
+  const { isOpen: isStakeSolOpen, onOpen: onStakeSolOpen, onClose: onStakeSolClose } = useDisclosure();
+  
   const [userWalletBlance , setUserWalletBlance] = useState(
     0
   )
@@ -401,6 +401,12 @@ export default function IndexPage() {
         {
           onDisconnect().catch(console.error);
         });
+
+        eventBus.on("stake_modal_display", (e:any)=>
+          {
+            onStakeSolOpen()
+          });
+        
 
 
       const init = async ()=>
@@ -831,7 +837,7 @@ export default function IndexPage() {
         <div className="inline-block max-w-xl text-center justify-center" style={{display:siteConfig.isHeadless}}>
         
           
-          <span className={title()}>Deposite&nbsp;</span>
+          <span className={title()}>Make Long&nbsp;</span>
           <span className={title({ color: "green" })+" github"}>Memecoin&nbsp;</span>
 
          
@@ -846,62 +852,6 @@ export default function IndexPage() {
 
       <br></br>
       
-
-      <div className="maincard" style={{minWidth : windowSize.width*0.32 , display:siteConfig.isHeadless}}>
-      <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full" style={{ width:"100%" }}>
-  <CardBody className="py-5 gap-4">
-    <div className="flex gap-2.5 justify-center">
-      <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
-        <span className="text-default-900 text-xl font-semibold">
-          Stake Sol
-        </span>
-      </div>
-    </div>
-
-    <div className="flex flex-col gap-6 w-full" style={{minWidth : windowSize.width*0.3}}>
-      <div  style={{width:'100%' , display:"flex" , justifyContent:"space-between" }}>
-        <Image
-                alt="chain logo"
-                height={40}
-                src="/icon/sol.png"
-                width={40}
-        />
-
-        <div style={{display:"flex",flexDirection:"column"}}>
-                      <span className=" text-xs">Your Supply</span>
-                      <span className="text-success">{userSupply.your }</span>
-        </div>
-
-        <div style={{display:"flex",flexDirection:"column"}}>
-                      <span className=" text-xs">Total Supply</span>
-                      <span className="text-success">{userSupply.total}</span>
-        </div>
-
-        <div style={{display:"flex",flexDirection:"column"}}>
-                      <span className=" text-xs">Total Borrow</span>
-                      <span className="text-success">{(userBorrorwInformation/1e9).toFixed(3)}</span>
-        </div>
-
-        <div style={{display:"flex",flexDirection:"column"}}>
-                      <span className=" text-xs">Supply APY</span>
-                      <span className="text-success">{userStakeSolApy}%</span>
-        </div>
-
-      </div>
-      <div style={{width:'100%' , display:"flex" , justifyContent:"space-between" }}>
-      <Button  color="success" onClick={onSupplyOpen} style={{width:"47%"}}>
-          ➕ Supply
-        </Button>
-        <Button  color="danger" onClick={onWithdrawOpen} style={{width:"47%"}}>
-          ➖ Withdraw
-        </Button>
-        </div>
-    </div>
-
-
-  </CardBody>
-</Card>
-      </div>
 
       <br></br>
       <div style={{width:"100%",minWidth:"300px"}} className="inline-block max-w-xl text-center justify-center item-center">
@@ -1054,7 +1004,7 @@ export default function IndexPage() {
     <div className="flex gap-2.5 justify-center">
       <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
         <span className="text-default-900 text-xl font-semibold">
-          Leverage Long
+          Max Long
         </span>
       </div>
     </div>
@@ -1123,7 +1073,9 @@ export default function IndexPage() {
 
         </p>
         <p>
-          <span className="text-xl" style={{color:"gray"}}>~${(leverageAmount*solPrice).toFixed(3)} </span>
+          <span className="text-xl" style={{color:"gray"}}>~${Number(
+            (leverageAmount*solPrice).toFixed(3)
+          )} </span>
         </p>
       </div>
       <div className="trans-icon rounded-full h-6 w-full flex justify-center">
@@ -1151,13 +1103,15 @@ export default function IndexPage() {
         </button>
 
 
-        <p className=" text-3xl">{(leverageOutAmount/1e6).toFixed(3)}</p>
+        <p className=" text-3xl">{Number((leverageOutAmount/1e6).toFixed(3))}</p>
       </div>
       <div className="card_foot flex justify-between  text-xs">
         {/* <p>{selectedTokenInfo.info.name}</p> */}
         <p></p>
         <p>
-          <span className="text-xl" style={{color:"gray"}}>~${leverageOutAmountUSD.toFixed(3)} </span>
+          <span className="text-xl" style={{color:"gray"}}>~${
+            Number(leverageOutAmountUSD.toFixed(3))
+            } </span>
         </p>
       </div>
 
@@ -1168,7 +1122,7 @@ export default function IndexPage() {
           </div>
           <div className="bottom-14 right-0 w-full p-4">
           <Button className="w-full colorfulbuttons" color="success" onClick={userLeverageButton}>
-          Leverage Buy
+          Max Buy
         </Button>
           </div>
         </div>
@@ -1295,7 +1249,9 @@ export default function IndexPage() {
   <div>
    
     {
-      (Number(lend.pumplend_estimate_interest(item.raw).interest)/1e9)
+      Number(
+        (Number(lend.pumplend_estimate_interest(item.raw).interest)/1e9).toFixed(0)
+      )
     } SOL
   </div>
   <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -1826,6 +1782,75 @@ export default function IndexPage() {
           </ModalBody>
           <ModalFooter>
           </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+
+
+            {/* Stake Sol Modal */}
+            <Modal isOpen={isStakeSolOpen} onClose={onStakeSolClose} isKeyboardDismissDisabled={true} size="3xl">
+        <ModalContent>
+         
+          <ModalBody>
+
+            
+          <div className="maincard" style={{minWidth : windowSize.width*0.32 , display:siteConfig.isHeadless}}>
+      <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full" style={{ width:"100%" }}>
+  <CardBody className="py-5 gap-4">
+    <div className="flex gap-2.5 justify-center">
+      <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
+        <span className="text-default-900 text-xl font-semibold">
+          Stake Sol
+        </span>
+      </div>
+    </div>
+
+    <div className="flex flex-col gap-6 w-full" style={{minWidth : windowSize.width*0.3}}>
+      <div  style={{width:'100%' , display:"flex" , justifyContent:"space-between" }}>
+        <Image
+                alt="chain logo"
+                height={40}
+                src="/icon/sol.png"
+                width={40}
+        />
+
+        <div style={{display:"flex",flexDirection:"column"}}>
+                      <span className=" text-xs">Your Supply</span>
+                      <span className="text-success">{userSupply.your }</span>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column"}}>
+                      <span className=" text-xs">Total Supply</span>
+                      <span className="text-success">{userSupply.total}</span>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column"}}>
+                      <span className=" text-xs">Total Borrow</span>
+                      <span className="text-success">{(userBorrorwInformation/1e9).toFixed(3)}</span>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column"}}>
+                      <span className=" text-xs">Supply APY</span>
+                      <span className="text-success">{userStakeSolApy}%</span>
+        </div>
+
+      </div>
+      <div style={{width:'100%' , display:"flex" , justifyContent:"space-between" }}>
+      <Button  color="success" onClick={onSupplyOpen} style={{width:"47%"}}>
+          ➕ Supply
+        </Button>
+        <Button  color="danger" onClick={onWithdrawOpen} style={{width:"47%"}}>
+          ➖ Withdraw
+        </Button>
+        </div>
+    </div>
+
+
+  </CardBody>
+</Card>
+      </div>
+
+          </ModalBody>
         </ModalContent>
       </Modal>
 

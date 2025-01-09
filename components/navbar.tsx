@@ -287,9 +287,10 @@ export const Navbar = () => {
         <NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
-            <p className="font-bold text-inherit">PUMPLEND</p>
+            {/* <p className="font-bold text-inherit">PUMPLONG</p> */}
           </NextLink>
         </NavbarBrand>
+        
         <div className="hidden lg:flex gap-4 justify-start ml-2">
         <NavbarItem >
               <div
@@ -316,6 +317,23 @@ export const Navbar = () => {
                 }
               >
                 [Referral]
+              </div>
+              &nbsp;&nbsp;&nbsp;
+              <div
+                className={clsx(
+                  linkStyles({ color: "foreground" }),
+                  "data-[active=true]:text-primary data-[active=true]:font-medium",
+                )}
+                color="foreground"
+                onClick={
+                  ()=>{
+                    eventBus.emit("stake_modal_display", { 
+                     
+                     });
+                  }
+                }
+              >
+                [Stake SOL]
               </div>
               &nbsp;&nbsp;&nbsp;
               <NextLink
@@ -444,7 +462,7 @@ export const Navbar = () => {
               
              
               <p className="text-sm">
-              &nbsp;&nbsp; Pumplend is a lending protocol built for pump, enabling users to fully tap into the liquidity of the pump bonding curve. User can use tokens from pump as collateral to borrow SOL or leverage SOL to go long on your favorite memes.
+              &nbsp;&nbsp; PUMPLONG is a lending protocol built for pump, enabling users to fully tap into the liquidity of the pump bonding curve. User can use tokens from pump as collateral to borrow SOL or leverage SOL to go long on your favorite memes.
               </p>
               <div className="flex w-full justify-center items-center">
                 <a className="text-xl" style={{color:"green"}}>Borrow ?</a>
@@ -477,7 +495,7 @@ export const Navbar = () => {
           <div className="flex w-full justify-center items-center">
               
             <Snippet color="success" symbol=""> 
-            {publicKey?'https://pumplend.fun/?referral='+publicKey.toBase58():"https://pumplend.fun/"}
+            {publicKey?'https://PUMPLONG.fun/?referral='+publicKey.toBase58():"https://PUMPLONG.fun/"}
             </Snippet>
             </div>
           </ModalBody>

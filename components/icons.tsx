@@ -13,9 +13,9 @@ export const Logo: React.FC<IconSvgProps> = ({
     className="apple"
     style={{
       width : "100px",
-      height :"100px",
+      height :"80px",
       backgroundColor: "transparent",
-      paddingTop:"10%"
+      // paddingTop:"10%"
     }}
   >
   </img>
