@@ -227,7 +227,7 @@ export default function IndexPage() {
   )
 
 
-  const [repayData, setRepayData] = useState([
+  const [repayData, setRepayData] = useState<any>([
     {
       address:"",
       name: "Rastapepe",
@@ -235,6 +235,7 @@ export default function IndexPage() {
       amount: "2",
       amountToken: "1000000",
       amountSol:"",
+      raw : {},
       lastUpdated:""
     },
   ]);
@@ -489,7 +490,7 @@ export default function IndexPage() {
   }
   const repayDisplay = async ( borrowInformationArray:any)=>
   {
-
+   
    
     if(!userBorrowTokens || userBorrowTokens.length != borrowInformationArray.length)
     {
@@ -512,6 +513,7 @@ export default function IndexPage() {
         amount: (Number(borrowInformationArray[i].borrowedAmount)/1e9).toFixed(3),
         amountToken: (Number(borrowInformationArray[i].collateralAmount)/1e6).toFixed(3),
         amountSol : (Number(borrowInformationArray[i].depositSolAmount)/1e9).toFixed(3),
+        raw : borrowInformationArray[i],
         lastUpdated : Number(borrowInformationArray[i].lastUpdated).toFixed(0)
       }
       borrowTokens.push(seed);
@@ -521,6 +523,8 @@ export default function IndexPage() {
     {
       setRepayChartDisplay(true)
     }
+
+    // console.log("✈ borrowInformationArray",borrowTokens , lend.pumplend_estimate_interest(borrowTokens[0].raw))
     setRepayData(borrowTokens);
   }
   
@@ -1200,7 +1204,7 @@ export default function IndexPage() {
     className="w-full"
     style={{
       display: "grid",
-      gridTemplateColumns: "repeat(6, 1fr)", 
+      gridTemplateColumns: "repeat(7, 1fr)", 
       alignItems: "center", 
       justifyItems: "center", 
       gap: "1rem",
@@ -1227,6 +1231,10 @@ export default function IndexPage() {
     <div>
       <span className="text-default-900 font-semibold">Liquidation</span>
     </div>
+
+    <div>
+      <span className="text-default-900 font-semibold">Interest</span>
+    </div>
     <div>
       <span className="text-default-900 font-semibold">Actions</span>
     </div>
@@ -1241,7 +1249,7 @@ export default function IndexPage() {
   className="w-full"
   style={{
     display: "grid",
-    gridTemplateColumns: "repeat(6, 1fr)", 
+    gridTemplateColumns: "repeat(7, 1fr)", 
     alignItems: "center", 
     justifyItems: "center", 
     gap: "1rem", 
@@ -1272,19 +1280,24 @@ export default function IndexPage() {
   <div>
    
     {
-      Math.floor(
-        ((24*60*60 + Number(item.lastUpdated))-(Date.now()/1000))/3600
-      )
+      Math.floor((lend.pumplend_estimate_interest(item.raw).liquiteRemainingTime)/3600)
     }
-    H
+    <span className="text-success text-xl"> H </span>
     {
-       ((((24*60*60 + Number(item.lastUpdated))-(Date.now()/1000))/3600 - Math.floor(
-        ((24*60*60 + Number(item.lastUpdated))-(Date.now()/1000))/3600
-      ))*60).toFixed(0)
+       Math.floor(
+        ((lend.pumplend_estimate_interest(item.raw).liquiteRemainingTime)%3600)/60)
+
     }
-    M
+   <span className="text-success text-xl"> M </span>
   </div>
 
+
+  <div>
+   
+    {
+      (Number(lend.pumplend_estimate_interest(item.raw).interest)/1e9)
+    } SOL
+  </div>
   <div style={{ display: "flex", gap: "0.5rem" }}>
     <Button color="danger" onClick={()=>{
       userClosePositionButton(item.address)
@@ -1298,7 +1311,9 @@ export default function IndexPage() {
       Repay
     </Button>
   </div>
+  <br></br>
 </div>
+
 
               ))}
               </div>
