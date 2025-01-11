@@ -1,8 +1,8 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "PUMPLEND",
-  description: "First lending protocol base on pump.",
+  name: "PUMPMAX",
+  description: "First max leverage protocol base on pump.",
   navItems: [
     {
       label: "[Referral]",
@@ -13,7 +13,7 @@ export const siteConfig = {
   ],
   links: {
     
-    website: "https://testnet.pumplend.fun/",
+    website: "https://testnet.pumpmax.fun/",
     bot:"https://t.me/pumplend_bot",
     webapp:"https://t.me/pumplend_bot/test",
     github: "https://github.com/pumplend",

@@ -287,7 +287,7 @@ export const Navbar = () => {
         <NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
-            {/* <p className="font-bold text-inherit">PUMPLONG</p> */}
+            {/* <p className="font-bold text-inherit">PUMPMAX</p> */}
           </NextLink>
         </NavbarBrand>
         
@@ -462,7 +462,7 @@ export const Navbar = () => {
               
              
               <p className="text-sm">
-              &nbsp;&nbsp; PUMPLONG is a lending protocol built for pump, enabling users to fully tap into the liquidity of the pump bonding curve. User can use tokens from pump as collateral to borrow SOL or leverage SOL to go long on your favorite memes.
+              &nbsp;&nbsp; PUMPMAX is a lending protocol built for pump, enabling users to fully tap into the liquidity of the pump bonding curve. User can use tokens from pump as collateral to borrow SOL or leverage SOL to go long on your favorite memes.
               </p>
               <div className="flex w-full justify-center items-center">
                 <a className="text-xl" style={{color:"green"}}>Borrow ?</a>
@@ -495,7 +495,7 @@ export const Navbar = () => {
           <div className="flex w-full justify-center items-center">
               
             <Snippet color="success" symbol=""> 
-            {publicKey?'https://PUMPLONG.fun/?referral='+publicKey.toBase58():"https://PUMPLONG.fun/"}
+            {publicKey?'https://PUMPMAX.fun/?referral='+publicKey.toBase58():"https://PUMPMAX.fun/"}
             </Snippet>
             </div>
           </ModalBody>
