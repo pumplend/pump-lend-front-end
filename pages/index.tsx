@@ -133,6 +133,7 @@ export default function IndexPage() {
   const [borrowOutAmount, setBorrowOutAmount] = useState(0)
   const [leverageAmount, setLeverageAmount] = useState(0)
   const [leverageOutAmount, setLeverageOutAmount] = useState(0)
+  const [leverageOutAmountSol, setLeverageOutAmountSol] = useState(0)
   const [leverageOutAmountUSD, setLeverageOutAmountUSD] = useState(0)
   const [repayChartDisplay, setRepayChartDisplay] = useState(false)
   
@@ -694,6 +695,9 @@ export default function IndexPage() {
                 setLeverageOutAmountUSD(
                  (( Number( maxBorrowAbleData.sol)/1e9)*solPrice)
                 )
+                setLeverageOutAmountSol(
+                  maxBorrowAbleData.sol
+                )
               }
             }
 
@@ -1148,7 +1152,11 @@ export default function IndexPage() {
           </div>
           <div className="bottom-14 right-0 w-full p-4">
           <Button className="w-full colorfulbuttons" color="success" onClick={userLeverageButton}>
-          Max Buy
+          {
+            leverageOutAmount?
+            ((Number(leverageOutAmountSol)/(leverageAmount*1e9)).toFixed(1)+"x"):
+            "Max"
+          } Buy
         </Button>
           </div>
         </div>
@@ -1336,7 +1344,7 @@ export default function IndexPage() {
    
     {
       Number(
-        (Number(lend.pumplend_estimate_interest(item.raw).interest)/1e9).toFixed(0)
+        (Number(lend.pumplend_estimate_interest(item.raw).interest)/1e9).toFixed(3)
       )
     } SOL
   </div>

@@ -393,7 +393,7 @@ export const Navbar = () => {
         </NavbarItem>
         {/* <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem> */}
         <NavbarItem className="hidden md:flex">
-          <Button
+          {/* <Button
             isExternal
             as={Link}
             className="text-sm font-normal text-default-600 bg-default-100"
@@ -402,7 +402,7 @@ export const Navbar = () => {
             variant="flat"
           >
             
-          </Button>
+          </Button> */}
 
           {
             walletConnected? walletBtn():walletBtn()
@@ -465,6 +465,13 @@ export const Navbar = () => {
               &nbsp;&nbsp; PUMPMAX is a lending protocol built for pump, enabling users to fully tap into the liquidity of the pump bonding curve. User can use tokens from pump as collateral to borrow SOL or leverage SOL to go long on your favorite memes.
               </p>
               <div className="flex w-full justify-center items-center">
+                <a className="text-xl" style={{color:"green"}}>Make Long !</a>
+             </div>
+              <p>&nbsp;&nbsp; Step 1: Choose a pump coin you want to long.</p>
+              <p>&nbsp;&nbsp; Step 2: Use SOL to open a long position.</p>
+              <p>&nbsp;&nbsp; Step 3: Sell and obtain SOL.</p>
+              
+              <div className="flex w-full justify-center items-center">
                 <a className="text-xl" style={{color:"green"}}>Borrow ?</a>
              </div>
               <p>&nbsp;&nbsp; Step 1: Step 1: Select a pump coin you want to use as collateral.</p>
@@ -472,12 +479,7 @@ export const Navbar = () => {
               <p>&nbsp;&nbsp; Step 3: Repay the SOL and interest to redeem your pump tokens.</p>
 
               <br></br>
-              <div className="flex w-full justify-center items-center">
-                <a className="text-xl" style={{color:"green"}}>Make Long !</a>
-             </div>
-              <p>&nbsp;&nbsp; Step 1: Choose a pump coin you want to long.</p>
-              <p>&nbsp;&nbsp; Step 2: Use SOL to open a long position.</p>
-              <p>&nbsp;&nbsp; Step 3: Sell and obtain SOL.</p>
+
              
             </div>
           </ModalBody>
