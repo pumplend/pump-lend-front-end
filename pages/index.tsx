@@ -39,7 +39,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import { Chip } from "@nextui-org/chip";
 
-import { trySetReferral , tryLoadReferral } from "@/core/storage";
+import { trySetReferral , tryLoadReferral ,trySetKlineConfig ,tryGetKlineConfig } from "@/core/storage";
 import { globalWallet } from "@/core/wallet"
 import {
   addressBooks , 
@@ -275,6 +275,7 @@ export default function IndexPage() {
 
   useEffect(() => {
         let walletConnectedLocks = false;
+        setKlineDisplay(tryGetKlineConfig())
         //Data init
         setRepayData([])
         //Window size function
@@ -847,8 +848,10 @@ export default function IndexPage() {
       if(klineDisplay == "none")
       {
         setKlineDisplay("")
+        trySetKlineConfig("")
       }else{
         setKlineDisplay("none")
+        trySetKlineConfig("none")
       }
       
     }
