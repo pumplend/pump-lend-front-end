@@ -287,7 +287,7 @@ export const Navbar = () => {
         <NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
-            {/* <p className="font-bold text-inherit">PUMPMAX</p> */}
+            <p className="font-bold text-inherit">PUMPMAX</p>
           </NextLink>
         </NavbarBrand>
         
@@ -318,7 +318,7 @@ export const Navbar = () => {
               >
                 [Referral]
               </div>
-              &nbsp;&nbsp;&nbsp;
+              {/* &nbsp;&nbsp;&nbsp;
               <div
                 className={clsx(
                   linkStyles({ color: "foreground" }),
@@ -345,7 +345,7 @@ export const Navbar = () => {
                 href={"faucet"}
               >
                 [Devnet Faucet]
-              </NextLink>
+              </NextLink> */}
           </NavbarItem>
             
 

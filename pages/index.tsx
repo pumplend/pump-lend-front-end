@@ -25,7 +25,8 @@ import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
-import { FaArrowDown } from "react-icons/fa";
+import { FaArrowDown , FaArrowUp } from "react-icons/fa";
+import { AiOutlineStock } from "react-icons/ai";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { LuLockKeyhole } from "react-icons/lu";
 import { MdOutlineSwapHoriz } from "react-icons/md";
@@ -95,14 +96,19 @@ export default function IndexPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([
     {
-      name:"📈 Long",
+      name:"📈 Max Buy",
+      color:"success",
+      display:true
+    },
+    {
+      name:"💵 Max Borrow",
       color:"default",
       display:false
     },
     {
-      name:"💰 Borrow",
-      color:"success",
-      display:true
+      name:"💰 Earn",
+      color:"default",
+      display:false
     }
   ]);
   const [solPrice,setSolPrice] = useState(
@@ -115,6 +121,10 @@ export default function IndexPage() {
     virtualTokenReserves:BigInt(0)
    }
   )
+
+  const [klineDisplay , setKlineDisplay] = useState(
+    "none"
+   )
 
   const [walletConnectedLock, setWalletConnectedLock] = useState(false)
   const [stakeAmout, setStakeAmount] = useState(0)
@@ -831,14 +841,25 @@ export default function IndexPage() {
       tmp[index].display = true
       setData(tmp);
     }
+
+    const klineControle = () =>
+    {
+      if(klineDisplay == "none")
+      {
+        setKlineDisplay("")
+      }else{
+        setKlineDisplay("none")
+      }
+      
+    }
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
         <div className="inline-block max-w-xl text-center justify-center" style={{display:siteConfig.isHeadless}}>
         
           
-          <span className={title()}>Make Long&nbsp;</span>
-          <span className={title({ color: "green" })+" github"}>Memecoin&nbsp;</span>
+          <span className={title()}>&nbsp;</span>
+          <span className={title({ color: "green" })+" github"}>Max Pump Coin&nbsp;</span>
 
          
 
@@ -860,24 +881,16 @@ export default function IndexPage() {
               <Button key={index} color={item.color}
                 onClick={() => {
                   changeType(data,index)
-                  // let tmp = JSON.parse(
-                  //   JSON.stringify(
-                  //     data
-                  //   )
-                  // )
-
-                  // for(let i = 0 ; i < tmp.length ; i++)
-                  // {
-                  //   tmp[i].color = "default";
-                  //   tmp[i].display = false;
-                  // }
-                  // tmp[index].color = "success";
-                  // tmp[index].display = true
-                  // setData(tmp);
                 }
               }
               >
-                {item.name}
+                {
+                item.name
+                }
+                {
+                  index == 2 ? 
+                  " : "+userStakeSolApy+"%" : null
+                } 
               </Button>
             ))}
           </ButtonGroup>
@@ -885,7 +898,7 @@ export default function IndexPage() {
       <div className="maincard" style={{minWidth : windowSize.width*0.32}}>
 
 {
-  data[0].display ? 
+  data[1].display ? 
   <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full" style={{ width:"100%" }}>
   <CardBody className="py-5 gap-4">
     <div className="flex gap-2.5 justify-center">
@@ -998,21 +1011,31 @@ export default function IndexPage() {
 
 
 {
-  data[1].display ? 
+  data[0].display ? 
         <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full  justify-center" style={{ width:"100%"}}>
   <CardBody className="py-5 gap-4">
     <div className="flex gap-2.5 justify-center">
       <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
         <span className="text-default-900 text-xl font-semibold">
-          Max Long
+          Max Buy
         </span>
       </div>
     </div>
 
 <div style={{display:"flex-wrap"}}>
 
-<iframe title="kline" src="https://www.gmgn.cc/kline/sol/CHUxbA8Y674koHfBERgoir2UQxwLTpW11C7LUgoYpump" width={kWindowsSize + "px"} height={windowSize.height*0.4}></iframe>
+<iframe style={
+  {display:klineDisplay}
+  } title="kline" src="https://www.gmgn.cc/kline/sol/CHUxbA8Y674koHfBERgoir2UQxwLTpW11C7LUgoYpump" width={kWindowsSize + "px"} height={windowSize.height*0.4}></iframe>
 <div>
+<div className="flex flex-col gap-6 w-full justify-between items-center ">
+<Button className="w-full" variant="bordered" onClick={()=>{
+  klineControle()
+}}>
+<AiOutlineStock size="48" />
+</Button>
+</div>
+
 &nbsp;
 &nbsp;
 &nbsp;
@@ -1134,6 +1157,66 @@ export default function IndexPage() {
   </CardBody>
         </Card> : null
 
+}
+
+
+{
+  data[2].display ? 
+
+  <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full" style={{ width:"100%" }}>
+    <CardBody className="py-5 gap-4">
+      <div className="flex gap-2.5 justify-center">
+        <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
+          <span className="text-default-900 text-xl font-semibold">
+            Stake Sol
+          </span>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-6 w-full" style={{minWidth : windowSize.width*0.3}}>
+        <div  style={{width:'100%' , display:"flex" , justifyContent:"space-between" }}>
+          <Image
+                  alt="chain logo"
+                  height={40}
+                  src="/icon/sol.png"
+                  width={40}
+          />
+
+          <div style={{display:"flex",flexDirection:"column"}}>
+                        <span className=" text-xs">Your Supply</span>
+                        <span className="text-success">{userSupply.your }</span>
+          </div>
+
+          <div style={{display:"flex",flexDirection:"column"}}>
+                        <span className=" text-xs">Total Supply</span>
+                        <span className="text-success">{userSupply.total}</span>
+          </div>
+
+          <div style={{display:"flex",flexDirection:"column"}}>
+                        <span className=" text-xs">Total Borrow</span>
+                        <span className="text-success">{(userBorrorwInformation/1e9).toFixed(3)}</span>
+          </div>
+
+          <div style={{display:"flex",flexDirection:"column"}}>
+                        <span className=" text-xs">Supply APY</span>
+                        <span className="text-success">{userStakeSolApy}%</span>
+          </div>
+
+        </div>
+        <div style={{width:'100%' , display:"flex" , justifyContent:"space-between" }}>
+        <Button  color="success" onClick={onSupplyOpen} style={{width:"47%"}}>
+            ➕ Supply
+          </Button>
+          <Button  color="danger" onClick={onWithdrawOpen} style={{width:"47%"}}>
+            ➖ Withdraw
+          </Button>
+          </div>
+      </div>
+
+
+    </CardBody>
+  </Card>
+:null
 }
       </div>
 
@@ -1794,61 +1877,61 @@ export default function IndexPage() {
           <ModalBody>
 
             
-          <div className="maincard" style={{minWidth : windowSize.width*0.32 , display:siteConfig.isHeadless}}>
-      <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full" style={{ width:"100%" }}>
-  <CardBody className="py-5 gap-4">
-    <div className="flex gap-2.5 justify-center">
-      <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
-        <span className="text-default-900 text-xl font-semibold">
-          Stake Sol
-        </span>
-      </div>
-    </div>
+        <div className="maincard" style={{minWidth : windowSize.width*0.32 , display:siteConfig.isHeadless}}>
+            <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full" style={{ width:"100%" }}>
+              <CardBody className="py-5 gap-4">
+                <div className="flex gap-2.5 justify-center">
+                  <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
+                    <span className="text-default-900 text-xl font-semibold">
+                      Stake Sol
+                    </span>
+                  </div>
+                </div>
 
-    <div className="flex flex-col gap-6 w-full" style={{minWidth : windowSize.width*0.3}}>
-      <div  style={{width:'100%' , display:"flex" , justifyContent:"space-between" }}>
-        <Image
-                alt="chain logo"
-                height={40}
-                src="/icon/sol.png"
-                width={40}
-        />
+                <div className="flex flex-col gap-6 w-full" style={{minWidth : windowSize.width*0.3}}>
+                  <div  style={{width:'100%' , display:"flex" , justifyContent:"space-between" }}>
+                    <Image
+                            alt="chain logo"
+                            height={40}
+                            src="/icon/sol.png"
+                            width={40}
+                    />
 
-        <div style={{display:"flex",flexDirection:"column"}}>
-                      <span className=" text-xs">Your Supply</span>
-                      <span className="text-success">{userSupply.your }</span>
+                    <div style={{display:"flex",flexDirection:"column"}}>
+                                  <span className=" text-xs">Your Supply</span>
+                                  <span className="text-success">{userSupply.your }</span>
+                    </div>
+
+                    <div style={{display:"flex",flexDirection:"column"}}>
+                                  <span className=" text-xs">Total Supply</span>
+                                  <span className="text-success">{userSupply.total}</span>
+                    </div>
+
+                    <div style={{display:"flex",flexDirection:"column"}}>
+                                  <span className=" text-xs">Total Borrow</span>
+                                  <span className="text-success">{(userBorrorwInformation/1e9).toFixed(3)}</span>
+                    </div>
+
+                    <div style={{display:"flex",flexDirection:"column"}}>
+                                  <span className=" text-xs">Supply APY</span>
+                                  <span className="text-success">{userStakeSolApy}%</span>
+                    </div>
+
+                  </div>
+                  <div style={{width:'100%' , display:"flex" , justifyContent:"space-between" }}>
+                  <Button  color="success" onClick={onSupplyOpen} style={{width:"47%"}}>
+                      ➕ Supply
+                    </Button>
+                    <Button  color="danger" onClick={onWithdrawOpen} style={{width:"47%"}}>
+                      ➖ Withdraw
+                    </Button>
+                    </div>
+                </div>
+
+
+              </CardBody>
+            </Card>
         </div>
-
-        <div style={{display:"flex",flexDirection:"column"}}>
-                      <span className=" text-xs">Total Supply</span>
-                      <span className="text-success">{userSupply.total}</span>
-        </div>
-
-        <div style={{display:"flex",flexDirection:"column"}}>
-                      <span className=" text-xs">Total Borrow</span>
-                      <span className="text-success">{(userBorrorwInformation/1e9).toFixed(3)}</span>
-        </div>
-
-        <div style={{display:"flex",flexDirection:"column"}}>
-                      <span className=" text-xs">Supply APY</span>
-                      <span className="text-success">{userStakeSolApy}%</span>
-        </div>
-
-      </div>
-      <div style={{width:'100%' , display:"flex" , justifyContent:"space-between" }}>
-      <Button  color="success" onClick={onSupplyOpen} style={{width:"47%"}}>
-          ➕ Supply
-        </Button>
-        <Button  color="danger" onClick={onWithdrawOpen} style={{width:"47%"}}>
-          ➖ Withdraw
-        </Button>
-        </div>
-    </div>
-
-
-  </CardBody>
-</Card>
-      </div>
 
           </ModalBody>
         </ModalContent>
