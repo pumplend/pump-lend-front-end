@@ -12,9 +12,14 @@ const trySetKlineConfig = (cfg:string) =>
     return localStorage.setItem("kline_config",cfg)
 }
 
-const tryGetKlineConfig = (cfg:string) =>
+const tryGetKlineConfig = () =>
 {
-    return localStorage.getItem("kline_config")
+    const ret = localStorage.getItem("kline_config")
+    if(!ret)
+    {
+        return "";
+    }
+    return ret
 }
 export {
     tryLoadReferral,

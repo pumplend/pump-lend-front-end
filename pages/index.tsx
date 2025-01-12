@@ -696,7 +696,7 @@ export default function IndexPage() {
                  (( Number( maxBorrowAbleData.sol)/1e9)*solPrice)
                 )
                 setLeverageOutAmountSol(
-                  maxBorrowAbleData.sol
+                  Number(maxBorrowAbleData.sol)
                 )
               }
             }
@@ -1152,11 +1152,12 @@ export default function IndexPage() {
           </div>
           <div className="bottom-14 right-0 w-full p-4">
           <Button className="w-full colorfulbuttons" color="success" onClick={userLeverageButton}>
-          {
+          {/* {
             leverageOutAmount?
             ((Number(leverageOutAmountSol)/(leverageAmount*1e9)).toFixed(1)+"x"):
             "Max"
-          } Buy
+          } */}
+          Max Buy
         </Button>
           </div>
         </div>
