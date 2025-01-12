@@ -4,7 +4,7 @@
 
 
 const coingeckoBaseUrl = `https://api.coingecko.com/api/v3/simple/price`;
-const pumpWebApi = `https://test.cgsn.pro/api`
+const pumpWebApi = `https://pumpmax.fun/api`
 const request_router = {
 
   app_indexer: {

@@ -106,7 +106,7 @@ export default function IndexPage() {
       display:false
     },
     {
-      name:"💰 Earn",
+      name:"💰 Earn SOL",
       color:"default",
       display:false
     }
@@ -329,7 +329,7 @@ export default function IndexPage() {
                   Number(userStakeInfo.totalStaked)/Number(userStakeInfo.totalShares))-1
                 )/
           (
-            (Date.now()/1000 - 1733369330)/(365*24*3600)
+            (Date.now()/1000 - 1734619878)/(365*24*3600)
           )
         )*100
         ).toFixed(3) 
@@ -894,10 +894,10 @@ export default function IndexPage() {
                 {
                 item.name
                 }
-                {
+                {/* {
                   index == 2 ? 
                   " : "+userStakeSolApy+"%" : null
-                } 
+                }  */}
               </Button>
             ))}
           </ButtonGroup>
