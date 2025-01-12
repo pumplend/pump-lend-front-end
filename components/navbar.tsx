@@ -334,7 +334,7 @@ export const Navbar = () => {
                 }
               >
                 [Stake SOL]
-              </div>
+              </div> */}
               &nbsp;&nbsp;&nbsp;
               <NextLink
                 className={clsx(
@@ -345,7 +345,7 @@ export const Navbar = () => {
                 href={"faucet"}
               >
                 [Devnet Faucet]
-              </NextLink> */}
+              </NextLink>
           </NavbarItem>
             
 
