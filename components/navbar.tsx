@@ -203,7 +203,18 @@ export const Navbar = () => {
         {
           onWalletConnectorOpen()
         });
-
+    eventBus.on("display_how_it_works", (e:any)=>
+        {
+          onAboutOpen()
+        });
+    eventBus.on("display_referral", (e:any)=>
+        {
+          onRefOpen()
+        });
+    eventBus.on("display_fauct", (e:any)=>
+        {
+          router.push("/faucet")
+        });
     console.log("Final wallet connect status ::",walletConnected)
 
   }, [connected,publicKey,walletConnectedType,walletConnected]);
@@ -285,9 +296,9 @@ export const Navbar = () => {
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start" style={{display:siteConfig.isHeadless}}>
         <NavbarBrand className="gap-3 max-w-fit">
-          <NextLink className="flex justify-start items-center gap-1" href="/">
+          <NextLink className="flex justify-start items-center gap-1" href="/"style={{maxWidth:"50%"}} >
             <Logo />
-            <p className="font-bold text-inherit">PUMPMAX</p>
+            <p className="font-bold text-inherit"  >PUMPMAX</p>
           </NextLink>
         </NavbarBrand>
         

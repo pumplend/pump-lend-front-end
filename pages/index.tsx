@@ -6,14 +6,13 @@ import { Card, CardBody, CardFooter } from "@nextui-org/card";
 
 import { envConfig } from "@/config/env";
 import { title, subtitle } from "@/components/primitives";
-import { GithubIcon, Logo } from "@/components/icons";
 import DefaultLayout from "@/layouts/default";
 
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { useState, useEffect } from "react";
 
 import {Input,Avatar,Spinner ,DropdownItem,DropdownMenu,DropdownTrigger,Dropdown,Tooltip , Tabs, Tab} from "@nextui-org/react"
-
+import { FaTelegram , FaTwitter , FaDiscord } from "react-icons/fa";
 
 import { Image } from "@nextui-org/image";
 import { IoIosArrowForward } from "react-icons/io";
@@ -38,6 +37,17 @@ import { siteConfig } from "@/config/site";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import { Chip } from "@nextui-org/chip";
+import {
+  TwitterIcon,
+  GithubIcon,
+  DiscordIcon,
+  HeartFilledIcon,
+  SearchIcon,
+  Logo,
+  OkxIcon,
+  TonspackIcon,
+  UXUYIcon,
+} from "@/components/icons";
 
 import { trySetReferral , tryLoadReferral ,trySetKlineConfig ,tryGetKlineConfig } from "@/core/storage";
 import { globalWallet } from "@/core/wallet"
@@ -859,16 +869,35 @@ export default function IndexPage() {
       }
       
     }
+
+    const displayHowItWorks = () =>
+    {
+      eventBus.emit("display_how_it_works", {});
+    }
+
+    const displayReferral = () =>
+      {
+        eventBus.emit("display_referral", {});
+      }
+
+      const displayFauct = () =>
+        {
+          eventBus.emit("display_fauct", {});
+        }
   return (
     <DefaultLayout>
-      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
-        <div className="inline-block max-w-xl text-center justify-center" style={{display:siteConfig.isHeadless}}>
+      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full mt-[-100px] md:mt-0  ">
+        <div className="inline-block max-w-xl text-center  py-2 md:py-4 justify-center" style={{display:siteConfig.isHeadless }}>
         
           
-          <span className={title()}>&nbsp;</span>
+          {/* <span className={title()}>&nbsp;</span> */}
           <span className={title({ color: "green" })+" github"}>Max Pump Coin&nbsp;</span>
 
-         
+         {
+          windowSize.width > 500 ? null :
+          <a onClick={displayHowItWorks}
+          >[How it works]</a>
+         }
 
           {/* <Button onClick={debugs}> Debug</Button> */}
           {/* <span className={title({ color: "green" })}>Memecoin&nbsp;</span> */}
@@ -878,10 +907,13 @@ export default function IndexPage() {
           </span> */}
         </div>
 
-      <br></br>
+        {
+          windowSize.width > 500 ?   <br></br> :null
+         }
+    
       
 
-      <br></br>
+      {/* <br></br> */}
       <div style={{width:"100%",minWidth:"300px"}} className="inline-block max-w-xl text-center justify-center item-center">
           <ButtonGroup>
             {data.map((item:any, index:number) => (
@@ -1030,17 +1062,17 @@ export default function IndexPage() {
     </div>
 
 <div style={{display:"flex-wrap"}}>
-
-<iframe style={
-  {display:klineDisplay}
-  } title="kline" src="https://www.gmgn.cc/kline/sol/CHUxbA8Y674koHfBERgoir2UQxwLTpW11C7LUgoYpump" width={kWindowsSize + "px"} height={windowSize.height*0.4}></iframe>
-<div>
-<div className="flex flex-col gap-6 w-full justify-between items-center ">
 <Button className="w-full" variant="bordered" onClick={()=>{
   klineControle()
 }}>
 <AiOutlineStock size="48" />
 </Button>
+<iframe style={
+  {display:klineDisplay}
+  } title="kline" src="https://www.gmgn.cc/kline/sol/CHUxbA8Y674koHfBERgoir2UQxwLTpW11C7LUgoYpump" width={kWindowsSize + "px"} height={windowSize.height*0.4}></iframe>
+<div>
+<div className="flex flex-col gap-6 w-full justify-between items-center ">
+
 </div>
 
 &nbsp;
@@ -1950,8 +1982,57 @@ export default function IndexPage() {
       </Modal>
 
 
+        <div className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full  ">
+          <div className="inline-block max-w-xl text-center  py-2 md:py-4 justify-center" style={{display:siteConfig.isHeadless }}>
+            {
+              windowSize.width > 500 ? null :
+              <a onClick={displayReferral}
+              >[Referral]</a>
+            }
+            &nbsp;&nbsp;&nbsp;
+            {
+              windowSize.width > 500 ? null :
+              <a onClick={displayFauct}
+              >[Devnet Fauct]</a>
+            }
+          </div>
 
+          
+            {
+              <div className="inline-block max-w-xl text-center  py-2 md:py-4 justify-center" style={{display:siteConfig.isHeadless }}>
+                <Link isExternal href={siteConfig.links.twitter} title="Twitter">
+                <TwitterIcon className="text-default-500" />
+              </Link>
+              &nbsp;
+              &nbsp;
+              <Link isExternal href={siteConfig.links.discord} title="Discord">
+                <DiscordIcon className="text-default-500" />
+              </Link>
+              &nbsp;
+              &nbsp;
+              <Link isExternal href={siteConfig.links.telegramChannel} title="Telegram">
+              <div
+                rel="noopener noreferrer"
+                style={{ fontSize: "24px", color: "#ffffff", textDecoration: "none" }}
+              >
+              <FaTelegram />
+              </div>
+              </Link>
+              &nbsp;
+              &nbsp;
+              <Link isExternal href={siteConfig.links.github} title="GitHub">
+                <GithubIcon className="text-default-500" />
+              </Link>
+                </div>
+            }
+
+
+          
+        </div>
       </div>
+
+
+
       </section>
     </DefaultLayout>
   );
