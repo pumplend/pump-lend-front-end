@@ -298,7 +298,7 @@ export const Navbar = () => {
         <NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/"style={{maxWidth:"50%"}} >
             <Logo />
-            <p className="font-bold text-inherit"  >PUMPMAX</p>
+            <p className="font-bold text-inherit text-sm md:text-xl"  >PUMPMAX</p>
           </NextLink>
         </NavbarBrand>
         
@@ -473,22 +473,32 @@ export const Navbar = () => {
               
              
               <p className="text-sm">
-              &nbsp;&nbsp; PUMPMAX is a lending protocol built for pump, enabling users to fully tap into the liquidity of the pump bonding curve. User can use tokens from pump as collateral to borrow SOL or leverage SOL to go long on your favorite memes.
+              &nbsp;&nbsp; 
+Pumpmax: Maximize your Pump coins easily through  <a style={{color:"orange"}}>buying</a>, <a style={{color:"yellow"}}>borrowing</a>, and <a style={{color:"pink"}}>earning</a> !A simple platform that helps Pump.fun users maximize gains .
+<br></br>
+&nbsp;&nbsp;  <a className="text-lg" style={{color:"gold"}}>Start small, think big</a>—Pumpmax makes supercharged gains simple for everyone!
+
               </p>
               <div className="flex w-full justify-center items-center">
-                <a className="text-xl" style={{color:"green"}}>Make Long !</a>
+                <a className="text-xl" style={{color:"green"}}>Max Buy !</a>
              </div>
-              <p>&nbsp;&nbsp; Step 1: Choose a pump coin you want to long.</p>
-              <p>&nbsp;&nbsp; Step 2: Use SOL to open a long position.</p>
-              <p>&nbsp;&nbsp; Step 3: Sell and obtain SOL.</p>
+              <p>&nbsp;&nbsp; Step 1: Select a Pump coin you want to buy .</p>
+              <p>&nbsp;&nbsp; Step 2:Deposit SOL to get the max coins. Confirm to execute loop borrowing and complete the purchase</p>
+              <p>&nbsp;&nbsp; Step 3:Click "Close" to exit the position and get SOL, or click "Repay" to pay interest and get coins.</p>
               
               <div className="flex w-full justify-center items-center">
-                <a className="text-xl" style={{color:"green"}}>Borrow ?</a>
+                <a className="text-xl" style={{color:"green"}}>Max Borrow</a>
              </div>
-              <p>&nbsp;&nbsp; Step 1: Step 1: Select a pump coin you want to use as collateral.</p>
+              <p>&nbsp;&nbsp; Step 1: Select a Pump coin you want to use as collateral.</p>
               <p>&nbsp;&nbsp; Step 2: Borrow out SOL.</p>
-              <p>&nbsp;&nbsp; Step 3: Repay the SOL and interest to redeem your pump tokens.</p>
+              <p>&nbsp;&nbsp; Step 3: Click "Repay" to pay SOL and interest to redeem Pump coins. Click "Close" to sell coins and get SOL.</p>
 
+              <div className="flex w-full justify-center items-center">
+                <a className="text-xl" style={{color:"green"}}>Stak SOL</a>
+             </div>
+              <p>&nbsp;&nbsp; Step1:Click “Supply" to deposit SOL and earn interest.</p>
+              <p>&nbsp;&nbsp; Step2:Click "Withdraw" to withdraw your SOL and interest.</p>
+              
               <br></br>
 
              
@@ -543,7 +553,9 @@ export const Navbar = () => {
 
       </Modal>
           {/* Wallet Connector */}
-      <Modal isOpen={isWalletConnectorOpen} onClose={onWalletConnectorClose} scrollBehavior={"inside"} size="lg">
+      <Modal isOpen={isWalletConnectorOpen} onClose={onWalletConnectorClose} scrollBehavior={"inside"} placement={"center"}  size="lg" 
+      style={{maxHeight : "500px"}}
+      >
         <ModalContent>
           <ModalHeader className="flex w-full">
           <div className="flex w-full justify-center items-center text-3xl">

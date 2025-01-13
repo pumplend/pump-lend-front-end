@@ -104,6 +104,38 @@ export default function WalletSelector() {
       // );
     }
 
+    const SupportWallets = ()=> {
+      return (
+
+
+        <div className="w-ful flex-col gap-20 p-4 rounded-2xl">
+
+                  <Button  startContent={<SolflareIcon/>} className="w-full text-xl" onClick={()=>{
+          setVisible(true)
+        }}>
+        Extension Wallets
+        </Button>
+
+        &nbsp;
+        
+        <Button  startContent={<OkxIcon />} className="w-full text-xl" onClick={async ()=>{
+          await okxWalletConnect()
+        }}>
+        OKX Wallets
+        </Button>
+        
+        &nbsp;
+        
+        <Button  startContent={<UXUYIcon />} className="w-full text-xl" onClick={()=>{
+          onTgOpen()
+        }}>
+        Telegram Wallets
+        </Button>
+
+        </div>
+      )
+    }
+
     const TelegramWallets = ()=> {
       return (
         <div className="w-ful flex-col gap-20 p-4 rounded-2xl">
@@ -130,25 +162,11 @@ export default function WalletSelector() {
 
   return (
 
-    <div className="w-ful flex-col gap-20 p-4 rounded-2xl">
-        <Button  startContent={<PhantomIcon />} endContent={<SolflareIcon/>} className="w-full text-xl" onClick={()=>{
-          setVisible(true)
-        }}>
-        Extension Wallets
-        </Button>
-        &nbsp;
-        <Button  startContent={<OkxIcon />} endContent={<OkxIcon/>} className="w-full text-xl" onClick={async ()=>{
-          await okxWalletConnect()
-        }}>
-        OKX Wallets
-        </Button>
-        &nbsp;
-        <Button  startContent={<UXUYIcon />} endContent={<TonspackIcon/>} className="w-full text-xl" onClick={()=>{
-          onTgOpen()
-        }}>
-        Telegram Wallets
-        </Button>
+    <div className="w-ful flex-col gap-4 p-4 rounded-2xl">
 
+        {
+          SupportWallets()
+        }
 
 
 
