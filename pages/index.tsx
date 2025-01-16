@@ -142,6 +142,7 @@ export default function IndexPage() {
   const [borrowAmount, setBorrowAmount] = useState(0)
   const [borrowOutAmount, setBorrowOutAmount] = useState(0)
   const [leverageAmount, setLeverageAmount] = useState(0)
+  const [leverageAmountTmp, setLeverageAmountTmp] = useState(0)
   const [leverageOutAmount, setLeverageOutAmount] = useState(0)
   const [leverageOutAmountSol, setLeverageOutAmountSol] = useState(0)
   const [leverageOutAmountUSD, setLeverageOutAmountUSD] = useState(0)
@@ -699,6 +700,7 @@ export default function IndexPage() {
               console.log("max Borrowable data ::",maxBorrowAbleData)
               if(maxBorrowAbleData)
               {
+                setLeverageAmountTmp(amount)
                 setLeverageOutAmount(
                  Number( maxBorrowAbleData.token)
                 )
@@ -708,6 +710,7 @@ export default function IndexPage() {
                 setLeverageOutAmountSol(
                   Number(maxBorrowAbleData.sol)
                 )
+               
               }
             }
 
@@ -1184,19 +1187,21 @@ export default function IndexPage() {
           Borrow Hourly Percentage Rate : 0.0416 %
           </div>
           {
-            leverageAmount ? 
+            leverageOutAmount ? 
             <div className="text-center text-gray-500 text-xs">
-            Borrow Hourly Percentage Rate : 0.0416 %
+            {
+              (Number(leverageOutAmountSol) * leverageOutAmount /(leverageAmountTmp*1e9*1e6)).toFixed(1)
+            } More Tokens Than pump.fun
             </div> : null
           }
           <div className="bottom-14 right-0 w-full p-4">
           <Button className="w-full colorfulbuttons" color="success" onClick={userLeverageButton}>
-          {/* {
+          {
             leverageOutAmount?
-            ((Number(leverageOutAmountSol)/(leverageAmount*1e9)).toFixed(1)+"x"):
+            ((Number(leverageOutAmountSol)/(leverageAmountTmp*1e9)).toFixed(1)+"x"):
             "Max"
-          } */}
-          Max Buy
+          }
+          &nbsp; Buy
         </Button>
           </div>
         </div>
