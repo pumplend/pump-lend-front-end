@@ -1125,15 +1125,25 @@ export default function IndexPage() {
 
         <input
         className=" text-3xl "
-        style={{width:"70%",textAlign:"right" , backgroundColor:"transparent"}}
+        style={{width:"70%",textAlign:"right" , backgroundColor:"transparent" , 
+          color : (leverageAmount > (userWalletBlance/1e9)) ? "red" : "null"
+        }}
         placeholder={(userWalletBlance/1e9).toFixed(3)}
+        min={"0"}
+        max={(userWalletBlance/1e9).toFixed(3)}
+        step="0.1" 
         onChange={
           (e:any) => { setLeverageAmountFunction(e.currentTarget.value); }
         } 
-        value={leverageAmount}
+        value={
+          leverageAmount ? leverageAmount :
+          null
+        }
+        
         key="payinput" 
          type="number"
         > 
+        
         </input>
         
       </div>
@@ -1185,18 +1195,30 @@ export default function IndexPage() {
       </div>
 
 
-          <div className="text-center text-gray-500 text-xs">
-          Borrow Hourly Percentage Rate : 0.0416 %
-          </div>
+
           {
             leverageOutAmount ? 
-            <div className="text-center text-gray-500 text-xs">
-            {
-              (Number(leverageOutAmountSol) * leverageOutAmount /(leverageAmountTmp*1e9*1e6)).toFixed(1)
-            } More Tokens Than pump.fun
+            <div className="text-center text-xs">
+               Congrats! Hit
+            
+             
+              <span className="text-xl text-gray-500" style={{color:"red"}}>
+                {" "+((Number(leverageOutAmountSol)/(leverageAmountTmp*1e7)).toFixed(1))}% 
+              </span>
+             
+            
+              max coins at <a className="text-green-500" onClick = {
+                ()=>{
+                  window.open("http://pump.fun/"+selectedToken)
+                }
+              }>pump.fun</a>
             </div> : null
           }
+                    <div className="text-center text-gray-500 text-xs">
+          Borrow Hourly Percentage Rate : 0.0416 %
+          </div>
           <div className="bottom-14 right-0 w-full p-4">
+
           <Button className="w-full colorfulbuttons" color="success" onClick={userLeverageButton}>
           {
             leverageOutAmount?
