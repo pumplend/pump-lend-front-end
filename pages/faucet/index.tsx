@@ -20,13 +20,14 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/react";
-
+import { useRouter } from 'next/router';
 import {
   pumpMintAndBuy
 } from "@/core/action"
 import { globalWallet } from "@/core/wallet";
 import { eventBus } from "@/core/events";
 export default function FaucetPage() {
+  const router = useRouter();
   const { publicKey,connected ,signTransaction , signMessage } = useWallet();
   const { isOpen: isMintOpen, onOpen: onMintOpen, onClose: onMintClose } = useDisclosure();
   const { isOpen: isSuccessOpen, onOpen: onSuccessOpen, onClose: onSuccessClose } = useDisclosure();
@@ -36,6 +37,14 @@ export default function FaucetPage() {
         
        });
     }
+
+  const returnToIndex = ()=>
+  {
+    setTimeout(() => {
+      router.push("/")
+    }, 3000);
+    
+  }
 
   return (
     <DefaultLayout>
@@ -104,6 +113,7 @@ export default function FaucetPage() {
               await pumpMintAndBuy(globalWallet.address,Number(10000000));
               onMintClose()
               onSuccessOpen()
+              returnToIndex()
             }else{
               openWalletModal()
             }
@@ -117,6 +127,7 @@ export default function FaucetPage() {
               await pumpMintAndBuy(globalWallet.address,Number(20000000));
               onMintClose()
               onSuccessOpen()
+              returnToIndex()
             }else{
               openWalletModal()
             }
@@ -130,6 +141,7 @@ export default function FaucetPage() {
               await pumpMintAndBuy(globalWallet.address,Number(30000000));
               onMintClose()
               onSuccessOpen()
+              returnToIndex()
             }else{
               openWalletModal()
             }

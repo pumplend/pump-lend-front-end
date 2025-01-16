@@ -2,7 +2,14 @@ import { Avatar } from "@nextui-org/react";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import {Input} from "@nextui-org/react"
 import { Button, ButtonGroup } from "@nextui-org/button";
-import { UXUYIcon,OkxIcon,PhantomIcon, SolflareIcon,TonspackIcon } from "@/components/icons";
+import { 
+  UXUYIcon,
+  OkxIcon,
+  PhantomIcon, 
+  SolflareIcon,
+  TonspackIcon ,
+  
+} from "@/components/icons";
 
 
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -110,10 +117,10 @@ export default function WalletSelector() {
 
         <div className="w-ful flex-col gap-20 p-4 rounded-2xl">
 
-                  <Button  startContent={<SolflareIcon/>} className="w-full text-xl" onClick={()=>{
+                  <Button className="w-full text-xl" onClick={()=>{
           setVisible(true)
         }}>
-        Extension Wallets
+        SOLANA Wallets
         </Button>
 
         &nbsp;

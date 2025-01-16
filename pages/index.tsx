@@ -296,7 +296,7 @@ export default function IndexPage() {
             width: window.innerWidth,
             height: window.innerHeight
           });
-          setKWindowsSize(window.innerWidth*0.33);
+          setKWindowsSize(window.innerWidth*0.65);
           if(window.innerWidth*0.33<300)
           {
             setKWindowsSize(window.innerWidth*0.8)
@@ -1073,7 +1073,9 @@ export default function IndexPage() {
 </Button>
 <iframe style={
   {display:klineDisplay}
-  } title="kline" src="https://www.gmgn.cc/kline/sol/CHUxbA8Y674koHfBERgoir2UQxwLTpW11C7LUgoYpump" width={kWindowsSize + "px"} height={windowSize.height*0.4}></iframe>
+  } title="kline" src="https://www.gmgn.cc/kline/sol/CHUxbA8Y674koHfBERgoir2UQxwLTpW11C7LUgoYpump" width={
+  kWindowsSize + "px"
+  } height={windowSize.height*0.4}></iframe>
 <div>
 <div className="flex flex-col gap-6 w-full justify-between items-center ">
 
