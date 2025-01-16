@@ -996,6 +996,7 @@ export default function IndexPage() {
         }
         key="payinput" 
         value = {borrowAmount}
+        type="number"
         >
           
         </input>
@@ -1126,6 +1127,7 @@ export default function IndexPage() {
         } 
         value={leverageAmount}
         key="payinput" 
+         type="number"
         > 
         </input>
         
@@ -1178,10 +1180,15 @@ export default function IndexPage() {
       </div>
 
 
-
           <div className="text-center text-gray-500 text-xs">
           Borrow Hourly Percentage Rate : 0.0416 %
           </div>
+          {
+            leverageAmount ? 
+            <div className="text-center text-gray-500 text-xs">
+            Borrow Hourly Percentage Rate : 0.0416 %
+            </div> : null
+          }
           <div className="bottom-14 right-0 w-full p-4">
           <Button className="w-full colorfulbuttons" color="success" onClick={userLeverageButton}>
           {/* {
@@ -1454,6 +1461,7 @@ export default function IndexPage() {
         onChange={(e:any) => { setStakeAmount(e.currentTarget.value); }}
         key="payinput"
         value={stakeAmout ? stakeAmout:""}
+        type="number"
         >
           
         </input>
