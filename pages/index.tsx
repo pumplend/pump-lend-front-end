@@ -296,7 +296,7 @@ export default function IndexPage() {
             width: window.innerWidth,
             height: window.innerHeight
           });
-          setKWindowsSize(window.innerWidth*0.65);
+          setKWindowsSize(window.innerWidth*0.3);
           if(window.innerWidth*0.33<300)
           {
             setKWindowsSize(window.innerWidth*0.8)
@@ -912,11 +912,7 @@ export default function IndexPage() {
 
         {
           windowSize.width > 500 ?   <br></br> :null
-         }
-    
-      
-
-      {/* <br></br> */}
+        }
       <div style={{width:"100%",minWidth:"300px"}} className="inline-block max-w-xl text-center justify-center item-center">
           <ButtonGroup>
             {data.map((item:any, index:number) => (
@@ -1065,34 +1061,53 @@ export default function IndexPage() {
       </div>
     </div>
 
-<div style={{display:"flex-wrap"}}>
-<Button className="w-full" variant="bordered" onClick={()=>{
-  klineControle()
-}}>
-<AiOutlineStock size="48" />
-</Button>
-<iframe style={
-  {display:klineDisplay}
-  } title="kline" src="https://www.gmgn.cc/kline/sol/CHUxbA8Y674koHfBERgoir2UQxwLTpW11C7LUgoYpump" width={
-  kWindowsSize + "px"
-  } height={windowSize.height*0.4}></iframe>
-<div>
-<div className="flex flex-col gap-6 w-full justify-between items-center ">
+    <div  className="flex-wrap" style={{display:"flex" , width:"100%"}}>
+
+  <div className="iframe-container">
+  <iframe className="rounded-frame" style={
+        {
+          display:klineDisplay 
+        }
+        } title="kline" src="https://www.gmgn.cc/kline/sol/CHUxbA8Y674koHfBERgoir2UQxwLTpW11C7LUgoYpump" width={
+        kWindowsSize + "px"
+        } height={windowSize.height*0.3}>
+
+      </iframe>
+  </div>
+
+        {/* {
+          windowSize.width<800?
+          <Button  className="w-full" style={{height:"40px"}} variant="bordered" onClick={()=>{
+            klineControle()
+          }}>
+          <AiOutlineStock size="48" />
+        </Button>
+        :
+        <Button  style={{width:'40px', height:windowSize.height*0.3}} variant="bordered" onClick={()=>{
+          klineControle()
+        }}>
+        <AiOutlineStock size="48" />
+      </Button>
+        } */}
+    <div>
+      
+      <div>
+      &nbsp;
+&nbsp;
+&nbsp;
+
+
+      </div>
+
 
 </div>
-
-&nbsp;
-&nbsp;
-&nbsp;
-</div>
-
-<div className="flex flex-col gap-6 w-full">
+<div className="flex flex-col gap-6 w-30" >
     <div className="flex flex-col justify-center gap-1 relative">
 
       <div className="card_head flex justify-between">
         <p>Deposite</p>
         <p className=" text-xs">
-          <span style={{color:"gray"}}>Balance: {(userWalletBlance/1e9).toFixed(3)} SOL  </span>
+          <span style={{color:"gray"}}>BAL: {(userWalletBlance/1e9).toFixed(3)} SOL  </span>
           &nbsp;
           &nbsp;
           &nbsp;
@@ -1137,7 +1152,7 @@ export default function IndexPage() {
         } 
         value={
           leverageAmount ? leverageAmount :
-          null
+          ""
         }
         
         key="payinput" 
@@ -1207,7 +1222,7 @@ export default function IndexPage() {
               </span>
              
             
-              max coins at <a className="text-green-500" onClick = {
+              max coins at <a style={{textDecoration: 'underline'}} className="text-green-500" onClick = {
                 ()=>{
                   window.open("http://pump.fun/"+selectedToken)
                 }
@@ -1234,8 +1249,11 @@ export default function IndexPage() {
 
 </div>
 
+
+
   </CardBody>
-        </Card> : null
+        </Card> 
+  : null
 
 }
 
@@ -1298,7 +1316,7 @@ export default function IndexPage() {
   </Card>
 :null
 }
-      </div>
+</div>
 
 <br></br>
 
