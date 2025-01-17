@@ -1091,6 +1091,10 @@ export default function IndexPage() {
         } */}
     <div>
       
+
+
+
+</div>
       <div>
       &nbsp;
 &nbsp;
@@ -1098,16 +1102,14 @@ export default function IndexPage() {
 
 
       </div>
-
-
-</div>
 <div className="flex flex-col gap-6 w-30" >
+  
     <div className="flex flex-col justify-center gap-1 relative">
 
       <div className="card_head flex justify-between">
         <p>Deposite</p>
         <p className=" text-xs">
-          <span style={{color:"gray"}}>BAL: {(userWalletBlance/1e9).toFixed(3)} SOL  </span>
+          {/* <span style={{color:"gray"}}>BAL: {(userWalletBlance/1e9).toFixed(3)} SOL  </span> */}
           &nbsp;
           &nbsp;
           &nbsp;
