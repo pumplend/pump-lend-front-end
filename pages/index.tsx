@@ -296,7 +296,7 @@ export default function IndexPage() {
             width: window.innerWidth,
             height: window.innerHeight
           });
-          setKWindowsSize(window.innerWidth*0.3);
+          setKWindowsSize(window.innerWidth*0.5);
           if(window.innerWidth*0.33<300)
           {
             setKWindowsSize(window.innerWidth*0.8)
@@ -887,6 +887,157 @@ export default function IndexPage() {
         {
           eventBus.emit("display_fauct", {});
         }
+
+    const userLeverageCardDisplay = (w :number) =>{
+      return (
+        <div className="flex flex-col gap-6" style={{width:w+"%"}} >
+  
+    <div className="flex flex-col justify-center gap-1 relative">
+
+      <div className="card_head flex justify-between">
+        <p>Deposite</p>
+        <p className=" text-xs">
+          {/* <span style={{color:"gray"}}>BAL: {(userWalletBlance/1e9).toFixed(3)} SOL  </span> */}
+          &nbsp;
+          &nbsp;
+          &nbsp;
+          <button className="bg-green-500/50" onClick={()=>{
+            setLeverageAmountFunction(
+              Math.floor((userWalletBlance/(2*1e6)))/1e3
+            )
+          }}> 50% </button>
+          &nbsp;
+          &nbsp;
+          &nbsp;
+          <button className="bg-green-500/50" onClick={()=>{
+            setLeverageAmountFunction(
+              Math.floor((userWalletBlance/1e6))/1e3
+            )
+          }}> MAX </button>
+        </p>
+      </div>
+      
+
+      <div className="card_body flex justify-between items-center text-white" >
+        <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-blue-500/50 hover:bg-black" style={{minWidth:"15%"}}>
+          <Avatar
+            className="w-6 h-6"
+            src="/icon/sol.png"
+          />
+          <span className="text-medium ">SOL</span>
+          
+        </div>
+
+        <input
+        className=" text-3xl "
+        style={{width:"70%",textAlign:"right" , backgroundColor:"transparent" , 
+          color : (leverageAmount > (userWalletBlance/1e9)) ? "red" : "null"
+        }}
+        placeholder={(userWalletBlance/1e9).toFixed(3)}
+        min={"0"}
+        max={(userWalletBlance/1e9).toFixed(3)}
+        step="0.1" 
+        onChange={
+          (e:any) => { setLeverageAmountFunction(e.currentTarget.value); }
+        } 
+        value={
+          leverageAmount ? leverageAmount :
+          ""
+        }
+        
+        key="payinput" 
+         type="number"
+        > 
+        
+        </input>
+        
+      </div>
+      <div className="card_foot flex justify-between">
+        <p>
+
+        </p>
+        <p>
+          <span className="text-xl" style={{color:"gray"}}>~${Number(
+            (leverageAmount*solPrice).toFixed(3)
+          )} </span>
+        </p>
+      </div>
+      <div className="trans-icon rounded-full h-6 w-full flex justify-center">
+            <div className="w-6 h-6 flex justify-center bg-white items-center rounded-full shadow-md">
+              <FaArrowDown color="blue" />
+            </div>
+      </div>
+
+      <div className="card_head flex justify-between">
+        <p>Leverage</p>
+
+      </div>
+      <div className="card_body flex justify-between items-center text-white" >
+        <button className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-green-500/50 hover:bg-black" style={{minWidth:"15%"}}
+        onClick={onTokenSelectOpen}
+        >
+          <Avatar
+            className="w-6 h-6 "
+            src={
+              selectedTokenInfo.info.image ? selectedTokenInfo.info.image : "https://pump.fun/logo.png"
+            }
+          />
+          <span className="text-medium ">{selectedTokenInfo.info.symbol}</span>
+          <RiArrowDropDownLine size={24} />
+        </button>
+
+
+        <p className=" text-3xl">{Number((leverageOutAmount/1e6).toFixed(3))}</p>
+      </div>
+      <div className="card_foot flex justify-between  text-xs">
+        {/* <p>{selectedTokenInfo.info.name}</p> */}
+        <p></p>
+        <p>
+          <span className="text-xl" style={{color:"gray"}}>~${
+            Number(leverageOutAmountUSD.toFixed(3))
+            } </span>
+        </p>
+      </div>
+
+
+
+          {
+            leverageOutAmount ? 
+            <div className="text-center text-xs">
+               Congrats! Hit
+            
+             
+              <span className="text-xl text-gray-500" style={{color:"red"}}>
+                {" "+((Number(leverageOutAmountSol)/(leverageAmountTmp*1e7)).toFixed(1))}% 
+              </span>
+             
+            
+              max coins at <a style={{textDecoration: 'underline'}} className="text-green-500" onClick = {
+                ()=>{
+                  window.open("http://pump.fun/"+selectedToken)
+                }
+              }>pump.fun</a>
+            </div> : null
+          }
+          <div className="text-center text-gray-500 text-xs">
+          Borrow Hourly Percentage Rate : 0.0416 %
+          </div>
+          <div className="bottom-14 right-0 w-full p-4">
+
+          <Button className="w-full colorfulbuttons" color="success" onClick={userLeverageButton}>
+          {
+            leverageOutAmount?
+            ((Number(leverageOutAmountSol)/(leverageAmountTmp*1e9)).toFixed(1)+"x"):
+            "Max"
+          }
+          &nbsp; Buy
+        </Button>
+          </div>
+        </div>
+        
+      </div>
+      )
+    }
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full mt-[-100px] md:mt-0  ">
@@ -1054,14 +1205,22 @@ export default function IndexPage() {
         <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full  justify-center" style={{ width:"100%"}}>
   <CardBody className="py-5 gap-4">
     <div className="flex gap-2.5 justify-center">
-      <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
+      <div classNa  me="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
         <span className="text-default-900 text-xl font-semibold">
           Max Buy
         </span>
       </div>
     </div>
 
-    <div  className="flex-wrap" style={{display:"flex" , width:"100%"}}>
+    <div className = "w-full justify-left">
+    <Button  style={{marginRight : "0px" ,width:"100%"}}  variant="bordered" onClick={()=>{
+            klineControle()
+          }}>
+          <AiOutlineStock size="48" />
+        </Button>
+      </div>
+
+    <div  className="flex" style={{width:"100%" , flexWrap: windowSize.width>800 ? "":'wrap'}}>
 
   <div className="iframe-container">
   <iframe className="rounded-frame" style={
@@ -1102,153 +1261,11 @@ export default function IndexPage() {
 
 
       </div>
-<div className="flex flex-col gap-6 w-30" >
-  
-    <div className="flex flex-col justify-center gap-1 relative">
-
-      <div className="card_head flex justify-between">
-        <p>Deposite</p>
-        <p className=" text-xs">
-          {/* <span style={{color:"gray"}}>BAL: {(userWalletBlance/1e9).toFixed(3)} SOL  </span> */}
-          &nbsp;
-          &nbsp;
-          &nbsp;
-          <button className="bg-green-500/50" onClick={()=>{
-            setLeverageAmountFunction(
-              Math.floor((userWalletBlance/(2*1e6)))/1e3
-            )
-          }}> 50% </button>
-          &nbsp;
-          &nbsp;
-          &nbsp;
-          <button className="bg-green-500/50" onClick={()=>{
-            setLeverageAmountFunction(
-              Math.floor((userWalletBlance/1e6))/1e3
-            )
-          }}> MAX </button>
-        </p>
-      </div>
-      
-
-      <div className="card_body flex justify-between items-center text-white" >
-        <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-blue-500/50 hover:bg-black" style={{minWidth:"15%"}}>
-          <Avatar
-            className="w-6 h-6"
-            src="/icon/sol.png"
-          />
-          <span className="text-medium ">SOL</span>
-          
-        </div>
-
-        <input
-        className=" text-3xl "
-        style={{width:"70%",textAlign:"right" , backgroundColor:"transparent" , 
-          color : (leverageAmount > (userWalletBlance/1e9)) ? "red" : "null"
-        }}
-        placeholder={(userWalletBlance/1e9).toFixed(3)}
-        min={"0"}
-        max={(userWalletBlance/1e9).toFixed(3)}
-        step="0.1" 
-        onChange={
-          (e:any) => { setLeverageAmountFunction(e.currentTarget.value); }
-        } 
-        value={
-          leverageAmount ? leverageAmount :
-          ""
-        }
+      {
+        (klineDisplay || windowSize.width<800)?
+        userLeverageCardDisplay(100) :userLeverageCardDisplay(30)
         
-        key="payinput" 
-         type="number"
-        > 
-        
-        </input>
-        
-      </div>
-      <div className="card_foot flex justify-between">
-        <p>
-
-        </p>
-        <p>
-          <span className="text-xl" style={{color:"gray"}}>~${Number(
-            (leverageAmount*solPrice).toFixed(3)
-          )} </span>
-        </p>
-      </div>
-      <div className="trans-icon rounded-full h-6 w-full flex justify-center">
-            <div className="w-6 h-6 flex justify-center bg-white items-center rounded-full shadow-md">
-              <FaArrowDown color="blue" />
-            </div>
-      </div>
-
-      <div className="card_head flex justify-between">
-        <p>Leverage</p>
-
-      </div>
-      <div className="card_body flex justify-between items-center text-white" >
-        <button className="flex items-center gap-2 rounded-xl p-2 cursor-pointer bg-green-500/50 hover:bg-black" style={{minWidth:"15%"}}
-        onClick={onTokenSelectOpen}
-        >
-          <Avatar
-            className="w-6 h-6 "
-            src={
-              selectedTokenInfo.info.image ? selectedTokenInfo.info.image : "https://pump.fun/logo.png"
-            }
-          />
-          <span className="text-medium ">{selectedTokenInfo.info.symbol}</span>
-          <RiArrowDropDownLine size={24} />
-        </button>
-
-
-        <p className=" text-3xl">{Number((leverageOutAmount/1e6).toFixed(3))}</p>
-      </div>
-      <div className="card_foot flex justify-between  text-xs">
-        {/* <p>{selectedTokenInfo.info.name}</p> */}
-        <p></p>
-        <p>
-          <span className="text-xl" style={{color:"gray"}}>~${
-            Number(leverageOutAmountUSD.toFixed(3))
-            } </span>
-        </p>
-      </div>
-
-
-
-          {
-            leverageOutAmount ? 
-            <div className="text-center text-xs">
-               Congrats! Hit
-            
-             
-              <span className="text-xl text-gray-500" style={{color:"red"}}>
-                {" "+((Number(leverageOutAmountSol)/(leverageAmountTmp*1e7)).toFixed(1))}% 
-              </span>
-             
-            
-              max coins at <a style={{textDecoration: 'underline'}} className="text-green-500" onClick = {
-                ()=>{
-                  window.open("http://pump.fun/"+selectedToken)
-                }
-              }>pump.fun</a>
-            </div> : null
-          }
-                    <div className="text-center text-gray-500 text-xs">
-          Borrow Hourly Percentage Rate : 0.0416 %
-          </div>
-          <div className="bottom-14 right-0 w-full p-4">
-
-          <Button className="w-full colorfulbuttons" color="success" onClick={userLeverageButton}>
-          {
-            leverageOutAmount?
-            ((Number(leverageOutAmountSol)/(leverageAmountTmp*1e9)).toFixed(1)+"x"):
-            "Max"
-          }
-          &nbsp; Buy
-        </Button>
-          </div>
-        </div>
-        
-      </div>
-
+      }
 </div>
 
 
