@@ -1205,7 +1205,7 @@ export default function IndexPage() {
         <Card className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full  justify-center" style={{ width:"100%"}}>
   <CardBody className="py-5 gap-4">
     <div className="flex gap-2.5 justify-center">
-      <div classNa  me="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
+      <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
         <span className="text-default-900 text-xl font-semibold">
           Max Buy
         </span>
@@ -1220,16 +1220,17 @@ export default function IndexPage() {
         </Button>
       </div>
 
-    <div  className="flex" style={{width:"100%" , flexWrap: windowSize.width>800 ? "":'wrap'}}>
+    <div  className="flex" style={{width:"100%" , flexWrap: windowSize.width>800 ? "nowrap":'wrap'}}>
 
   <div className="iframe-container">
   <iframe className="rounded-frame" style={
         {
           display:klineDisplay 
         }
-        } title="kline" src="https://www.gmgn.cc/kline/sol/CHUxbA8Y674koHfBERgoir2UQxwLTpW11C7LUgoYpump" width={
+        } title="kline" src="https://www.gmgn.cc/kline/sol/6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN" width={
+          
         kWindowsSize + "px"
-        } height={windowSize.height*0.3}>
+        } height={windowSize.height*0.7}>
 
       </iframe>
   </div>
