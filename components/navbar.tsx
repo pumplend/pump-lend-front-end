@@ -488,30 +488,29 @@ export const Navbar = () => {
              
               <p className="text-sm">
               &nbsp;&nbsp; 
-Pumpmax: Maximize your Pump coins easily through  <a style={{color:"orange"}}>buying</a>, <a style={{color:"yellow"}}>borrowing</a>, and <a style={{color:"pink"}}>earning</a> !A simple platform that helps Pump.fun users maximize gains .
-<br></br>
-&nbsp;&nbsp;  <a className="text-lg" style={{color:"gold"}}>Start small, think big</a>—Pumpmax makes supercharged gains simple for everyone!
+Pumpmax: Maximize Pump coins easily by <a style={{color:"orange"}}>buying</a>, <a style={{color:"yellow"}}>borrowing</a>, and <a style={{color:"pink"}}>earning</a> !A simple platform to boost Pump.fun user gains.
+<a className="text-lg" style={{color:"gold"}}>Start small, think big.</a>
 
               </p>
-              <div className="flex w-full justify-center items-center">
-                <a className="text-xl" style={{color:"green"}}>Max Buy !</a>
+              <br/><div className="flex w-full justify-center items-center">
+                <a className="text-xl" style={{color:"green"}}>Max Buy</a>
              </div>
-              <p>&nbsp;&nbsp; Step 1: Select a Pump coin you want to buy .</p>
-              <p>&nbsp;&nbsp; Step 2:Deposit SOL to get the max coins. Confirm to execute loop borrowing and complete the purchase</p>
-              <p>&nbsp;&nbsp; Step 3:Click "Close" to exit the position and get SOL, or click "Repay" to pay interest and get coins.</p>
+             <br/><p className="text-sm">&nbsp;&nbsp; Step 1: Select a Pump coin you want to buy .</p>
+              <br/><p className="text-sm">&nbsp;&nbsp; Step 2:Deposit SOL to get the max coins. Confirm to execute loop borrowing and finish buy. </p>
+              <br/><p className="text-sm">&nbsp;&nbsp; Step 3:Click "Close" to exit the position and get SOL, or click "Repay" to pay interest and get coins.</p>
               
-              <div className="flex w-full justify-center items-center">
+              <br/><div className="flex w-full justify-center items-center">
                 <a className="text-xl" style={{color:"green"}}>Max Borrow</a>
              </div>
-              <p>&nbsp;&nbsp; Step 1: Select a Pump coin you want to use as collateral.</p>
-              <p>&nbsp;&nbsp; Step 2: Borrow out SOL.</p>
-              <p>&nbsp;&nbsp; Step 3: Click "Repay" to pay SOL and interest to redeem Pump coins. Click "Close" to sell coins and get SOL.</p>
+             <br/><p className="text-sm">&nbsp;&nbsp; Step 1: Select a Pump coin you want to use as collateral.</p>
+              <br/><p className="text-sm">&nbsp;&nbsp; Step 2: Borrow out SOL.</p>
+              <br/><p className="text-sm">&nbsp;&nbsp; Step 3: Click "Repay" to pay SOL and interest to redeem Pump coins. Click "Close" to sell coins and get SOL.</p>
 
-              <div className="flex w-full justify-center items-center">
+              <br/><div className="flex w-full justify-center items-center">
                 <a className="text-xl" style={{color:"green"}}>Stak SOL</a>
              </div>
-              <p>&nbsp;&nbsp; Step1:Click “Supply" to deposit SOL and earn interest.</p>
-              <p>&nbsp;&nbsp; Step2:Click "Withdraw" to withdraw your SOL and interest.</p>
+              <p className="text-sm">&nbsp;&nbsp; Step1:Click “Supply" to deposit SOL and earn interest.</p>
+              <br/> <p className="text-sm">&nbsp;&nbsp; Step2:Click "Withdraw" to withdraw your SOL and interest.</p>
               
               <br></br>
 
