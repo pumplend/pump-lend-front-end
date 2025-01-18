@@ -344,6 +344,16 @@ swapcard {
   text-shadow: 0 0 50px #0072ff, 0 0 100px #0072ff, 0 0 150px #0072ff, 0 0 200px #0072ff;
   
 }
+.logocolor{
+  font-size:1em;
+  color:#fff;
+
+  animation: animate 3s linear infinite;
+  box-shadow: 2px 2px 2px #00000080, 10px 1px 12px #000000080, 2px 2p 10px #00000080, 2px 2px 3px #00000080, inset 2px 2px 10px #0000000080, inset 2px 2px 10px #00000080, 2px 2px 10px #00000080;
+  text-shadow: 0 0 50px #0072ff, 0 0 100px #0072ff, 0 0 150px #0072ff, 0 0 200px #0072ff;
+  
+}
+
 
 .twitter{
   animation-delay: 0.3s;

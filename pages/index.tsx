@@ -1045,7 +1045,7 @@ export default function IndexPage() {
         
           
           {/* <span className={title()}>&nbsp;</span> */}
-          <span className={title({ color: "green" })+" github"}>Max Pump Coin&nbsp;</span>
+          {/* <span className={title({ color: "green" })+" github"}>Max Pump Coin&nbsp;</span> */}
 
          {
           windowSize.width > 500 ? null :
@@ -1061,9 +1061,9 @@ export default function IndexPage() {
           </span> */}
         </div>
 
-        {
+        {/* {
           windowSize.width > 500 ?   <br></br> :null
-        }
+        } */}
       <div style={{width:"100%",minWidth:"300px"}} className="inline-block max-w-xl text-center justify-center item-center">
           <ButtonGroup>
             {data.map((item:any, index:number) => (
@@ -1230,7 +1230,7 @@ export default function IndexPage() {
         } title="kline" src="https://www.gmgn.cc/kline/sol/6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN" width={
           
         kWindowsSize + "px"
-        } height={windowSize.height*0.7}>
+        } height={windowSize.height*0.6}>
 
       </iframe>
   </div>

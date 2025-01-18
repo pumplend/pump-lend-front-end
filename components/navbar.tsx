@@ -223,7 +223,8 @@ export const Navbar = () => {
     if(!walletConnected)
     {
       return (
-        <Button onClick={connectWallet} className="text-lg"> Connect Wallet </Button>
+        // <Button onClick={connectWallet} className="text-lg">  </Button>
+        <a onClick={connectWallet}> [Connect Wallet] </a>
       )
     }else{
       if(walletConnectedType == 0)
@@ -294,11 +295,24 @@ export const Navbar = () => {
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start" style={{display:siteConfig.isHeadless}}>
-        <NavbarBrand className="gap-3 max-w-fit">
-          <NextLink className="flex justify-start items-center gap-1" href="/"style={{maxWidth:"50%"}} >
-            <Logo />
-            <p className="font-bold text-inherit text-sm md:text-xl"  >PUMPMAX</p>
+      <NavbarContent justify="start" style={{display:siteConfig.isHeadless}}>
+        <NavbarBrand >
+          <NextLink className="flex justify-start items-center gap-1" href="/" >
+            {/* <Logo />   */}
+            <img
+  alt="logo"
+    src="/logo.png"
+    className="logocolor"
+    style={{
+      width : "30px",
+      height :"30px",
+      backgroundColor: "transparent",
+     
+    }}
+  />
+            <p className="font-bold text-inherit text-sm md:text-sm"  >
+              <span className={"github"}>Max Pump Coin&nbsp;</span>
+              </p>
           </NextLink>
         </NavbarBrand>
         
