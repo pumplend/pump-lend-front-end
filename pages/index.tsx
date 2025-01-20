@@ -37,6 +37,7 @@ import { siteConfig } from "@/config/site";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import { Chip } from "@nextui-org/chip";
+import { formatTimeInterval } from "@/core/utills"
 import {
   TwitterIcon,
   GithubIcon,
@@ -1412,7 +1413,7 @@ export default function IndexPage() {
     </div>
 
     <div>
-      <span className="text-default-900 font-semibold">Liquidation</span>
+      <span className="text-default-900 font-semibold">Liquidation Timer</span>
     </div>
 
     <div>
@@ -1461,14 +1462,27 @@ export default function IndexPage() {
   </div>
 
   <div>
-   
+  {
+      (      formatTimeInterval(
+        lend.pumplend_estimate_interest(item.raw,testFeeRate).liquiteRemainingTime
+      ).days > 0 ) ?       formatTimeInterval(
+        lend.pumplend_estimate_interest(item.raw,testFeeRate).liquiteRemainingTime
+      ).days : 0
+    }
+    <span className="text-success text-xl"> D </span>
     {
-      Math.floor((lend.pumplend_estimate_interest(item.raw,testFeeRate).liquiteRemainingTime)/3600)
+      Math.floor(
+        formatTimeInterval(
+          lend.pumplend_estimate_interest(item.raw,testFeeRate).liquiteRemainingTime
+        ).hours
+      )
+
     }
     <span className="text-success text-xl"> H </span>
     {
-       Math.floor(
-        ((lend.pumplend_estimate_interest(item.raw,testFeeRate).liquiteRemainingTime)%3600)/60)
+      formatTimeInterval(
+        lend.pumplend_estimate_interest(item.raw,testFeeRate).liquiteRemainingTime
+      ).minutes
 
     }
    <span className="text-success text-xl"> M </span>
