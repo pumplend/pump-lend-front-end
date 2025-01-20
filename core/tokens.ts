@@ -177,13 +177,18 @@ async function checkTokenExsitOrNot(publicKey:PublicKey) {
   {
     let r : PublicKey[];
     r = []
+    let tmpT = JSON.parse(
+      JSON.stringify(
+        userTokens
+      )
+    )
     position.data.forEach((e:any) => {
-      for(let i = 0 ; i < userTokens.length ; i++)
+      for(let i = 0 ; i < tmpT.length ; i++)
       {
-        if(e.token == userTokens[i].address)
+        if(e.token == tmpT[i].address)
         {
           r.push(
-            userTokens[i]
+            tmpT[i]
           )
         }
       }
@@ -196,69 +201,69 @@ async function checkTokenExsitOrNot(publicKey:PublicKey) {
   )
   return 0;
   // Old solution . loop again and agin
-  let ret :any[];
-  ret = [];
-  if(!userTokens)
-  {
-    return false;
-  }
-  for(let i = 0 ; i<userTokens.length ; i ++)
-  {
-    try{
-      const borrowAddress = PublicKey.findProgramAddressSync(
-        [
-          Buffer.from("user_borrow_data"),
-          new PublicKey(
-            JSON.parse(
-              JSON.stringify(
-                userTokens[i]
-              )
-            ).address
-          ).toBuffer(),
-          publicKey.toBuffer()
-        ],
-        programIdDefault
-      )[0];
+  // let ret :any[];
+  // ret = [];
+  // if(!userTokens)
+  // {
+  //   return false;
+  // }
+  // for(let i = 0 ; i<userTokens.length ; i ++)
+  // {
+  //   try{
+  //     const borrowAddress = PublicKey.findProgramAddressSync(
+  //       [
+  //         Buffer.from("user_borrow_data"),
+  //         new PublicKey(
+  //           JSON.parse(
+  //             JSON.stringify(
+  //               userTokens[i]
+  //             )
+  //           ).address
+  //         ).toBuffer(),
+  //         publicKey.toBuffer()
+  //       ],
+  //       programIdDefault
+  //     )[0];
 
-      const accountInfo = await connection.getAccountInfo(
-        borrowAddress
+  //     const accountInfo = await connection.getAccountInfo(
+  //       borrowAddress
 
-      );
+  //     );
 
-      if (!accountInfo) {
-        console.log("✈Token not found",JSON.parse(
-          JSON.stringify(
-            userTokens[i]
-          )
-        ).address)
-        throw new Error("Account not found");
-      }else{
-        console.log("✈Token found",accountInfo,JSON.parse(
-          JSON.stringify(
-            userTokens[i]
-          )
-        ).address)
-        ret.push(
-          userTokens[i]
-        )
-      }
+  //     if (!accountInfo) {
+  //       console.log("✈Token not found",JSON.parse(
+  //         JSON.stringify(
+  //           userTokens[i]
+  //         )
+  //       ).address)
+  //       throw new Error("Account not found");
+  //     }else{
+  //       console.log("✈Token found",accountInfo,JSON.parse(
+  //         JSON.stringify(
+  //           userTokens[i]
+  //         )
+  //       ).address)
+  //       ret.push(
+  //         userTokens[i]
+  //       )
+  //     }
   
 
-    }catch(e)
-    {
-      console.error(e)
-    }
+  //   }catch(e)
+  //   {
+  //     console.error(e)
+  //   }
 
-  }
+  // }
 
 
-  if(ret.length>0)
-    {
-      console.log("✈ Final stake tokens :: ",ret)
-      userBorrowTokens = JSON.parse(
-        JSON.stringify(ret)
-      );
-    }
+  // if(ret.length>0)
+  //   {
+  //     console.log("✈ Final stake tokens :: ",ret)
+  //     userBorrowTokens = JSON.parse(
+  //       JSON.stringify(ret)
+  //     );
+  //   }
     
 }
 
@@ -269,67 +274,67 @@ async function checkTokenPumpOrNot(publicKey:PublicKey) {
     );
   return 0;
   //Do not check 
-  let ret :any[];
-  ret = [];
-  if(!userTokens)
-  {
-    return false;
-  }
-  for(let i = 0 ; i<userTokens.length ; i ++)
-  {
-    try{
-        let [bondingCurve] = PublicKey.findProgramAddressSync(
-          [
-              Buffer.from("bonding-curve"),
-              new PublicKey(
-                JSON.parse(
-                  JSON.stringify(
-                    userTokens[i]
-                  )
-                ).address
-              ).toBuffer(),
-          ],
-          pumpKeyAccount
-      );
-      const accountInfo = await connection.getAccountInfo(
-        bondingCurve
+  // let ret :any[];
+  // ret = [];
+  // if(!userTokens)
+  // {
+  //   return false;
+  // }
+  // for(let i = 0 ; i<userTokens.length ; i ++)
+  // {
+  //   try{
+  //       let [bondingCurve] = PublicKey.findProgramAddressSync(
+  //         [
+  //             Buffer.from("bonding-curve"),
+  //             new PublicKey(
+  //               JSON.parse(
+  //                 JSON.stringify(
+  //                   userTokens[i]
+  //                 )
+  //               ).address
+  //             ).toBuffer(),
+  //         ],
+  //         pumpKeyAccount
+  //     );
+  //     const accountInfo = await connection.getAccountInfo(
+  //       bondingCurve
 
-      );
+  //     );
 
-      if (!accountInfo) {
-        console.log("✈Token not found",JSON.parse(
-          JSON.stringify(
-            userTokens[i]
-          )
-        ).address)
-        throw new Error("Account not found");
-      }else{
-        console.log("✈Token found",accountInfo,JSON.parse(
-          JSON.stringify(
-            userTokens[i]
-          )
-        ).address)
-        ret.push(
-          userTokens[i]
-        )
-      }
+  //     if (!accountInfo) {
+  //       console.log("✈Token not found",JSON.parse(
+  //         JSON.stringify(
+  //           userTokens[i]
+  //         )
+  //       ).address)
+  //       throw new Error("Account not found");
+  //     }else{
+  //       console.log("✈Token found",accountInfo,JSON.parse(
+  //         JSON.stringify(
+  //           userTokens[i]
+  //         )
+  //       ).address)
+  //       ret.push(
+  //         userTokens[i]
+  //       )
+  //     }
   
 
-    }catch(e)
-    {
-      console.error(e)
-    }
+  //   }catch(e)
+  //   {
+  //     console.error(e)
+  //   }
 
-  }
+  // }
 
 
-  if(ret.length>0)
-    {
-      console.log("✈ Final stake tokens :: ",ret)
-      userPumpTokens = JSON.parse(
-        JSON.stringify(ret)
-      );
-    }
+  // if(ret.length>0)
+  //   {
+  //     console.log("✈ Final stake tokens :: ",ret)
+  //     userPumpTokens = JSON.parse(
+  //       JSON.stringify(ret)
+  //     );
+  //   }
     
 }
 const getTokenBalance = async (tokenAddress:PublicKey, walletAddress: PublicKey) =>
