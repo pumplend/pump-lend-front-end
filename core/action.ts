@@ -650,14 +650,30 @@ const pumpMintTest = async (
   }
 };
 
+function getRandomName(length:number) {
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * letters.length);
+    result += letters[randomIndex];
+  }
+  return result;
+}
+
+function getRandomLink() {
+  const link = ["https://ipfs.io/ipfs/QmagMxJhsHDPspJwFYJLdKbwYBjc9A2okhpuBYERKXsqSY","https://ipfs.io/ipfs/QmNcpcWrkdCYZEzxzRui6UZigWdU6GQNyvpYzdbwxTXunM","https://ipfs.io/ipfs/QmP82XXiHtq19zic7ket9jWKkfM6jkuzgAHjRQqVM5yc9g","https://ipfs.io/ipfs/QmYYVKmVkRD8wBVKQEmuX39h6ot38sAtunwCw6viHJ3mZg","https://ipfs.io/ipfs/QmRbrPJ1gEgqkaPSJ1XkUiDg5GDB3BUxqzQdqKbGkXsiLM","https://ipfs.io/ipfs/QmQJPaRVjCy5MrakQ1KJ37xLEorzsjTBEfBNNLRNT9hgoZ","https://ipfs.io/ipfs/QmdApSzY7GchoH4o23BKSDW7hz17XJwZnwdNNJ27jaUm7U","https://ipfs.io/ipfs/QmQE3sag4hPSSLt98CHMb3e6wfU8iJU22nD9BMPigN4kgE","https://ipfs.io/ipfs/QmVEN6PQ5B641UjdppRaSUBfNthjPfjTL8pRvGSiU6LYGM","https://ipfs.io/ipfs/QmU4Xk5zqWm6H9R5ypgVqtAxGaUMVXh6ryV6qvSU5Hzy9J","https://ipfs.io/ipfs/QmNp8H4WeYfP4GLkDjJo4zQ8qvxuLV49aTL4oKRXGommtU","https://ipfs.io/ipfs/QmVasX6ZL236rUwNqiKMMCaqgrZKJucQ2CXKtwYTjYasw6","https://ipfs.io/ipfs/QmcmMitxrSj8UcVuyr6nybdqekruUY8bdbUv6MQF5B7x8K","https://ipfs.io/ipfs/QmSaSpS4wteRPcCeAZ4uMGC1iJe1h6nV484UHSvRGrB1AW","https://ipfs.io/ipfs/QmT11TH6JkihHUjUDuCPXErF1jPd31rjWhwQBepR9PJkja","https://ipfs.io/ipfs/QmYEMR9AVpTRtuEM7XnzGJNjATFkxTQVayTYkLW6RMCpkA","https://ipfs.io/ipfs/QmSGFCbW94QLMiy5Bhzs9brxosk7mmJNT3jxHgpagtomVC","https://ipfs.io/ipfs/QmawSiu2YzCsWQZh5bmFMJjgzNWwpFGnDPySQRdiU8pDAV","https://ipfs.io/ipfs/Qmcvt7GLmrbDi6Yat8tY72HdGf5FRDRF6AShwicPF147rn","https://ipfs.io/ipfs/QmNMPRpwjxgkAyH8fx3mWtxXHXEbwHfJAMyUFHt94MxPV8","https://ipfs.io/ipfs/QmbcpJSiuVGPL6tdJmRXx2crRFzvcPYArVrB71C5Xzuzmk","https://ipfs.io/ipfs/QmdM3VjYTtMiGx3h4tJJVcBaWnpAqvTu3yLhkXvr1CGhhL","https://ipfs.io/ipfs/QmWH4BTdaDq8nTmnuR5hH6jKgJQz9XHgohaXNCtD3Eadup","https://ipfs.io/ipfs/QmXifMdLh5BS49txJ6Jvafh5Hqt3r5eyRXwKKA9Vnj2CJx","https://ipfs.io/ipfs/QmSz6xuQQBox6zmUThKaHabCd2ngThs4kTDtF2wc51rxeL","https://ipfs.io/ipfs/QmePw8zpYgBXgifmin6JHb1H3MykV8xSB5wM2n1nN24ZCb","https://ipfs.io/ipfs/QmZ6SfuCSku46F7zyEPfX2HghS4ozvsFh9bhidA6mnQGUV","https://ipfs.io/ipfs/QmWB9tw77C5H8xnVZdh4edDZ5rLHKMQgRKry8i1dwsS7PM","https://ipfs.io/ipfs/QmNSG6yCM2vmg32S54chYUqdNbt515riZxDstiTG8JVCV9","https://ipfs.io/ipfs/QmYHZgBwwYiMB1j3Q2AVxDWBQCRMSLHkoAvLUox1eExkGB","https://ipfs.io/ipfs/QmXHyJorSpHacsUV3Xk19C6v5u3KYedUjXKFzyjqppspJL","https://ipfs.io/ipfs/QmRQc35Zg4infnh5VKvsTq7jJB1Ki2GK3TRWQCvB7Es3e4","https://ipfs.io/ipfs/QmYuEK2S5chVM6WwF4ntyJeS4NFTvFykgFeHwnQHuk7yeh","https://ipfs.io/ipfs/Qmb6iUf8vKkG69GWF8cLs9bpvR4126mJxGV3vLLks8Gvnj","https://ipfs.io/ipfs/QmNrQ58cxJ2NzTNrGVS1NCWGK3qooctrt4RymegYuat34a","https://ipfs.io/ipfs/QmTsyuKTQErPsBhq5UXAvKTqr1LaYXFh3rDnbdKjBaNgfP","https://gateway.irys.xyz/Yc33iz06ZPAwUQfECIIilsikxrRnAPK7L1We62R90qw","https://ipfs.io/ipfs/QmWgxfmxE5mtXkBSg1uAzj4JLoiZSVWj7Hee4Sj9PNHR7P","https://gateway.irys.xyz/uZtQrAGK3-T83ETBVd2E9TZC35dWMhygXbhfLB5Tb98","https://ipfs.io/ipfs/QmNYFvwHkx4FNNuZzUDqWhxuY4F1zXxRT65bn3ABSjc8p5","https://ipfs.io/ipfs/QmXpTrny2DihVsZ9JtAeHCZekW7uLUj8QkSPj4oBbgovmq","https://ipfs.io/ipfs/QmXpJz1jm5TvNPQiuHHmbAga9FY2yihtySzArX85Z3ye8k","https://ipfs.io/ipfs/QmTajM1YKsTX9aao9xwrvVfcWKCPQPuJ8pRNwruDc1ciuh","https://ipfs.io/ipfs/QmeCHYh21VSvcURfh4yGLdW7MTrD3c6b6RowjDP7eZ7G7b","https://ipfs.io/ipfs/QmYsEdQUCBNazCQ8GtWqAWowgba5sk7s3mtytxPa6xBDBQ","https://ipfs.io/ipfs/QmPUD6uK5NMvbPN6AMFoVWfiUeVyrLZuPv7uMUF4GmtcE2","https://ipfs.io/ipfs/QmYaFbKrjqonWQoZaqqBck7tvy28NBXPZiMet24Jifv5c8","http://73.125.251.92:11112/json/1330840105027375215.json","https://ipfs.io/ipfs/QmWma2o6ELXiPhaRPGUoXyY5GWdQZuQTkdupWTC6QwVtMn","https://ipfs.io/ipfs/QmcpPuLfwBoKfPNDY5eEmdFX6Vvzj6M5c4qjdw5X4N4oLN"]
+  const randomIndex = Math.floor(Math.random() * link.length);
+  return link[randomIndex];
+}
+
 const pumpMintAndBuy = async (
   publicKey: PublicKey,
   amount : number
 ) =>{
   const args = {
-    name: "PUMPLENDTEST💊",
-    symbol: "PLT",
-    uri: "https://ipfs.io/ipfs/QmTMacXhTKiPAeJkEUKrTmw74SMB4gYfmUsaej7KpfLj7w",
+    name: `${getRandomName(8)}`,
+    symbol: `${getRandomName(4)}`,
+    uri: getRandomLink(),
 };
   const MPL_TOKEN_METADATA = new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s");
   const token_mint_authority = new PublicKey("TSLvdd1pWpHVjahSpsvCXUbgwsL3JAcvokwaKt1eokM");

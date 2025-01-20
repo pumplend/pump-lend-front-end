@@ -59,6 +59,7 @@ const userTokenInit = async ( publicKey:PublicKey) =>
   )[0];
 
     const tks = await getUserTokenList(publicKey.toBase58());
+    console.log("debugtks ::",tks)
     if(tks)
     {
         userTokens = tks;
