@@ -4,7 +4,8 @@
 
 
 const coingeckoBaseUrl = `https://api.coingecko.com/api/v3/simple/price`;
-const pumpWebApi = `https://pumpmax.fun/api`
+const pumpWebApi = `https://testnet.pumpmax.fun/api`
+const pumpmaxApi = `https://api.pumpmax.fun`
 const request_router = {
 
   app_indexer: {
@@ -13,6 +14,11 @@ const request_router = {
   pump:{
     coins : pumpWebApi+"/",
     search : pumpWebApi+"/search",
+  },
+  pumpmax : {
+    positions : pumpmaxApi + "/explorer/positions",
+    actives : pumpmaxApi + "/explorer/actives",
+    liquidations : pumpmaxApi + "/explorer/liquidations"
   }
 
 };
@@ -91,7 +97,7 @@ async function api_pump_lts_token(amount:number) {
     }
   }
 
-  async function api_pump_search_token(search:string,amount:number) {
+async function api_pump_search_token(search:string,amount:number) {
     try {
     return await requester(
         `${request_router.pump.search}/${search}/${amount}`,
@@ -102,11 +108,58 @@ async function api_pump_lts_token(amount:number) {
   
       return 0;
     }
-  }
+}
 
+async function api_pumpmax_get_user_positions(page?:number = 1 , pageSize?:number = 10,user?:string,token?:string) {
+  try {
+    let url = `${request_router.pumpmax.positions}?page=${page}&pageSize=${pageSize}`;
+    if(user)
+    {
+      url += `&user=${user}`
+    }
+    if(token)
+    {
+      url += `&token=${token}`
+    }
+
+    return await requester(
+        url,
+        request_get_unauth(),
+      );
+  } catch (e) {
+    console.error(e);
+
+    return 0;
+  }
+}
+
+async function api_pumpmax_get_user_actives(page?:number = 1 , pageSize?:number = 10,user?:string,token?:string) {
+  try {
+    let url = `${request_router.pumpmax.actives}?page=${page}&pageSize=${pageSize}`;
+      if(user)
+      {
+        url += `&user=${user}`
+      }
+      if(token)
+      {
+        url += `&token=${token}`
+      }
+    
+    return await requester(
+        url,
+        request_get_unauth(),
+      );
+  } catch (e) {
+    console.error(e);
+
+    return 0;
+  }
+}
 export {
 
     api_price_oracle,
     api_pump_lts_token,
-    api_pump_search_token
+    api_pump_search_token,
+    api_pumpmax_get_user_positions,
+    api_pumpmax_get_user_actives
 };
