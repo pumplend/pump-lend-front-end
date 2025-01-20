@@ -2100,10 +2100,10 @@
   resolved "https://registry.yarnpkg.com/@pkgr/core/-/core-0.1.1.tgz#1ec17e2edbec25c8306d424ecfbf13c7de1aaa31"
   integrity sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==
 
-"@pumplend/pumplend-sdk@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@pumplend/pumplend-sdk/-/pumplend-sdk-0.0.8.tgz#bed515969a168dd186e4df63883128c0b0eb8bdc"
-  integrity sha512-70CHbDRRcDOga/aah0M2aDee8RqAbmSR1RMl03ZtWWBmfO3yxl5HDu+UrVX6Cplz4+I2NpUmM0JmEQI3QyTmqA==
+"@pumplend/pumplend-sdk@^0.1.1":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@pumplend/pumplend-sdk/-/pumplend-sdk-0.1.2.tgz#aa07b47b9550c5d0ef3b86538f5c2f19696fdc98"
+  integrity sha512-K0buQlXvuBI7iNZTGRfXE15RgIMgsRTSlGaWYDcIIrmTGjeCbn05lXbysIFofKYXLu6/2388gKnLErg09JGE6A==
   dependencies:
     "@solana/spl-token" "^0.4.9"
     "@solana/web3.js" "^1.95.8"

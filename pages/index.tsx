@@ -136,6 +136,7 @@ export default function IndexPage() {
     "none"
    )
 
+  const testFeeRate = 10;
   const [walletConnectedLock, setWalletConnectedLock] = useState(false)
   const [stakeAmout, setStakeAmount] = useState(0)
   const [withdrawAmount, setWithdrawAmount] = useState(0)
@@ -1462,12 +1463,12 @@ export default function IndexPage() {
   <div>
    
     {
-      Math.floor((lend.pumplend_estimate_interest(item.raw).liquiteRemainingTime)/3600)
+      Math.floor((lend.pumplend_estimate_interest(item.raw,testFeeRate).liquiteRemainingTime)/3600)
     }
     <span className="text-success text-xl"> H </span>
     {
        Math.floor(
-        ((lend.pumplend_estimate_interest(item.raw).liquiteRemainingTime)%3600)/60)
+        ((lend.pumplend_estimate_interest(item.raw,testFeeRate).liquiteRemainingTime)%3600)/60)
 
     }
    <span className="text-success text-xl"> M </span>
@@ -1478,7 +1479,7 @@ export default function IndexPage() {
    
     {
       Number(
-        (Number(lend.pumplend_estimate_interest(item.raw).interest)/1e9).toFixed(3)
+        (Number(lend.pumplend_estimate_interest(item.raw,testFeeRate).interest)/1e9).toFixed(3)
       )
     } SOL
   </div>
