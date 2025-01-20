@@ -418,6 +418,13 @@ export default function IndexPage() {
 
         eventBus.on("reload_connected", async (e:any)=>
           {
+
+            //Reload all the data 
+            setBorrowAmount(0);
+            setLeverageAmount(0);
+            setStakeAmount(0);
+            setWithdrawAmount(0);
+            //Onconnect again
             onConnect(globalWallet.address,true).catch(console.error);
           });
       eventBus.on("wallet_disconnected", (e:any)=>
@@ -462,10 +469,24 @@ export default function IndexPage() {
           }, q.getAll("type")
         )
 
-        if(_type && _type == "l")
+        if(_type)
         {
-          //Leverage 
-          changeType(data,1);
+          if(_type == "l")
+          {
+            //Leverage 
+            changeType(data,0);
+          }
+
+          if(_type == "b")
+            {
+              //Leverage 
+              changeType(data,1);
+            }
+          if(_type == "s")
+          {
+            //Leverage 
+            changeType(data,2);
+          }
         }
 
         if(_src)
@@ -931,7 +952,7 @@ export default function IndexPage() {
         <input
         className=" text-3xl "
         style={{width:"70%",textAlign:"right" , backgroundColor:"transparent" , 
-          color : (leverageAmount > (userWalletBlance/1e9)) ? "red" : "null"
+          color : (leverageAmount > (userWalletBlance/1e9)) ? "red" : "white"
         }}
         placeholder={(userWalletBlance/1e9).toFixed(3)}
         min={"0"}
@@ -1139,11 +1160,17 @@ export default function IndexPage() {
 
         <input
         className=" text-3xl "
-        style={{width:"70%",textAlign:"right" , backgroundColor:"transparent"}}
+        style={{width:"70%",textAlign:"right" , backgroundColor:"transparent" , 
+          color : (borrowAmount > Number(selectedTokenInfo.balance)) ? "red" : "white"
+        }}
         placeholder={(selectedTokenInfo.balance).toFixed(3) ? (selectedTokenInfo.balance).toFixed(3) : "0"}
         onChange={
           (e:any) => { setBorrowAmountFunction(e.currentTarget.value); }
         }
+        min={"0"}
+        max={(selectedTokenInfo.balance).toFixed(3)}
+        step="0.1" 
+
         key="payinput" 
         value = {borrowAmount}
         type="number"
