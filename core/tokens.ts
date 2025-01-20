@@ -14,7 +14,7 @@ import {
   fetchUserStakingData,
   fetchSystemConfigData
 } from "@/core/solanaData"
-import {api_pump_lts_token , api_pump_search_token} from "@/core/request";
+import {api_pump_lts_token , api_pump_search_token, api_pumpmax_get_user_positions} from "@/core/request";
 import { Pumplend } from "@pumplend/pumplend-sdk"
 // @ts-ignore
 import BN from 'bn.js';
@@ -24,7 +24,7 @@ const programIdDefault = new PublicKey('6m6ixFjRGq7HYAPsu8YtyEauJm8EE8pzA3mqESt5
 let pumpKeyAccount = new PublicKey('6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P');
 let userTokens : false | [] ;
 
-let userBorrowTokens : false | [] ;
+let userBorrowTokens : false | PublicKey[] ;
 let userPumpTokens : false | [] ;
 
 let systemConfig: PublicKey;
@@ -159,6 +159,42 @@ async function getUserTokenList(address:string) {
 }
 
 async function checkTokenExsitOrNot(publicKey:PublicKey) {
+
+  //New solution . using explorer
+
+  if(!userTokens)
+  {
+    return 0;
+  }
+  const position = await api_pumpmax_get_user_positions(
+    1,
+    10,
+    publicKey.toBase58()
+  )
+
+  if(position && position?.data)
+  {
+    let r : PublicKey[];
+    r = []
+    position.data.forEach((e:any) => {
+      for(let i = 0 ; i < userTokens.length ; i++)
+      {
+        if(e.token == userTokens[i].address)
+        {
+          r.push(
+            userTokens[i]
+          )
+        }
+      }
+
+    });
+    userBorrowTokens = r
+  }
+  console.log(
+    "🚀 checkTokenExsitOrNot" , userBorrowTokens
+  )
+  return 0;
+  // Old solution . loop again and agin
   let ret :any[];
   ret = [];
   if(!userTokens)
@@ -226,6 +262,12 @@ async function checkTokenExsitOrNot(publicKey:PublicKey) {
 }
 
 async function checkTokenPumpOrNot(publicKey:PublicKey) {
+  //Ignore
+  userPumpTokens = JSON.parse(
+      JSON.stringify(userTokens)
+    );
+  return 0;
+  //Do not check 
   let ret :any[];
   ret = [];
   if(!userTokens)

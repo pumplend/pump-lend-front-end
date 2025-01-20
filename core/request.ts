@@ -110,7 +110,7 @@ async function api_pump_search_token(search:string,amount:number) {
     }
 }
 
-async function api_pumpmax_get_user_positions(page?:number = 1 , pageSize?:number = 10,user?:string,token?:string) {
+async function api_pumpmax_get_user_positions(page:number = 1 , pageSize:number = 10,user?:string,token?:string) {
   try {
     let url = `${request_router.pumpmax.positions}?page=${page}&pageSize=${pageSize}`;
     if(user)
@@ -133,7 +133,7 @@ async function api_pumpmax_get_user_positions(page?:number = 1 , pageSize?:numbe
   }
 }
 
-async function api_pumpmax_get_user_actives(page?:number = 1 , pageSize?:number = 10,user?:string,token?:string) {
+async function api_pumpmax_get_user_actives(page:number = 1 , pageSize:number = 10,user?:string,token?:string) {
   try {
     let url = `${request_router.pumpmax.actives}?page=${page}&pageSize=${pageSize}`;
       if(user)
