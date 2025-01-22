@@ -1,0 +1,12 @@
+.animation1 {
+  animation: 40s linear 0s infinite normal none running animation-action1;
+}
+
+@keyframes animation-action1 {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}

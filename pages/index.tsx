@@ -50,6 +50,8 @@ import {
   UXUYIcon,
 } from "@/components/icons";
 
+import NbBackground from "@/components/nb-background";
+
 import { trySetReferral , tryLoadReferral ,trySetKlineConfig ,tryGetKlineConfig } from "@/core/storage";
 import { globalWallet } from "@/core/wallet"
 import {
@@ -1063,6 +1065,9 @@ export default function IndexPage() {
     }
   return (
     <DefaultLayout>
+      {
+       ( windowSize.width) > 500 ? <NbBackground width={windowSize.width} /> : null
+      }
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full mt-[-100px] md:mt-0  ">
         <div className="inline-block max-w-xl text-center  py-2 md:py-4 justify-center" style={{display:siteConfig.isHeadless }}>
         
