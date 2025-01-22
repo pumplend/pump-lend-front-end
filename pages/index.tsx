@@ -436,12 +436,20 @@ export default function IndexPage() {
           onDisconnect().catch(console.error);
         });
 
-        eventBus.on("stake_modal_display", (e:any)=>
-          {
-            onStakeSolOpen()
-          });
+      eventBus.on("stake_modal_display", (e:any)=>
+        {
+          onStakeSolOpen()
+        });
         
+      eventBus.on("update_selected_token", (e:any)=>
+        {
+          // console.log("update_selected_token",e.detail)
+          if(e?.detail && e.detail?.mint)
+          {
+            updateSelectToken(false,e.detail)
+          }
 
+        });
 
       const init = async ()=>
         {
@@ -740,19 +748,25 @@ export default function IndexPage() {
             }
 
         }
-      const setSelectedTokenFunction = async (address:string)=>
+      const setSelectedTokenFunction = async (address:string , info?:any)=>
       {
         if(userTokens)
         {
           setSelectedToken(address);
-          userTokens.forEach(ele => {
-            const e = JSON.parse(JSON.stringify(ele))
-            if(e?.address == address)
-            {
-              setSelectedTokenInfo(e)
-              
-            }
-          });
+          if(info)
+          {
+            setSelectedTokenInfo(info)
+          }else{
+            userTokens.forEach(ele => {
+              const e = JSON.parse(JSON.stringify(ele))
+              if(e?.address == address)
+              {
+                setSelectedTokenInfo(e)
+                
+              }
+            });
+          }
+
           await updateSolanaInitData(address)
           
         }
@@ -1920,7 +1934,7 @@ export default function IndexPage() {
             }}
           >
               <div>
-              Not Token Found
+              No Token Found
               </div>
             </div>
           }

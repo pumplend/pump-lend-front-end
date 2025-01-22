@@ -7,7 +7,7 @@ import {
 } from "@/core/tokens"
 
 import { useState, useEffect } from "react";
-
+import { eventBus } from "@/core/events";
 import { pumpLtsMock } from "@/core/mock";
 type NbBackgroundProps = {
   width: number; 
@@ -23,9 +23,9 @@ export default function NbBackground({width}:NbBackgroundProps) {
       let lts = [];
       if(ltsToken && ltsToken.length>0)
       {
-        console.log("req exsit")
+        // console.log("req exsit")
       }else{
-        console.log("new req")
+        // console.log("new req")
         lts = await getPumpLtsTokenList(40);
         if(!lts || lts.length == 0)
         {
@@ -34,10 +34,17 @@ export default function NbBackground({width}:NbBackgroundProps) {
         setLtsToken(lts);
       }
      
-      console.log("💊Lts :: ",lts)
+      // console.log("💊Lts :: ",lts)
     }
     onload()
   })
+
+  const updateToken = (data : any) => {
+    // console.log(
+    //   "updateToken",data
+    // )
+          eventBus.emit("update_selected_token", data);
+  }
   return (
     <div style={{ width: width*0.99 ,
       position: "absolute",
@@ -53,7 +60,11 @@ export default function NbBackground({width}:NbBackgroundProps) {
               ltsToken
                 .map((item, i) => (
                   <>
-                    <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer hover:bg-white">
+                    <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer hover:bg-white" onClick={
+                      ()=>{
+                        updateToken(item)
+                      }
+                    }>
                                 <Avatar
                                   className="w-6 h-6"
                                   src={item.image_uri}
@@ -73,7 +84,12 @@ export default function NbBackground({width}:NbBackgroundProps) {
              ltsToken
                 .map((item, i) => (
                   <>
-                    <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer hover:bg-black">
+                    <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer hover:bg-black" onClick={
+                      ()=>{
+                        updateToken(item)
+                      }
+                    }
+                  >
                                 <Avatar
                                   className="w-6 h-6"
                                   src={item.image_uri}
