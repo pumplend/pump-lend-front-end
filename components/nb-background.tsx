@@ -1,4 +1,3 @@
-import "./animation.css";
 import {Avatar, MenuItem} from "@nextui-org/react"
 
 
@@ -67,9 +66,9 @@ export default function NbBackground({width}:NbBackgroundProps) {
                     }>
                                 <Avatar
                                   className="w-6 h-6"
-                                  src={item.image_uri}
+                                  src={JSON.parse(JSON.stringify(item)).image_uri}
                                 />
-                              <span className="text-lg " style={{color:"black"}}>{item.symbol}</span>
+                              <span className="text-lg " style={{color:"black"}}>{JSON.parse(JSON.stringify(item)).symbol}</span>
                             </div>
                           <span>※</span>
                   </>
@@ -92,9 +91,9 @@ export default function NbBackground({width}:NbBackgroundProps) {
                   >
                                 <Avatar
                                   className="w-6 h-6"
-                                  src={item.image_uri}
+                                  src={JSON.parse(JSON.stringify(item)).image_uri}
                                 />
-                              <span className="text-lg " style={{color:"white"}}>{item.symbol}</span>
+                              <span className="text-lg " style={{color:"white"}}>{JSON.parse(JSON.stringify(item)).symbol}</span>
                             </div>
                           <span>※</span>
                   </>
