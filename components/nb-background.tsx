@@ -1,10 +1,43 @@
 import "./animation.css";
-import {Avatar} from "@nextui-org/react"
+import {Avatar, MenuItem} from "@nextui-org/react"
+
+
+import {
+  getPumpLtsTokenList
+} from "@/core/tokens"
+
+import { useState, useEffect } from "react";
+
+import { pumpLtsMock } from "@/core/mock";
 type NbBackgroundProps = {
   width: number; 
 };
 
 export default function NbBackground({width}:NbBackgroundProps) {
+
+
+  const [ltsToken, setLtsToken] = useState([]);
+
+  useEffect(() => {
+    const onload = async () => {
+      let lts = [];
+      if(ltsToken && ltsToken.length>0)
+      {
+        console.log("req exsit")
+      }else{
+        console.log("new req")
+        lts = await getPumpLtsTokenList(40);
+        if(!lts || lts.length == 0)
+        {
+          lts = pumpLtsMock
+        }
+        setLtsToken(lts);
+      }
+     
+      console.log("💊Lts :: ",lts)
+    }
+    onload()
+  })
   return (
     <div style={{ width: width*0.99 ,
       position: "absolute",
@@ -16,15 +49,16 @@ export default function NbBackground({width}:NbBackgroundProps) {
         <div className="CrossA absolute top-[10%] left-0 transform skew-y-3 w-full overflow-hidden h-12 z-101" style={{backgroundColor:"pink"}}>
           <div className="Items flex items-center absolute top-0 left-0 z-1 h-full">
             <div className="Item flex items-center animation1">
-              {[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-                .map((_, i) => (
+              {
+              ltsToken
+                .map((item, i) => (
                   <>
                     <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer hover:bg-white">
                                 <Avatar
                                   className="w-6 h-6"
-                                  src="/icon/sol.png"
+                                  src={item.image_uri}
                                 />
-                              <span className="text-lg " style={{color:"black"}}>SOL</span>
+                              <span className="text-lg " style={{color:"black"}}>{item.symbol}</span>
                             </div>
                           <span>※</span>
                   </>
@@ -36,15 +70,15 @@ export default function NbBackground({width}:NbBackgroundProps) {
           <div className="Items flex items-center absolute top-0 left-0 z-1 h-full">
             <div className="Item flex items-center animation1">
               {
-              [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-                .map((_, i) => (
+             ltsToken
+                .map((item, i) => (
                   <>
                     <div className="flex items-center gap-2 rounded-xl p-2 cursor-pointer hover:bg-black">
                                 <Avatar
                                   className="w-6 h-6"
-                                  src="/icon/sol.png"
+                                  src={item.image_uri}
                                 />
-                              <span className="text-lg " style={{color:"white"}}>SOL</span>
+                              <span className="text-lg " style={{color:"white"}}>{item.symbol}</span>
                             </div>
                           <span>※</span>
                   </>

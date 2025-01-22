@@ -31,7 +31,7 @@ let systemConfig: PublicKey;
 let poolStakingData: PublicKey;
 let userStakingData: PublicKey;
 
-
+let ltsPumpToken : any[] = [];
 const lend = new Pumplend("devnet")
 poolStakingData = PublicKey.findProgramAddressSync(
   [
@@ -351,9 +351,9 @@ const getAddressBalance = async (address : PublicKey) =>
 {
   return await connection.getBalance(address);
 }
-const getPumpLtsTokenList = async () =>
+const getPumpLtsTokenList = async (list=10) =>
 {
-  const data = await api_pump_lts_token(10);
+  const data = await api_pump_lts_token(list);
   console.log("💊 LTS pump token ::",data)
   if(!data)
   {
@@ -386,5 +386,6 @@ export {
     userTokenBorrowFetch,
     getAddressBalance,
     getPumpLtsTokenList,
-    getPumpLtsTokenSearch
+    getPumpLtsTokenSearch,
+    ltsPumpToken
 }
