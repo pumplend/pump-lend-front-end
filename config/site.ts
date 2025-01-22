@@ -9,19 +9,17 @@ export const siteConfig = {
       href: "/referral",
     },
   ],
-  navMenuItems: [
-  ],
+  navMenuItems: [],
   links: {
-    
     website: "https://testnet.pumpmax.fun/",
-    bot:"https://t.me/pumplend_bot",
-    webapp:"https://t.me/pumplend_bot/test",
+    bot: "https://t.me/pumplend_bot",
+    webapp: "https://t.me/pumplend_bot/test",
     github: "https://github.com/pumplend",
     twitter: "https://x.com/pumplendfun",
-    telegramChannel:"https://t.me/+50XGEOayi543NzM1",
+    telegramChannel: "https://t.me/+50XGEOayi543NzM1",
     docs: "https://nextui.org",
     discord: "https://discord.gg/X6BdtCRM3W",
     sponsor: "https://patreon.com/jrgarciadev",
   },
-  isHeadless:""
+  isHeadless: "",
 };

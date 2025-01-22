@@ -258,17 +258,13 @@
           "name": "tokenMint",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "The mint of the token"
-          ]
+          "docs": ["The mint of the token"]
         },
         {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "The token program"
-          ]
+          "docs": ["The token program"]
         },
         {
           "name": "associatedTokenProgram",
@@ -330,17 +326,13 @@
           "name": "tokenMint",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "The mint of the token"
-          ]
+          "docs": ["The mint of the token"]
         },
         {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "The token program"
-          ]
+          "docs": ["The token program"]
         },
         {
           "name": "associatedTokenProgram",
@@ -433,17 +425,13 @@
           "name": "tokenMint",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "The mint of the token"
-          ]
+          "docs": ["The mint of the token"]
         },
         {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "The token program"
-          ]
+          "docs": ["The token program"]
         },
         {
           "name": "associatedTokenProgram",
@@ -523,58 +511,42 @@
         "fields": [
           {
             "name": "initialized",
-            "docs": [
-              "Whether the struct is initialized"
-            ],
+            "docs": ["Whether the struct is initialized"],
             "type": "bool"
           },
           {
             "name": "authority",
-            "docs": [
-              "The authority of the system"
-            ],
+            "docs": ["The authority of the system"],
             "type": "publicKey"
           },
           {
             "name": "poolTokenAuthority",
-            "docs": [
-              "The pool token authority"
-            ],
+            "docs": ["The pool token authority"],
             "type": "publicKey"
           },
           {
             "name": "pumpFunProgram",
-            "docs": [
-              "The pump function program address"
-            ],
+            "docs": ["The pump function program address"],
             "type": "publicKey"
           },
           {
             "name": "baseVirtualTokenReserves",
-            "docs": [
-              "The base virtual token reserves"
-            ],
+            "docs": ["The base virtual token reserves"],
             "type": "u64"
           },
           {
             "name": "baseVirtualSolReserves",
-            "docs": [
-              "The base virtual SOL reserves"
-            ],
+            "docs": ["The base virtual SOL reserves"],
             "type": "u64"
           },
           {
             "name": "poolTokenAuthorityBumpSeed",
-            "docs": [
-              "The pool token authority bump seed"
-            ],
+            "docs": ["The pool token authority bump seed"],
             "type": "u8"
           },
           {
             "name": "borrowRatePerSecond",
-            "docs": [
-              "The borrow rate per second"
-            ],
+            "docs": ["The borrow rate per second"],
             "type": "u64"
           }
         ]

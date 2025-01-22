@@ -20,31 +20,33 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/react";
-import { useRouter } from 'next/router';
-import {
-  pumpMintAndBuy
-} from "@/core/action"
+import { useRouter } from "next/router";
+import { pumpMintAndBuy } from "@/core/action";
 import { globalWallet } from "@/core/wallet";
 import { eventBus } from "@/core/events";
 export default function FaucetPage() {
   const router = useRouter();
-  const { publicKey,connected ,signTransaction , signMessage } = useWallet();
-  const { isOpen: isMintOpen, onOpen: onMintOpen, onClose: onMintClose } = useDisclosure();
-  const { isOpen: isSuccessOpen, onOpen: onSuccessOpen, onClose: onSuccessClose } = useDisclosure();
-  const [buyAmount, setBuyAmount] = useState("0")
-    const openWalletModal = ()=>{
-      eventBus.emit("wallet_open", { 
-        
-       });
-    }
+  const { publicKey, connected, signTransaction, signMessage } = useWallet();
+  const {
+    isOpen: isMintOpen,
+    onOpen: onMintOpen,
+    onClose: onMintClose,
+  } = useDisclosure();
+  const {
+    isOpen: isSuccessOpen,
+    onOpen: onSuccessOpen,
+    onClose: onSuccessClose,
+  } = useDisclosure();
+  const [buyAmount, setBuyAmount] = useState("0");
+  const openWalletModal = () => {
+    eventBus.emit("wallet_open", {});
+  };
 
-  const returnToIndex = ()=>
-  {
+  const returnToIndex = () => {
     setTimeout(() => {
-      router.push("/")
+      router.push("/");
     }, 3000);
-    
-  }
+  };
 
   return (
     <DefaultLayout>
@@ -69,7 +71,7 @@ export default function FaucetPage() {
           >
             ① Devnet SOL Faucet
           </Link>
-          <Button color="success" onClick = {onMintOpen}>
+          <Button color="success" onClick={onMintOpen}>
             ② Buy Test Token
           </Button>
         </div>
@@ -83,20 +85,21 @@ export default function FaucetPage() {
           </Button>
         </div> */}
 
-
-
-      <Modal isOpen={isMintOpen} onClose={onMintClose} scrollBehavior={"inside"} size="lg">
-        <ModalContent>
-          <ModalHeader className="flex w-full">
-          <div className="flex w-full justify-center items-center text-3xl">
-          Buy New Token
-            </div>
-          </ModalHeader>
-          <ModalBody>
-            <div>
-              Random buy a new token in pump . How much you want : 
-            </div>
-            {/* <Input
+        <Modal
+          isOpen={isMintOpen}
+          onClose={onMintClose}
+          scrollBehavior={"inside"}
+          size="lg"
+        >
+          <ModalContent>
+            <ModalHeader className="flex w-full">
+              <div className="flex w-full justify-center items-center text-3xl">
+                Buy New Token
+              </div>
+            </ModalHeader>
+            <ModalBody>
+              <div>Random buy a new token in pump . How much you want :</div>
+              {/* <Input
             onChange={
               (e:any)=>{
                 setBuyAmount(e.currentTarget.value)
@@ -107,70 +110,81 @@ export default function FaucetPage() {
             >
             
             </Input> */}
-           <Button onClick={async ()=>{
-            if(globalWallet.connected)
-            {
-              await pumpMintAndBuy(globalWallet.address,Number(10000000));
-              onMintClose()
-              onSuccessOpen()
-              returnToIndex()
-            }else{
-              openWalletModal()
-            }
+              <Button
+                onClick={async () => {
+                  if (globalWallet.connected) {
+                    await pumpMintAndBuy(
+                      globalWallet.address,
+                      Number(10000000),
+                    );
+                    onMintClose();
+                    onSuccessOpen();
+                    returnToIndex();
+                  } else {
+                    openWalletModal();
+                  }
+                }}
+              >
+                10M
+              </Button>
+              <Button
+                onClick={async () => {
+                  if (globalWallet.connected) {
+                    await pumpMintAndBuy(
+                      globalWallet.address,
+                      Number(20000000),
+                    );
+                    onMintClose();
+                    onSuccessOpen();
+                    returnToIndex();
+                  } else {
+                    openWalletModal();
+                  }
+                }}
+              >
+                20M
+              </Button>
+              <Button
+                onClick={async () => {
+                  if (globalWallet.connected) {
+                    await pumpMintAndBuy(
+                      globalWallet.address,
+                      Number(30000000),
+                    );
+                    onMintClose();
+                    onSuccessOpen();
+                    returnToIndex();
+                  } else {
+                    openWalletModal();
+                  }
+                }}
+              >
+                30M
+              </Button>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
 
-           }}>
-            10M
-            </Button> 
-            <Button onClick={async ()=>{
-            if(globalWallet.connected)
-            {
-              await pumpMintAndBuy(globalWallet.address,Number(20000000));
-              onMintClose()
-              onSuccessOpen()
-              returnToIndex()
-            }else{
-              openWalletModal()
-            }
-
-           }}>
-            20M
-            </Button> 
-            <Button onClick={async ()=>{
-            if(globalWallet.connected)
-            {
-              await pumpMintAndBuy(globalWallet.address,Number(30000000));
-              onMintClose()
-              onSuccessOpen()
-              returnToIndex()
-            }else{
-              openWalletModal()
-            }
-
-           }}>
-            30M
-            </Button> 
-            
-          </ModalBody>
-        </ModalContent>
-
-      </Modal>
-
-
-      <Modal isOpen={isSuccessOpen} onClose={onSuccessClose} scrollBehavior={"inside"} size="lg">
-        <ModalContent>
-          <ModalHeader className="flex w-full">
-          <div className="flex w-full justify-center items-center text-3xl">
-          Transaction Pending...
-            </div>
-          </ModalHeader>
-          <ModalBody>
-            <div>
-              Now please wait for 2 minute and your will recive the token in your wallet .
-            </div>
-          </ModalBody>
-        </ModalContent>
-
-      </Modal>
+        <Modal
+          isOpen={isSuccessOpen}
+          onClose={onSuccessClose}
+          scrollBehavior={"inside"}
+          size="lg"
+        >
+          <ModalContent>
+            <ModalHeader className="flex w-full">
+              <div className="flex w-full justify-center items-center text-3xl">
+                Transaction Pending...
+              </div>
+            </ModalHeader>
+            <ModalBody>
+              <div>
+                Now please wait for 2 minute and your will recive the token in
+                your wallet .
+              </div>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
       </section>
     </DefaultLayout>
   );

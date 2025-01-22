@@ -7,10 +7,10 @@ const nextConfig = {
   },
   exportPathMap: async function () {
     return {
-      '/': { page: '/' },
-      '/faucet': { page: '/faucet' },
+      "/": { page: "/" },
+      "/faucet": { page: "/faucet" },
     };
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

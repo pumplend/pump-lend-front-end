@@ -8,17 +8,16 @@ export const Logo: React.FC<IconSvgProps> = ({
   ...props
 }) => (
   <img
-  alt="logo"
+    alt="logo"
     src="/logo.png"
     className="apple"
     style={{
-      width : "100px",
-      height :"60px",
+      width: "100px",
+      height: "60px",
       backgroundColor: "transparent",
       // paddingTop:"10%"
     }}
-  >
-  </img>
+  ></img>
 );
 
 export const DiscordIcon: React.FC<IconSvgProps> = ({
@@ -211,7 +210,6 @@ export const NextUILogo: React.FC<IconSvgProps> = (props) => {
   );
 };
 
-
 export const PhantomIcon: React.FC<IconSvgProps> = ({
   size = 24,
   width,
@@ -219,20 +217,28 @@ export const PhantomIcon: React.FC<IconSvgProps> = ({
   ...props
 }) => {
   return (
-
-
-<svg width="1200" height="1200" viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_2596_138588)">
-<rect width="1200" height="1200" rx="257.592" fill="#AB9FF2"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M517.219 779.814C470.102 852.012 391.148 943.378 286.09 943.378C236.426 943.378 188.672 922.933 188.672 834.122C188.672 607.943 497.48 257.813 784.004 257.813C947.004 257.813 1011.95 370.902 1011.95 499.326C1011.95 664.168 904.98 852.651 798.648 852.651C764.902 852.651 748.347 834.122 748.347 804.732C748.347 797.065 749.621 788.759 752.168 779.814C715.875 841.789 645.836 899.292 580.254 899.292C532.5 899.292 508.305 869.263 508.305 827.094C508.305 811.76 511.488 795.787 517.219 779.814ZM904.363 494.869C904.363 532.291 882.284 551.002 857.586 551.002C832.514 551.002 810.809 532.291 810.809 494.869C810.809 457.448 832.514 438.737 857.586 438.737C882.284 438.737 904.363 457.448 904.363 494.869ZM764.031 494.871C764.031 532.293 741.952 551.004 717.254 551.004C692.182 551.004 670.477 532.293 670.477 494.871C670.477 457.449 692.182 438.739 717.254 438.739C741.952 438.739 764.031 457.449 764.031 494.871Z" fill="#FFFDF8"/>
-</g>
-<defs>
-<clipPath id="clip0_2596_138588">
-<rect width="1200" height="1200" fill="white"/>
-</clipPath>
-</defs>
-</svg>
-
+    <svg
+      width="1200"
+      height="1200"
+      viewBox="0 0 1200 1200"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g clip-path="url(#clip0_2596_138588)">
+        <rect width="1200" height="1200" rx="257.592" fill="#AB9FF2" />
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M517.219 779.814C470.102 852.012 391.148 943.378 286.09 943.378C236.426 943.378 188.672 922.933 188.672 834.122C188.672 607.943 497.48 257.813 784.004 257.813C947.004 257.813 1011.95 370.902 1011.95 499.326C1011.95 664.168 904.98 852.651 798.648 852.651C764.902 852.651 748.347 834.122 748.347 804.732C748.347 797.065 749.621 788.759 752.168 779.814C715.875 841.789 645.836 899.292 580.254 899.292C532.5 899.292 508.305 869.263 508.305 827.094C508.305 811.76 511.488 795.787 517.219 779.814ZM904.363 494.869C904.363 532.291 882.284 551.002 857.586 551.002C832.514 551.002 810.809 532.291 810.809 494.869C810.809 457.448 832.514 438.737 857.586 438.737C882.284 438.737 904.363 457.448 904.363 494.869ZM764.031 494.871C764.031 532.293 741.952 551.004 717.254 551.004C692.182 551.004 670.477 532.293 670.477 494.871C670.477 457.449 692.182 438.739 717.254 438.739C741.952 438.739 764.031 457.449 764.031 494.871Z"
+          fill="#FFFDF8"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_2596_138588">
+          <rect width="1200" height="1200" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
   );
 };
 
@@ -242,18 +248,16 @@ export const OkxIcon: React.FC<IconSvgProps> = ({
   ...props
 }) => (
   <img
-  alt="okx"
+    alt="okx"
     src="/wallets/okxwallet.jpeg"
     style={{
-      width : "35px",
-      height :"35px",
-      borderRadius: '30%',
-      backgroundColor: "transparent"
+      width: "35px",
+      height: "35px",
+      borderRadius: "30%",
+      backgroundColor: "transparent",
     }}
-  >
-  </img>
+  ></img>
 );
-
 
 export const BackpackIcon: React.FC<IconSvgProps> = ({
   size = 24,
@@ -261,16 +265,15 @@ export const BackpackIcon: React.FC<IconSvgProps> = ({
   ...props
 }) => (
   <img
-  alt="backpack"
+    alt="backpack"
     src="/wallets/backpack.webp"
     style={{
-      width : "35px",
-      height :"35px",
-      borderRadius: '30%',
-      backgroundColor: "transparent"
+      width: "35px",
+      height: "35px",
+      borderRadius: "30%",
+      backgroundColor: "transparent",
     }}
-  >
-  </img>
+  ></img>
 );
 
 export const SolflareIcon: React.FC<IconSvgProps> = ({
@@ -279,16 +282,15 @@ export const SolflareIcon: React.FC<IconSvgProps> = ({
   ...props
 }) => (
   <img
-  alt="solfalre"
+    alt="solfalre"
     src="/wallets/solflare.png"
     style={{
-      width : "35px",
-      height :"35px",
-      borderRadius: '30%',
-      backgroundColor: "transparent"
+      width: "35px",
+      height: "35px",
+      borderRadius: "30%",
+      backgroundColor: "transparent",
     }}
-  >
-  </img>
+  ></img>
 );
 
 export const UXUYIcon: React.FC<IconSvgProps> = ({
@@ -297,16 +299,15 @@ export const UXUYIcon: React.FC<IconSvgProps> = ({
   ...props
 }) => (
   <img
-  alt="uxuy"
+    alt="uxuy"
     src="/wallets/uxuy.svg"
     style={{
-      width : "35px",
-      height :"35px",
-      borderRadius: '30%',
-      backgroundColor: "transparent"
+      width: "35px",
+      height: "35px",
+      borderRadius: "30%",
+      backgroundColor: "transparent",
     }}
-  >
-  </img>
+  ></img>
 );
 
 export const TonspackIcon: React.FC<IconSvgProps> = ({
@@ -315,14 +316,13 @@ export const TonspackIcon: React.FC<IconSvgProps> = ({
   ...props
 }) => (
   <img
-  alt="tonspack"
+    alt="tonspack"
     src="/wallets/tonspack.png"
     style={{
-      width : "35px",
-      height :"35px",
-      borderRadius: '30%',
-      backgroundColor: "transparent"
+      width: "35px",
+      height: "35px",
+      borderRadius: "30%",
+      backgroundColor: "transparent",
     }}
-  >
-  </img>
+  ></img>
 );

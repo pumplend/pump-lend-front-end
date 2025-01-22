@@ -1,16 +1,14 @@
 import { Avatar } from "@nextui-org/react";
 import { RiArrowDropDownLine } from "react-icons/ri";
-import {Input} from "@nextui-org/react"
+import { Input } from "@nextui-org/react";
 import { Button, ButtonGroup } from "@nextui-org/button";
-import { 
+import {
   UXUYIcon,
   OkxIcon,
-  PhantomIcon, 
+  PhantomIcon,
   SolflareIcon,
-  TonspackIcon ,
-  
+  TonspackIcon,
 } from "@/components/icons";
-
 
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
@@ -28,173 +26,175 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-  Snippet
+  Snippet,
 } from "@nextui-org/react";
 import { OKXSolanaProvider } from "@okxconnect/solana-provider";
 export default function WalletSelector() {
   const { setVisible } = useWalletModal();
-  const { isOpen: isTgopen, onOpen: onTgOpen, onClose: onTgClose } = useDisclosure();
-  
-  const okxWalletConnect = async ()=>{
-    
-      if(!(window as any)?.okxwallet)
-      {
-        const w = OKXUniversalConnectUI.getWallets()
-        console.log("OKX wallet ::",w)
-        const universalUi = await OKXUniversalConnectUI.init({
-          dappMetaData: {
-              icon: "https://pumplend.fun/logo.png",
-              name: "PUMPLEND"
-          },
-          actionsConfiguration: {
-              returnStrategy: 'tg://resolve',
-              modals:"all",
-              tmaReturnUrl:'back'
-          },
-          language: "en_US",
+  const {
+    isOpen: isTgopen,
+    onOpen: onTgOpen,
+    onClose: onTgClose,
+  } = useDisclosure();
+
+  const okxWalletConnect = async () => {
+    if (!(window as any)?.okxwallet) {
+      const w = OKXUniversalConnectUI.getWallets();
+      console.log("OKX wallet ::", w);
+      const universalUi = await OKXUniversalConnectUI.init({
+        dappMetaData: {
+          icon: "https://pumplend.fun/logo.png",
+          name: "PUMPLEND",
+        },
+        actionsConfiguration: {
+          returnStrategy: "tg://resolve",
+          modals: "all",
+          tmaReturnUrl: "back",
+        },
+        language: "en_US",
       });
-    
+
       var session = await universalUi.openModal({
         namespaces: {
-            solana: {
-                chains: [
-                "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp", // solana mainnet
-                // "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",// solana testnet
-                //  "sonic:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",// sonic testnet
-                ],
-            }
-        }
-    })
-    const status = universalUi.connected();
-    if(status)
-    {
-      eventBus.emit("wallet_connected", { 
-        type : 2 , //OKX UNI wallet extension type
-        data : universalUi
-       });
-    }
-
-
-      }else{
-       
-        try{
-          (window as any)?.okxwallet.solana.disconnect()
-          (window as any)?.okxwallet.solana.on(
-            "connect", () => {
-              eventBus.emit("wallet_connected", { 
-                type : 1 , //OKX wallet extension type
-                data : (window as any)?.okxwallet.solana
-               });
-            }
-          );
-        }catch(e)
-        {e}
-        
-        (window as any)?.okxwallet.solana.connect()
+          solana: {
+            chains: [
+              "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp", // solana mainnet
+              // "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",// solana testnet
+              //  "sonic:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",// sonic testnet
+            ],
+          },
+        },
+      });
+      const status = universalUi.connected();
+      if (status) {
+        eventBus.emit("wallet_connected", {
+          type: 2, //OKX UNI wallet extension type
+          data: universalUi,
+        });
       }
+    } else {
+      try {
+        (window as any)?.okxwallet.solana
+          .disconnect()(window as any)
+          ?.okxwallet.solana.on("connect", () => {
+            eventBus.emit("wallet_connected", {
+              type: 1, //OKX wallet extension type
+              data: (window as any)?.okxwallet.solana,
+            });
+          });
+      } catch (e) {
+        e;
       }
 
-
-    const UXUYWalletConnec = async ()=>
-    {
-      window.alert("We are working on it .")
-      // const { solana } = new WalletTgSdk({
-      //     metaData: {
-      //         icon: "https://pumplend.fun/logo.png",
-      //         name: "PUMPLEND",
-      //         hostname: "PUMPLEND"
-      //     }
-      // });
-
-      // await solana.connect(
-      //   {onlyIfTrusted:false},false
-      // );
+      (window as any)?.okxwallet.solana.connect();
     }
+  };
 
-    const SupportWallets = ()=> {
-      return (
+  const UXUYWalletConnec = async () => {
+    window.alert("We are working on it .");
+    // const { solana } = new WalletTgSdk({
+    //     metaData: {
+    //         icon: "https://pumplend.fun/logo.png",
+    //         name: "PUMPLEND",
+    //         hostname: "PUMPLEND"
+    //     }
+    // });
 
+    // await solana.connect(
+    //   {onlyIfTrusted:false},false
+    // );
+  };
 
-        <div className="w-ful flex-col gap-20 p-4 rounded-2xl">
-
-                  <Button className="w-full text-xl" onClick={()=>{
-          setVisible(true)
-        }}>
-        SOLANA Wallets
-        </Button>
-
-        &nbsp;
-        
-        <Button  startContent={<OkxIcon />} className="w-full text-xl" onClick={async ()=>{
-          await okxWalletConnect()
-        }}>
-        OKX Wallets
-        </Button>
-        
-        &nbsp;
-        
-        <Button  startContent={<UXUYIcon />} className="w-full text-xl" onClick={()=>{
-          onTgOpen()
-        }}>
-        Telegram Wallets
-        </Button>
-
-        </div>
-      )
-    }
-
-    const TelegramWallets = ()=> {
-      return (
-        <div className="w-ful flex-col gap-20 p-4 rounded-2xl">
-        <Button  startContent={<UXUYIcon />}  className="w-full text-xl" onClick={()=>{
-          UXUYWalletConnec()
-        }}>
-        UXUY Wallet
+  const SupportWallets = () => {
+    return (
+      <div className="w-ful flex-col gap-20 p-4 rounded-2xl">
+        <Button
+          className="w-full text-xl"
+          onClick={() => {
+            setVisible(true);
+          }}
+        >
+          SOLANA Wallets
         </Button>
         &nbsp;
-        <Button  startContent={<OkxIcon />} className="w-full text-xl" onClick={async ()=>{
-          await okxWalletConnect()
-        }}>
-        OKX Wallets
+        <Button
+          startContent={<OkxIcon />}
+          className="w-full text-xl"
+          onClick={async () => {
+            await okxWalletConnect();
+          }}
+        >
+          OKX Wallets
         </Button>
         &nbsp;
-        <Button  startContent={<TonspackIcon />}  className="w-full text-xl" onClick={()=>{
-          window.alert("We are working on it .")
-        }}>
-        Tonspack Wallets
+        <Button
+          startContent={<UXUYIcon />}
+          className="w-full text-xl"
+          onClick={() => {
+            onTgOpen();
+          }}
+        >
+          Telegram Wallets
         </Button>
-        </div>
-      )
-    }
+      </div>
+    );
+  };
+
+  const TelegramWallets = () => {
+    return (
+      <div className="w-ful flex-col gap-20 p-4 rounded-2xl">
+        <Button
+          startContent={<UXUYIcon />}
+          className="w-full text-xl"
+          onClick={() => {
+            UXUYWalletConnec();
+          }}
+        >
+          UXUY Wallet
+        </Button>
+        &nbsp;
+        <Button
+          startContent={<OkxIcon />}
+          className="w-full text-xl"
+          onClick={async () => {
+            await okxWalletConnect();
+          }}
+        >
+          OKX Wallets
+        </Button>
+        &nbsp;
+        <Button
+          startContent={<TonspackIcon />}
+          className="w-full text-xl"
+          onClick={() => {
+            window.alert("We are working on it .");
+          }}
+        >
+          Tonspack Wallets
+        </Button>
+      </div>
+    );
+  };
 
   return (
-
     <div className="w-ful flex-col gap-4 p-4 rounded-2xl">
+      {SupportWallets()}
 
-        {
-          SupportWallets()
-        }
-
-
-
-
-      <Modal isOpen={isTgopen} onClose={onTgClose} scrollBehavior={"inside"} size="lg">
+      <Modal
+        isOpen={isTgopen}
+        onClose={onTgClose}
+        scrollBehavior={"inside"}
+        size="lg"
+      >
         <ModalContent>
           <ModalHeader className="flex w-full">
-          <div className="flex w-full justify-center items-center text-3xl">
-          Connect Telegram Wallet
+            <div className="flex w-full justify-center items-center text-3xl">
+              Connect Telegram Wallet
             </div>
           </ModalHeader>
-          <ModalBody>
-            {
-              TelegramWallets()
-            }
-          </ModalBody>
-        </ModalContent> 
-
+          <ModalBody>{TelegramWallets()}</ModalBody>
+        </ModalContent>
       </Modal>
-
-
     </div>
   );
 }
