@@ -119,6 +119,7 @@ import { useRouter } from "next/router";
 import BN from "bn.js";
 import { eventBus } from "@/core/events";
 import { Pumplend } from "@pumplend/pumplend-sdk";
+import { api_pumpmax_get_user_actives } from "@/core/request";
 export default function IndexPage() {
   const lend = new Pumplend("devnet");
   const { publicKey, connected, signTransaction } = useWallet();
@@ -136,6 +137,18 @@ export default function IndexPage() {
     },
     {
       name: "💰 Earn SOL",
+      color: "default",
+      display: false,
+    },
+  ]);
+  const [lowData, setLowData] = useState([
+    {
+      name: "🚀 Positions",
+      color: "success",
+      display: true,
+    },
+    {
+      name: "⌚ History",
       color: "default",
       display: false,
     },
@@ -160,7 +173,7 @@ export default function IndexPage() {
   const [leverageOutAmount, setLeverageOutAmount] = useState(0);
   const [leverageOutAmountSol, setLeverageOutAmountSol] = useState(0);
   const [leverageOutAmountUSD, setLeverageOutAmountUSD] = useState(0);
-  const [repayChartDisplay, setRepayChartDisplay] = useState(false);
+  const [repayChartDisplay, setRepayChartDisplay] = useState(true);
 
   const [selectedToken, setSelectedToken] = useState("");
   const [selectedTokenInfo, setSelectedTokenInfo] = useState({
@@ -258,6 +271,17 @@ export default function IndexPage() {
     },
   ]);
 
+  const [historyData, setHistoryData] = useState([
+    {
+      "hash": "49XV4dWfnnEySjj2dC3Pey7cBBRcVq5PUtJrrT5KKMn7ep1cKBAWar25EpWUUCSPCwMqjm7nyr8pXbLgB5TweSvQ",
+      "id": "",
+      "type": "borrow",
+      "user": "",
+      "token": "Dtt6Zet8QaC4k27KF2NnpPRoomNysDZ3Wmom1cYSwpdd",
+      "amount": "10000000000000",
+      "blockTime": 1735880077
+    },
+  ]);
   const [windowSize, setWindowSize] = useState({
     width: 0,
     height: 0,
@@ -392,12 +416,19 @@ export default function IndexPage() {
         //No default token .select the project token as default
       }
 
+      //Do sit hisotry 
+      const userHis = await api_pumpmax_get_user_actives(0,50,address.toBase58())
+      console.log("🚀 user his ::",userHis)
+      if(userHis && userHis?.code==200 &&userHis?.data)
+      {
+        setHistoryData(userHis?.data)
+      }
       onLoadingClose();
     };
 
     //When user disconnect wallet
     const onDisconnect = async () => {
-      setRepayChartDisplay(false);
+      // setRepayChartDisplay(false);
     };
 
     const onLoad = async () => {
@@ -560,6 +591,7 @@ export default function IndexPage() {
       borrowTokens.push(seed);
     }
 
+    setRepayChartDisplay(true);
     if (borrowTokens.length > 0) {
       setRepayChartDisplay(true);
     }
@@ -813,6 +845,18 @@ export default function IndexPage() {
     tmp[index].color = "success";
     tmp[index].display = true;
     setData(tmp);
+  };
+
+  const changeLowType = (data: any, index: number) => {
+    let tmp = JSON.parse(JSON.stringify(data));
+
+    for (let i = 0; i < tmp.length; i++) {
+      tmp[i].color = "default";
+      tmp[i].display = false;
+    }
+    tmp[index].color = "success";
+    tmp[index].display = true;
+    setLowData(tmp);
   };
 
   const klineControle = () => {
@@ -1351,7 +1395,32 @@ export default function IndexPage() {
 
         <br></br>
 
-        {repayChartDisplay ? (
+{
+  repayChartDisplay ? 
+  <div
+  style={{ width: "100%", minWidth: "300px" }}
+  className="inline-block max-w-xl text-center justify-center item-center"
+>
+  <ButtonGroup>
+    {lowData.map((item: any, index: number) => (
+      <Button
+        key={index}
+        color={item.color}
+        onClick={() => {
+          changeLowType(lowData, index);
+        }}
+      >
+        {item.name}
+      </Button>
+    ))}
+  </ButtonGroup>
+</div> : 
+null
+}
+
+
+        {
+        (lowData[0].display&&repayChartDisplay) ? (
           <div
             className="maincard"
             style={{ minWidth: windowSize.width * 0.3 }}
@@ -1364,7 +1433,7 @@ export default function IndexPage() {
                 <div className="flex gap-2.5 justify-center">
                   <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
                     <span className="text-default-900 text-xl font-semibold">
-                      Repay Sol
+                      Active Positions
                     </span>
                   </div>
                 </div>
@@ -1543,6 +1612,173 @@ export default function IndexPage() {
                           Repay
                         </Button>
                       </div>
+                      <br></br>
+                    </div>
+                  ))}
+                </div>
+              </CardBody>
+            </Card>
+          </div>
+        ) : null}
+        {(lowData[1].display&&repayChartDisplay) ? (
+          <div
+            className="maincard"
+            style={{ minWidth: windowSize.width * 0.3 }}
+          >
+            <Card
+              className=" bg-default-50 rounded-xl shadow-md px-3 w-full h-full  justify-center"
+              style={{ width: "100%" }}
+            >
+              <CardBody className="py-5 gap-4">
+                <div className="flex gap-2.5 justify-center">
+                  <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
+                    <span className="text-default-900 text-xl font-semibold">
+                      History
+                    </span>
+                  </div>
+                </div>
+
+                <div className="gap-6">
+                  <div
+                    className="w-full"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(5, 1fr)",
+                      alignItems: "center",
+                      justifyItems: "center",
+                      gap: "1rem",
+                    }}
+                  >
+
+
+                    <div>
+                      <span className="text-default-900 font-semibold">
+                        Action
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-default-900 font-semibold">
+                        Token
+                      </span>
+                    </div>
+                    <div>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                        }}
+                      >
+                        <span className="text-default-900 font-semibold">
+                          Amount
+                        </span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <span className="text-default-900 font-semibold">
+                        Time
+                      </span>
+                    </div>
+
+                    <div>
+                      <span className="text-default-900 font-semibold">
+                       Hash
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="gap-6  justify-center ">
+                  {historyData.map((item) => (
+                    <div
+                      key={item.hash}
+                      className="w-full"
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(5, 1fr)",
+                        alignItems: "center",
+                        justifyItems: "center",
+                        gap: "1rem",
+                      }}
+                    >
+                                            <div>
+                        
+                        {
+                          item.type == "borrow" ?
+                          <Chip color="success">
+                           BORROW
+                          </Chip>
+                          :null
+                        }
+                        {
+                          item.type == "repay" ?
+                          <Chip color="primary">
+                           REPAY
+                          </Chip>
+                          :null
+                        }
+                        {
+                          item.type == "stake" ?
+                          <Chip color="primary">
+                           STAKE
+                          </Chip>
+                          :null
+                        }
+                        {
+                          item.type == "withdraw" ?
+                          <Chip color="warning">
+                           WITHDRAW
+                          </Chip>
+                          :null
+                        }
+                        {
+                          item.type == "liquidatePump" ||item.type == "liquidateRaydium" ?
+                          <Chip color="danger">
+                           CLOSE
+                          </Chip>
+                          :null
+                        }
+                      </div>
+
+                      <div>
+                        
+                         {
+                          item?.token?
+                         `${item.token.slice(0, 10)}...`:
+                         "NA"
+                         }
+                        
+                      </div>
+
+
+
+
+                      <div>
+                      <span >
+                            {
+                              item?.amount ? item?.amount : 'NA'
+                            }
+                          </span>
+                      </div>
+
+                      <div>
+                        <span className="text-default-900 font-semibold">
+                          {
+                           (new Date(Number(item.blockTime)*1000)).toLocaleString()
+                          }
+                        </span>
+                      </div>
+                      <a 
+                      onClick={() => {
+                        window.open(`https://explorer.solana.com/tx/${item.hash}?cluster=devnet`);
+                      }}
+                      className="text-success"
+                      >
+                      {item.hash.slice(0, 20)}...
+                      </a>
+                      
+
                       <br></br>
                     </div>
                   ))}
