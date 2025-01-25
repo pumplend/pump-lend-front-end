@@ -1712,6 +1712,13 @@ null
                           :null
                         }
                         {
+                          (item.type == "borrowLoopPump" ||item.type == "borrowLoopRaydium"  ) ?
+                          <Chip color="success">
+                           MAX BUY
+                          </Chip>
+                          :null
+                        }
+                        {
                           item.type == "repay" ?
                           <Chip color="primary">
                            REPAY
@@ -1733,7 +1740,7 @@ null
                           :null
                         }
                         {
-                          item.type == "liquidatePump" ||item.type == "liquidateRaydium" ?
+                          item.type == "liquidatePump" || item.type == "liquidateRaydium" ?
                           <Chip color="danger">
                            CLOSE
                           </Chip>
