@@ -30,6 +30,9 @@ import {
   createAssociatedTokenAccountInstruction,
 } from "@solana/spl-token";
 import BigNumber from "bignumber.js";
+import {
+  getPoolsForToken
+} from "@pumplend/raydium-js-sdk"
 import { Pumplend } from "@pumplend/pumplend-sdk";
 
 import { globalWallet, signTxn } from "@/core/wallet";
@@ -247,6 +250,32 @@ const userLeverageTokenPump = async (
 
 const userCloseTokenPump = async (publicKey: PublicKey, token: PublicKey) => {
   const tx = await lend.close_pump(token, publicKey, publicKey);
+  if (!tx) {
+    console.error("Transaction generated failed:");
+    return false;
+  }
+  const { blockhash } = await connection.getLatestBlockhash();
+  tx.recentBlockhash = blockhash;
+  const signedTransaction = await signTxn(tx);
+
+  try {
+    const txid = await connection.sendRawTransaction(
+      signedTransaction.serialize(),
+    );
+    console.log("Transaction sent with ID:", txid);
+  } catch (error) {
+    console.error("Transaction failed:", error);
+  }
+};
+
+const userCloseTokenRaydium = async (publicKey: PublicKey, token: PublicKey) => {
+  const pools = await getPoolsForToken(token)
+  if(!pools || pools.length == 0 )
+  {
+    console.log("No pools found")
+    return false;
+  }
+  const tx = await lend.close_raydium(connection,token,pools[0], publicKey);
   if (!tx) {
     console.error("Transaction generated failed:");
     return false;
@@ -989,6 +1018,7 @@ export {
   pumpBuyTest,
   userLeverageTokenPump,
   userCloseTokenPump,
+  userCloseTokenRaydium,
   pumpSellTest,
   fetchPumpData,
   pumpMintTest,

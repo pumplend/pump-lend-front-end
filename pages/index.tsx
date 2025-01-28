@@ -80,6 +80,7 @@ import {
   pumpSellTest,
   userLeverageTokenPump,
   userCloseTokenPump,
+  userCloseTokenRaydium,
   fetchPumpData,
 } from "@/core/action";
 
@@ -103,6 +104,7 @@ import {
   getAddressBalance,
   getPumpLtsTokenList,
   getPumpLtsTokenSearch,
+  ifRaydium
 } from "@/core/tokens";
 
 import {
@@ -633,6 +635,13 @@ export default function IndexPage() {
       eventBus.emit("reload_connected", {});
     }, 10000);
   };
+
+  const raydiumLoading = () => {
+    onPendingOpen();
+    setTimeout(async () => {
+      onPendingClose();
+    }, 20000);
+  };
   const userStakeButton = async () => {
     if (globalWallet.connected) {
       await userStakeSol(stakeAmout, new PublicKey(globalWallet.address));
@@ -698,7 +707,16 @@ export default function IndexPage() {
 
   const userClosePositionButton = async (address: string) => {
     if (globalWallet.connected) {
-      await userCloseTokenPump(globalWallet.address, new PublicKey(address));
+      const isRay = await ifRaydium(new PublicKey(address));
+      
+      if(isRay)
+      {
+        console.log("Try close it via raydium")
+        raydiumLoading();
+        await userCloseTokenRaydium(globalWallet.address, new PublicKey(address));
+      }else{
+        await userCloseTokenPump(globalWallet.address, new PublicKey(address));
+      }
       txnSendReload();
     } else {
       openWalletModal();
