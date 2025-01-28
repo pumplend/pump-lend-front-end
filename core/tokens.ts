@@ -334,7 +334,7 @@ const getPumpLtsTokenSearch = async (searchdata: string) => {
 
 const ifRaydium  = async (token:PublicKey) =>
 {
-  const curve = await lend.tryGetPumpTokenCurveData(connection,token)4
+  const curve = await lend.tryGetPumpTokenCurveData(connection,token)
   if(curve && curve.complete == BigInt(1))
     {
       return true;
