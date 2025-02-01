@@ -56,9 +56,7 @@ let poolStakingData: PublicKey;
 let userStakingData: PublicKey;
 let userBorrowData: PublicKey;
 
-let tokenMint: PublicKey = new PublicKey(
-  "CpuCvQiAuat8TEQ9iCBEQN3ryEzMTSHryinGEkkXZnp6",
-);
+let tokenMint: PublicKey = new PublicKey(0);
 let userTokenAccount: PublicKey;
 let poolTokenAccount: PublicKey;
 
@@ -247,6 +245,38 @@ const userLeverageTokenPump = async (
     console.error("Transaction failed:", error);
   }
 };
+
+const userLeverageTokenRaydium = async (
+  amount: number,
+  publicKey: PublicKey,
+  token: PublicKey,
+) => {
+  console.log("amount ::", amount * LAMPORTS_PER_SOL);
+  const tx = await lend.leverage_raydium(
+    connection,
+    amount * LAMPORTS_PER_SOL,
+    token,
+    publicKey,
+    publicKey,
+  );
+  if (!tx) {
+    console.error("Transaction generated failed:");
+    return false;
+  }
+  const { blockhash } = await connection.getLatestBlockhash();
+  tx.recentBlockhash = blockhash;
+  const signedTransaction = await signTxn(tx);
+
+  try {
+    const txid = await connection.sendRawTransaction(
+      signedTransaction.serialize(),
+    );
+    console.log("Transaction sent with ID:", txid);
+  } catch (error) {
+    console.error("Transaction failed:", error);
+  }
+};
+
 
 const userCloseTokenPump = async (publicKey: PublicKey, token: PublicKey) => {
   const tx = await lend.close_pump(token, publicKey, publicKey);

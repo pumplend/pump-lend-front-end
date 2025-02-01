@@ -329,6 +329,7 @@ export default function IndexPage() {
   const router = useRouter();
 
   useEffect(() => {
+    // console.log("Now , try init.env :: ",process.env.PUMPMAX_CA)
     let walletConnectedLocks = false;
     setKlineDisplay(tryGetKlineConfig());
     //Data init
