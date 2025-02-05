@@ -1344,6 +1344,15 @@ export default function IndexPage() {
                   </div>
                 </div>
 
+                <div className="flex gap-2.5 justify-center">
+                  <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
+                    <span className="text-default-900 text-sm font-semibold">
+                    <a style={{color:"green"}}>PUMPMAX</a> is now mainnet-beta test version . <a style={{color:"red"}}>Contract not been audited yet </a>. So be careful for depositing SOL .
+                    </span>
+                  </div>
+                </div>
+
+                
                 <div
                   className="flex flex-col gap-6 w-full"
                   style={{ minWidth: windowSize.width * 0.3 }}
