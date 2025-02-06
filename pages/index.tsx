@@ -346,7 +346,7 @@ export default function IndexPage() {
           ((Number(userStakeInfo.totalStaked) /
             Number(userStakeInfo.totalShares) -
             1) /
-            ((Date.now() / 1000 - 1734619878) / (365 * 24 * 3600))) *
+            ((Date.now() / 1000 - 1738845585) / (365 * 24 * 3600))) *
           100
         ).toFixed(3),
       );
@@ -1822,9 +1822,16 @@ null
 
                       <div>
                       <span >
-                            {
-                              item?.amount ? item?.amount : 'NA'
-                            }
+                          {
+                            ( item.type == "stake" )?
+                            Number(Number(item.amount/1e9).toFixed(3))+" SOL"
+                            :null
+                          }
+                          {
+                            (item.type == "borrow" || item.type == "borrowLoopRaydium" || item.type == "borrowLoopPump")?
+                            Number(Number(item.amount/1e6).toFixed(3))+" $"
+                            :null
+                          }
                           </span>
                       </div>
 

@@ -4,9 +4,10 @@ export const envConfig = {
       `https://api.shyft.to/sol/v1/wallet/all_tokens?network=${process.env.NEXT_PUBLIC_NETWORK}&wallet=`,
   },
   apiKey: {
-    shyft: "AwM0UoO6r1w8XNOA",
+    shyft: "c6sQsEKeMhtSq6sp",
   },
-  rpc: "https://api.devnet.solana.com",
+  // rpc: "https://api.devnet.solana.com",
+  rpc:process.env.NEXT_PUBLIC_SOLANA_RPC_URL,
   token: {
     defaultIcon: "https://pump.fun/logo.png",
   },
@@ -17,7 +18,7 @@ export const envConfig = {
       pumpmaxVault:"zzntY4AtoZhQE8UnfUoiR4HKK2iv8wjW4fHVTCzKnn6"
     },
     mainnet:{
-      pumpmaxProgramId :"3H39yWShVgHCTxfFbp3e2RdGmhcAW16CoNAMoeo4b2mx",
+      pumpmaxProgramId :"41LsHyCYgo6VPuiFkk8q4n7VxJCkcuEBEX99hnCpt8Tk",
       pumpmaxVault:"FVRXRzHXtG1UDdrVfLPoSTKD44cwx99XKoWAqcQqeNb"
     }
   }

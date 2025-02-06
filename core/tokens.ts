@@ -29,7 +29,10 @@ let poolStakingData: PublicKey;
 let userStakingData: PublicKey;
 
 let ltsPumpToken: any[] = [];
-const lend = new Pumplend("devnet");
+const lend = new Pumplend(
+  process.env.NEXT_PUBLIC_NETWORK,
+  new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId)
+);
 poolStakingData = PublicKey.findProgramAddressSync(
   [Buffer.from("pool_staking_data")],
   programIdDefault,
@@ -81,7 +84,7 @@ const userSolStakeFetch = async (userAdd?: PublicKey) => {
         ret.userShares = user.shares;
       }
     }
-    
+  // console.log("RAW stake inform ::",pool , connection,lend)
   return ret;
 };
 
@@ -236,8 +239,14 @@ async function checkTokenExsitOrNot(publicKey: PublicKey) {
 
 async function checkTokenPumpOrNot(publicKey: PublicKey) {
   //Ignore
-  userPumpTokens = JSON.parse(JSON.stringify(userTokens));
-  return 0;
+  try{
+    userPumpTokens = JSON.parse(JSON.stringify(userTokens));
+    return 0;
+  }catch(e)
+  {
+    userPumpTokens = []
+  }
+
   //Do not check
   // let ret :any[];
   // ret = [];
