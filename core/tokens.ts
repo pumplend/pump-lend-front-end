@@ -57,9 +57,9 @@ const userTokenInit = async (publicKey: PublicKey) => {
   return true;
 };
 
-const userSolStakeFetch = async (userAdd: PublicKey) => {
+const userSolStakeFetch = async (userAdd?: PublicKey) => {
   const pool = await lend.tryGetPoolStakingData(connection);
-  const user = await lend.tryGetUserStakingData(connection, userAdd);
+
   let ret = {
     totalStaked: BigInt(0),
     totalShares: BigInt(0),
@@ -74,9 +74,14 @@ const userSolStakeFetch = async (userAdd: PublicKey) => {
     ret.pendingVaultProfit = pool.pendingVaultProfit;
   }
 
-  if (user) {
-    ret.userShares = user.shares;
-  }
+  if(userAdd)
+    {
+      const user = await lend.tryGetUserStakingData(connection, userAdd);
+      if (user) {
+        ret.userShares = user.shares;
+      }
+    }
+    
   return ret;
 };
 

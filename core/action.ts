@@ -300,7 +300,7 @@ const userCloseTokenPump = async (publicKey: PublicKey, token: PublicKey) => {
 };
 
 const userCloseTokenRaydium = async (publicKey: PublicKey, token: PublicKey) => {
-  const pools = await getPoolsForToken(token)
+  const pools = await getDefaultPool(token,process.env.NEXT_PUBLIC_NETWORK)
   if(!pools || pools.length == 0 )
   {
     console.log("No pools found")

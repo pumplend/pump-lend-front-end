@@ -330,6 +330,28 @@ export default function IndexPage() {
   const [userWalletBlance, setUserWalletBlance] = useState(0);
   const { setVisible } = useWalletModal();
   const router = useRouter();
+
+  const stakeDisplayFunction = async(address?:PublicKey)=>
+  {
+    
+      /**
+       * Handel Stake information fetch and display
+       */
+      const userStakeInfo = await userSolStakeFetch(address);
+      console.log("🍺 Stake information ::", userStakeInfo);
+      setUserStakeSolInformation(userStakeInfo);
+      setUserBorrowInformation(Number(userStakeInfo.totalBorrowed));
+      setUserStakeSolApy(
+        (
+          ((Number(userStakeInfo.totalStaked) /
+            Number(userStakeInfo.totalShares) -
+            1) /
+            ((Date.now() / 1000 - 1734619878) / (365 * 24 * 3600))) *
+          100
+        ).toFixed(3),
+      );
+      stakeDisplay(userStakeInfo);
+  }
   useEffect(() => {
     
     let walletConnectedLocks = false;
@@ -349,7 +371,7 @@ export default function IndexPage() {
     };
     handleResize();
     window.addEventListener("resize", handleResize);
-
+   
     //Onload functions
     const onConnect = async (address: PublicKey, foreceReload?: boolean) => {
       if (foreceReload) {
@@ -367,20 +389,21 @@ export default function IndexPage() {
       /**
        * Handel Stake information fetch and display
        */
-      const userStakeInfo = await userSolStakeFetch(globalWallet.address);
-      console.log("🍺 Stake information ::", userStakeInfo);
-      setUserStakeSolInformation(userStakeInfo);
-      setUserBorrowInformation(Number(userStakeInfo.totalBorrowed));
-      setUserStakeSolApy(
-        (
-          ((Number(userStakeInfo.totalStaked) /
-            Number(userStakeInfo.totalShares) -
-            1) /
-            ((Date.now() / 1000 - 1734619878) / (365 * 24 * 3600))) *
-          100
-        ).toFixed(3),
-      );
-      stakeDisplay(userStakeInfo);
+      await stakeDisplayFunction(globalWallet.address)
+      // const userStakeInfo = await userSolStakeFetch(globalWallet.address);
+      // console.log("🍺 Stake information ::", userStakeInfo);
+      // setUserStakeSolInformation(userStakeInfo);
+      // setUserBorrowInformation(Number(userStakeInfo.totalBorrowed));
+      // setUserStakeSolApy(
+      //   (
+      //     ((Number(userStakeInfo.totalStaked) /
+      //       Number(userStakeInfo.totalShares) -
+      //       1) /
+      //       ((Date.now() / 1000 - 1734619878) / (365 * 24 * 3600))) *
+      //     100
+      //   ).toFixed(3),
+      // );
+      // stakeDisplay(userStakeInfo);
 
       console.log(
         "🍺 All my token ::",
@@ -439,6 +462,7 @@ export default function IndexPage() {
     const onLoad = async () => {
       const solPrice = await solPriceFetch();
       setSolPrice(solPrice);
+      await stakeDisplayFunction();
       console.log("Sol price :: ", solPrice);
       const ltsPump = await getPumpLtsTokenList()
       setPumpLtsTokens(ltsPump);
@@ -446,6 +470,7 @@ export default function IndexPage() {
       // setSelectedToken(ltsPump[0].mint);
       // await updateSolanaInitData(ltsPump[0].mint);
       updateSelectToken(false, ltsPump[0]);
+      
     };
 
     eventBus.on("confirm_connected", async (e: any) => {
@@ -1729,7 +1754,7 @@ null
                       key={item.hash}
                       className="w-full"
                       style={{
-                        display: "grid",
+                        display: item.blockTime == 1735880077 ?"none":"grid" ,
                         gridTemplateColumns: "repeat(5, 1fr)",
                         alignItems: "center",
                         justifyItems: "center",
