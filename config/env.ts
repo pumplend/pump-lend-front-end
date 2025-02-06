@@ -1,7 +1,7 @@
 export const envConfig = {
   api: {
     shyft:
-      "https://api.shyft.to/sol/v1/wallet/all_tokens?network=devnet&wallet=",
+      `https://api.shyft.to/sol/v1/wallet/all_tokens?network=${process.env.NEXT_PUBLIC_NETWORK}&wallet=`,
   },
   apiKey: {
     shyft: "AwM0UoO6r1w8XNOA",
@@ -18,7 +18,7 @@ export const envConfig = {
     },
     mainnet:{
       pumpmaxProgramId :"3H39yWShVgHCTxfFbp3e2RdGmhcAW16CoNAMoeo4b2mx",
-      pumpmaxVault:"zzntY4AtoZhQE8UnfUoiR4HKK2iv8wjW4fHVTCzKnn6"
+      pumpmaxVault:"FVRXRzHXtG1UDdrVfLPoSTKD44cwx99XKoWAqcQqeNb"
     }
   }
 };

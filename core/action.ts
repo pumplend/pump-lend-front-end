@@ -31,7 +31,8 @@ import {
 } from "@solana/spl-token";
 import BigNumber from "bignumber.js";
 import {
-  getPoolsForToken
+  getPoolsForToken,
+  getDefaultPool
 } from "@pumplend/raydium-js-sdk"
 import { Pumplend } from "@pumplend/pumplend-sdk";
 

@@ -330,7 +330,6 @@ export default function IndexPage() {
   const [userWalletBlance, setUserWalletBlance] = useState(0);
   const { setVisible } = useWalletModal();
   const router = useRouter();
-  console.log("Now , try init.env :: ",process.env.NEXT_PUBLIC_SOLANA_RPC_URL)
   useEffect(() => {
     
     let walletConnectedLocks = false;
@@ -396,12 +395,12 @@ export default function IndexPage() {
        * Handel Token information fetch and display
        */
       if (userTokens && userTokens.length > 0) {
-        if (userPumpTokens && userPumpTokens.length > 0) {
-          let pumptmp = JSON.parse(JSON.stringify(userPumpTokens));
-          setSelectedTokenInfo(pumptmp[0]);
-          setSelectedToken(pumptmp[0].address);
-          await updateSolanaInitData(pumptmp[0].address);
-        }
+        // if (userPumpTokens && userPumpTokens.length > 0) {
+        //   let pumptmp = JSON.parse(JSON.stringify(userPumpTokens));
+        //   setSelectedTokenInfo(pumptmp[0]);
+        //   setSelectedToken(pumptmp[0].address);
+        //   await updateSolanaInitData(pumptmp[0].address);
+        // }
 
         if (userBorrowTokens && userBorrowTokens.length > 0) {
           const borrowInformationArray = await userTokenBorrowFetch(
@@ -441,8 +440,12 @@ export default function IndexPage() {
       const solPrice = await solPriceFetch();
       setSolPrice(solPrice);
       console.log("Sol price :: ", solPrice);
-
-      setPumpLtsTokens(await getPumpLtsTokenList());
+      const ltsPump = await getPumpLtsTokenList()
+      setPumpLtsTokens(ltsPump);
+      // setSelectedTokenInfo(ltsPump[0]);
+      // setSelectedToken(ltsPump[0].mint);
+      // await updateSolanaInitData(ltsPump[0].mint);
+      updateSelectToken(false, ltsPump[0]);
     };
 
     eventBus.on("confirm_connected", async (e: any) => {
