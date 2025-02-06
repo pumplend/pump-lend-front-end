@@ -216,6 +216,28 @@ const userRepayToken = async (publicKey: PublicKey, token: PublicKey) => {
  *
  * Both pump.close raydium.close
  */
+const checkPDA = async ( pk:PublicKey,tk :PublicKey) =>
+{
+  const acc = getAssociatedTokenAddressSync(
+    tk,
+    pk,
+    false
+  )
+  try{
+    await getAccount(connection,acc)
+
+    return {
+      status : true,
+      acc
+    }
+  }catch(e)
+  {
+    return {
+      status : false,
+      acc
+    }
+  }
+}
 
 const userLeverageTokenPump = async (
   amount: number,
@@ -223,16 +245,29 @@ const userLeverageTokenPump = async (
   token: PublicKey,
 ) => {
   console.log("amount ::", amount * LAMPORTS_PER_SOL);
-  const tx = await lend.leverage_pump(
+  const tx = new Transaction();
+  
+  const userTokenPda = await checkPDA(publicKey,token)
+  
+  const leverageTx = await lend.leverage_pump(
     amount * LAMPORTS_PER_SOL,
     token,
     publicKey,
     publicKey,
   );
-  if (!tx) {
+  if (!leverageTx) {
     console.error("Transaction generated failed:");
     return false;
   }
+  
+  if(!userTokenPda.status)
+  {
+    const userPDAInstruction = createAssociatedTokenAccountInstruction(publicKey,userTokenPda.acc,publicKey,token);
+    tx.add(userPDAInstruction)
+  }
+ 
+  tx.add(leverageTx)
+  tx.feePayer = publicKey
   const { blockhash } = await connection.getLatestBlockhash();
   tx.recentBlockhash = blockhash;
   const signedTransaction = await signTxn(tx);
