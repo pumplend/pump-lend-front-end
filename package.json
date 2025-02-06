@@ -1,6 +1,6 @@
 {
-  "name": "next-pages-template",
-  "version": "0.1.0",
+  "name": "PUMPMAX-APP",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
@@ -27,7 +27,7 @@
     "@nextui-org/theme": "2.2.11",
     "@okxconnect/solana-provider": "^1.6.5",
     "@okxconnect/ui": "^1.6.5",
-    "@pumplend/pumplend-sdk": "^0.1.9",
+    "@pumplend/pumplend-sdk": "^0.1.10",
     "@pumplend/raydium-js-sdk": "^0.0.7",
     "@react-aria/visually-hidden": "3.8.12",
     "@solana/spl-token": "^0.4.9",
