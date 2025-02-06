@@ -42,12 +42,12 @@ import * as abi from "@/core/pump_lend.json";
 import { serialize, Schema, deserialize, deserializeUnchecked } from "borsh";
 import { createHash } from "crypto";
 import { envConfig } from "@/config/env";
-const programIdDefault = new PublicKey(
-  "6m6ixFjRGq7HYAPsu8YtyEauJm8EE8pzA3mqESt5cGYf",
-);
-const vault = new PublicKey("zzntY4AtoZhQE8UnfUoiR4HKK2iv8wjW4fHVTCzKnn6");
+const programIdDefault = new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId)
 
-const lend = new Pumplend("devnet");
+const lend = new Pumplend(
+  process.env.NEXT_PUBLIC_NETWORK,
+  new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId)
+);
 
 // PDA Accounts
 let systemConfig: PublicKey;

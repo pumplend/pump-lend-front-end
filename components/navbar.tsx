@@ -355,7 +355,9 @@ export const Navbar = () => {
                 [Stake SOL]
               </div> */}
             &nbsp;&nbsp;&nbsp;
-            <NextLink
+            {
+              (process.env.NEXT_PUBLIC_NETWORK == "devnet")?
+              <NextLink
               className={clsx(
                 linkStyles({ color: "foreground" }),
                 "data-[active=true]:text-primary data-[active=true]:font-medium",
@@ -364,7 +366,9 @@ export const Navbar = () => {
               href={"faucet"}
             >
               [Devnet Faucet]
-            </NextLink>
+            </NextLink>:null
+            }
+
           </NavbarItem>
 
           {/* {siteConfig.navItems.map((item) => (

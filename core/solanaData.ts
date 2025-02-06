@@ -37,11 +37,10 @@ import { envConfig } from "@/config/env";
 import { api_price_oracle } from "./request";
 import { Pumplend } from "@pumplend/pumplend-sdk";
 
-const lend = new Pumplend("devnet");
-const programIdDefault = new PublicKey(
-  "6m6ixFjRGq7HYAPsu8YtyEauJm8EE8pzA3mqESt5cGYf",
+const lend = new Pumplend(
+  process.env.NEXT_PUBLIC_NETWORK,
+  new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId)
 );
-
 // PDA Accounts
 let systemConfig: PublicKey;
 let poolTokenAuthority: PublicKey;
@@ -50,7 +49,7 @@ let userStakingData: PublicKey;
 let userBorrowData: PublicKey;
 
 let tokenMint: PublicKey = new PublicKey(
-  "CpuCvQiAuat8TEQ9iCBEQN3ryEzMTSHryinGEkkXZnp6",
+  0
 );
 let userTokenAccount: PublicKey;
 let poolTokenAccount: PublicKey;

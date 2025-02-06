@@ -123,7 +123,10 @@ import { eventBus } from "@/core/events";
 import { Pumplend } from "@pumplend/pumplend-sdk";
 import { api_pumpmax_get_user_actives } from "@/core/request";
 export default function IndexPage() {
-  const lend = new Pumplend("devnet");
+  const lend = new Pumplend(
+    process.env.NEXT_PUBLIC_NETWORK,
+    new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId)
+  );
   const { publicKey, connected, signTransaction } = useWallet();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([
@@ -327,9 +330,9 @@ export default function IndexPage() {
   const [userWalletBlance, setUserWalletBlance] = useState(0);
   const { setVisible } = useWalletModal();
   const router = useRouter();
-
+  console.log("Now , try init.env :: ",process.env.NEXT_PUBLIC_SOLANA_RPC_URL)
   useEffect(() => {
-    // console.log("Now , try init.env :: ",process.env.PUMPMAX_CA)
+    
     let walletConnectedLocks = false;
     setKlineDisplay(tryGetKlineConfig());
     //Data init
@@ -1806,7 +1809,7 @@ null
                       </div>
                       <a 
                       onClick={() => {
-                        window.open(`https://explorer.solana.com/tx/${item.hash}?cluster=devnet`);
+                        window.open(`https://explorer.solana.com/tx/${item.hash}?cluster=${process.env.NEXT_PUBLIC_NETWORK}`);
                       }}
                       className="text-success"
                       >
@@ -2580,7 +2583,8 @@ null
                 <a onClick={displayReferral}>[Referral]</a>
               )}
               &nbsp;&nbsp;&nbsp;
-              {windowSize.width > 500 ? null : (
+              {
+              (windowSize.width > 500&&process.env.NEXT_PUBLIC_NETWORK == "devnet") ? null : (
                 <a onClick={displayFauct}>[Devnet Fauct]</a>
               )}
             </div>

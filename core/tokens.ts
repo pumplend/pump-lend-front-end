@@ -17,12 +17,8 @@ import { Pumplend } from "@pumplend/pumplend-sdk";
 import BN from "bn.js";
 const connection = new Connection(envConfig.rpc);
 
-const programIdDefault = new PublicKey(
-  "6m6ixFjRGq7HYAPsu8YtyEauJm8EE8pzA3mqESt5cGYf",
-);
-let pumpKeyAccount = new PublicKey(
-  "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
-);
+const programIdDefault = new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId)
+
 let userTokens: false | [];
 
 let userBorrowTokens: false | PublicKey[];
