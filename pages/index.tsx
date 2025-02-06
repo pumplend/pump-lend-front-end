@@ -125,7 +125,9 @@ import { api_pumpmax_get_user_actives } from "@/core/request";
 export default function IndexPage() {
   const lend = new Pumplend(
     process.env.NEXT_PUBLIC_NETWORK,
-    new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId)
+    new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId),
+    null,
+    new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxVault),
   );
   const { publicKey, connected, signTransaction } = useWallet();
   const [isLoading, setIsLoading] = useState(true);

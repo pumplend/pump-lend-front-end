@@ -39,7 +39,9 @@ import { Pumplend } from "@pumplend/pumplend-sdk";
 
 const lend = new Pumplend(
   process.env.NEXT_PUBLIC_NETWORK,
-  new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId)
+  new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId),
+  null,
+  new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxVault),
 );
 // PDA Accounts
 let systemConfig: PublicKey;

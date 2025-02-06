@@ -31,7 +31,9 @@ let userStakingData: PublicKey;
 let ltsPumpToken: any[] = [];
 const lend = new Pumplend(
   process.env.NEXT_PUBLIC_NETWORK,
-  new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId)
+  new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId),
+  null,
+  new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxVault),
 );
 poolStakingData = PublicKey.findProgramAddressSync(
   [Buffer.from("pool_staking_data")],

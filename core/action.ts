@@ -47,7 +47,9 @@ const programIdDefault = new PublicKey(JSON.parse(JSON.stringify(envConfig.web3)
 
 const lend = new Pumplend(
   process.env.NEXT_PUBLIC_NETWORK,
-  new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId)
+  new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId),
+  null,
+  new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxVault),
 );
 
 // PDA Accounts
@@ -260,6 +262,7 @@ const userLeverageTokenPump = async (
     return false;
   }
   
+  console.log("userTokenPda::",userTokenPda)
   if(!userTokenPda.status)
   {
     const userPDAInstruction = createAssociatedTokenAccountInstruction(publicKey,userTokenPda.acc,publicKey,token);
