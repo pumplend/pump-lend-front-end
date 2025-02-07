@@ -2643,9 +2643,11 @@ null
               )}
               &nbsp;&nbsp;&nbsp;
               {
-              (windowSize.width > 500&&process.env.NEXT_PUBLIC_NETWORK == "mainnet") ? null : (
+              (windowSize.width < 500&&process.env.NEXT_PUBLIC_NETWORK == "devnet") ? 
+              (
                 <a onClick={displayFauct}>[Devnet Fauct]</a>
-              )}
+              )
+              :null}
             </div>
 
             {
