@@ -2318,11 +2318,16 @@ null
                 <section className="flex flex-col gap-2">
                   <Input
                     labelPlacement="outside"
-                    placeholder="Search by token address or name"
+                    placeholder="Search token CA"
                     startContent={<FaSearch />}
                     type="text"
-                    onChange={(e: any) => {
+                    onChange={async (e: any) => {
                       setUserSearchToken(e.currentTarget.value);
+
+                      if(e.currentTarget.value.length == 44)
+                      {
+                        setPumpSearchToken(await getPumpLtsTokenSearch(e.currentTarget.value));
+                      }
                     }}
                     onKeyDown={searchTokenFunction}
                   />

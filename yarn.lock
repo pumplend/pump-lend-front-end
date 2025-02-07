@@ -2233,10 +2233,10 @@
     bn.js "^5.1.2"
     buffer-layout "^1.2.0"
 
-"@pumplend/pumplend-sdk@^0.1.10":
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/@pumplend/pumplend-sdk/-/pumplend-sdk-0.1.15.tgz#5f28d584922fda08953f5f5b4cd3901aef107d56"
-  integrity sha512-jtnC87FbqfRgnIkeEftlibV1FvQ2X/qN0N1B00thCq7n6C3kyn+TzOkNcsVvAeGj0B91RR69vDFkUicjRUIVTg==
+"@pumplend/pumplend-sdk@^0.1.15":
+  version "0.1.16"
+  resolved "https://registry.yarnpkg.com/@pumplend/pumplend-sdk/-/pumplend-sdk-0.1.16.tgz#a9d31603a5d44749eb32ef1a8bc896e480b68b28"
+  integrity sha512-RO+vdkk4zV8ChMBvdsv47+p2FzyxMvpOi3jD+emXj/E/+dfVSPSDPiWm+TBKyRYjn2ZQ8R7ShOVFWmuAls7TTw==
   dependencies:
     "@project-serum/borsh" "^0.2.5"
     "@pumplend/raydium-js-sdk" "^0.1.0"
