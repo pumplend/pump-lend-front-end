@@ -27,7 +27,7 @@
     "@nextui-org/theme": "2.2.11",
     "@okxconnect/solana-provider": "^1.6.5",
     "@okxconnect/ui": "^1.6.5",
-    "@pumplend/pumplend-sdk": "^0.1.14",
+    "@pumplend/pumplend-sdk": "^0.1.15",
     "@pumplend/raydium-js-sdk": "^0.1.2",
     "@react-aria/visually-hidden": "3.8.12",
     "@solana/spl-token": "^0.4.9",

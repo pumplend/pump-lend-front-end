@@ -15,7 +15,7 @@ export const siteConfig = {
     bot: "https://t.me/pumplend_bot",
     webapp: "https://t.me/pumplend_bot/test",
     github: "https://github.com/pumplend",
-    twitter: "https://x.com/pumplendfun",
+    twitter: "https://x.com/pumpmaxfun",
     telegramChannel: "https://t.me/+50XGEOayi543NzM1",
     docs: "https://nextui.org",
     discord: "https://discord.gg/X6BdtCRM3W",
