@@ -48,7 +48,7 @@ const programIdDefault = new PublicKey(JSON.parse(JSON.stringify(envConfig.web3)
 const lend = new Pumplend(
   process.env.NEXT_PUBLIC_NETWORK,
   new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId),
-  null,
+  undefined,
   new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxVault),
 );
 
@@ -291,17 +291,40 @@ const userLeverageTokenRaydium = async (
   token: PublicKey,
 ) => {
   console.log("amount ::", amount * LAMPORTS_PER_SOL);
-  const tx = await lend.leverage_raydium(
+  const tx = new Transaction();
+  
+  const userTokenPda = await checkPDA(publicKey,token)
+  
+
+  const pools = await getDefaultPool(token,process.env.NEXT_PUBLIC_NETWORK)
+  if(!pools || pools.length == 0 )
+  {
+    console.log("No pools found")
+    return false;
+  }
+
+  const leverageTx = await lend.leverage_raydium(
     connection,
     amount * LAMPORTS_PER_SOL,
     token,
+    pools[0],
     publicKey,
     publicKey,
   );
-  if (!tx) {
+  if (!leverageTx) {
     console.error("Transaction generated failed:");
     return false;
   }
+
+  console.log("userTokenPda::",userTokenPda)
+  if(!userTokenPda.status)
+  {
+    const userPDAInstruction = createAssociatedTokenAccountInstruction(publicKey,userTokenPda.acc,publicKey,token);
+    tx.add(userPDAInstruction)
+  }
+ 
+  tx.add(leverageTx)
+  tx.feePayer = publicKey
   const { blockhash } = await connection.getLatestBlockhash();
   tx.recentBlockhash = blockhash;
   const signedTransaction = await signTxn(tx);
@@ -1092,4 +1115,5 @@ export {
   fetchPumpData,
   pumpMintTest,
   pumpMintAndBuy,
+  userLeverageTokenRaydium
 };

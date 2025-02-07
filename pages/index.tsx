@@ -82,6 +82,7 @@ import {
   userCloseTokenPump,
   userCloseTokenRaydium,
   fetchPumpData,
+  userLeverageTokenRaydium,
 } from "@/core/action";
 
 import {
@@ -126,7 +127,7 @@ export default function IndexPage() {
   const lend = new Pumplend(
     process.env.NEXT_PUBLIC_NETWORK,
     new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId),
-    null,
+    undefined,
     new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxVault),
   );
   const { publicKey, connected, signTransaction } = useWallet();
@@ -169,7 +170,7 @@ export default function IndexPage() {
 
   const [klineDisplay, setKlineDisplay] = useState("none");
 
-  const testFeeRate = 10;
+  const testFeeRate = 0.01; //1%
   const [walletConnectedLock, setWalletConnectedLock] = useState(false);
   const [stakeAmout, setStakeAmount] = useState(0);
   const [withdrawAmount, setWithdrawAmount] = useState(0);
@@ -727,12 +728,26 @@ export default function IndexPage() {
   };
 
   const userLeverageButton = async () => {
+    
     if (globalWallet.connected) {
-      await userLeverageTokenPump(
-        leverageAmount,
-        globalWallet.address,
-        new PublicKey(selectedToken),
-      );
+      const isRay = await ifRaydium(new PublicKey(selectedToken));
+      
+      if(isRay)
+      {
+        console.log("Try open it via raydium")
+        raydiumLoading();
+        await userLeverageTokenRaydium(
+          leverageAmount,
+          globalWallet.address,
+          new PublicKey(selectedToken),
+        );
+      }else{
+        await userLeverageTokenPump(
+          leverageAmount,
+          globalWallet.address,
+          new PublicKey(selectedToken),
+        );
+      }
       txnSendReload();
     } else {
       openWalletModal();
@@ -1333,7 +1348,7 @@ export default function IndexPage() {
                         display: klineDisplay,
                       }}
                       title="kline"
-                      src="https://www.gmgn.cc/kline/sol/6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN"
+                      src={`https://www.gmgn.cc/kline/sol/`+selectedToken}
                       width={kWindowsSize + "px"}
                       height={windowSize.height * 0.6}
                     ></iframe>
@@ -1826,12 +1841,12 @@ null
                       <span >
                           {
                             ( item.type == "stake" )?
-                            Number(Number(item.amount/1e9).toFixed(3))+" SOL"
+                            Number(Number(Number(item.amount)/1e9).toFixed(3))+" SOL"
                             :null
                           }
                           {
                             (item.type == "borrow" || item.type == "borrowLoopRaydium" || item.type == "borrowLoopPump")?
-                            Number(Number(item.amount/1e6).toFixed(3))+" $"
+                            Number(Number(Number(item.amount)/1e6).toFixed(3))+" $"
                             :null
                           }
                           </span>

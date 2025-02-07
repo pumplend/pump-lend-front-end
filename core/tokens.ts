@@ -32,7 +32,7 @@ let ltsPumpToken: any[] = [];
 const lend = new Pumplend(
   process.env.NEXT_PUBLIC_NETWORK,
   new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxProgramId),
-  null,
+  undefined,
   new PublicKey(JSON.parse(JSON.stringify(envConfig.web3))[String(process.env.NEXT_PUBLIC_NETWORK)].pumpmaxVault),
 );
 poolStakingData = PublicKey.findProgramAddressSync(

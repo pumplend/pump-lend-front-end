@@ -7,7 +7,7 @@ export const envConfig = {
     shyft: "c6sQsEKeMhtSq6sp",
   },
   // rpc: "https://api.devnet.solana.com",
-  rpc:process.env.NEXT_PUBLIC_SOLANA_RPC_URL,
+  rpc:String(process.env.NEXT_PUBLIC_SOLANA_RPC_URL),
   token: {
     defaultIcon: "https://pump.fun/logo.png",
   },
@@ -19,7 +19,7 @@ export const envConfig = {
     },
     mainnet:{
       pumpmaxProgramId :"41LsHyCYgo6VPuiFkk8q4n7VxJCkcuEBEX99hnCpt8Tk",
-      pumpmaxVault:"6QJnyDfQHu1mfCpMiyamBhshbjsAQm9T8baSpHPyrtNe"
+      pumpmaxVault:"FVRXRzHXtG1UDdrVfLPoSTKD44cwx99XKoWAqcQqeNb"
     }
   }
 };
