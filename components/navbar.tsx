@@ -510,7 +510,7 @@ export const Navbar = () => {
                   Max Buy
                 </a>
               </div>
-              <br />
+              {/* <br /> */}
               <p className="text-sm">
                 &nbsp;&nbsp; Step 1: Select a Pump coin you want to buy .
               </p>
@@ -530,7 +530,7 @@ export const Navbar = () => {
                   Max Borrow
                 </a>
               </div>
-              <br />
+              {/* <br /> */}
               <p className="text-sm">
                 &nbsp;&nbsp; Step 1: Select a Pump coin you want to use as
                 collateral.
