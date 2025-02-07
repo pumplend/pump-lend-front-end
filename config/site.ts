@@ -11,7 +11,7 @@ export const siteConfig = {
   ],
   navMenuItems: [],
   links: {
-    website: "https://testnet.pumpmax.fun/",
+    website: "https://app.pumpmax.fun/",
     bot: "https://t.me/pumplend_bot",
     webapp: "https://t.me/pumplend_bot/test",
     github: "https://github.com/pumplend",

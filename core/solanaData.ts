@@ -379,23 +379,28 @@ const culcuateLeverageAbleToken = async (
   token: PublicKey,
   user: PublicKey,
 ) => {
-  const borrowData = await lend.tryGetUserBorrowData(connection, token, user);
-  const curve = await lend.tryGetPumpTokenCurveData(connection, token);
-  console.log(borrowData, curve, token, amount);
+  // const borrowData = await lend.tryGetUserBorrowData(connection, token, user);
+  // const curve = await lend.tryGetPumpTokenCurveData(connection, token);
+  // console.log(borrowData, curve, token, amount);
 
-  const ret = lend.pumplend_culcuate_max_leverage(borrowData, amount, curve);
+  // const ret = lend.pumplend_culcuate_max_leverage(borrowData, amount, curve);
+  const ret = lend.pumplend_culcuate_max_leverageable(connection,token,user, amount);
   console.log(ret);
   if (!ret) {
-    if (
-      curve &&
-      curve.realSolReserves > 0 &&
-      curve.realTokenReserves != BigInt(0)
-    ) {
-      return {
-        sol: Number((3.3 * amount).toFixed(0)),
-        token: culcuateInitCurveBorrowAbleAmount(3.3 * amount),
-      };
-    }
+    // if (
+    //   curve &&
+    //   curve.realSolReserves > 0 &&
+    //   curve.realTokenReserves != BigInt(0)
+    // ) {
+    //   return {
+    //     sol: Number((3.3 * amount).toFixed(0)),
+    //     token: culcuateInitCurveBorrowAbleAmount(3.3 * amount),
+    //   };
+    // }
+    return {
+      sol: Number((amount).toFixed(0)),
+      token: 0,
+    };
   }
   return ret;
 };

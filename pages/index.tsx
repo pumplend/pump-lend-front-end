@@ -375,8 +375,10 @@ export default function IndexPage() {
     handleResize();
     window.addEventListener("resize", handleResize);
    
+    setRepayChartDisplay(false)
     //Onload functions
     const onConnect = async (address: PublicKey, foreceReload?: boolean) => {
+      setRepayChartDisplay(true)
       if (foreceReload) {
         walletConnectedLocks = false;
       }
@@ -628,10 +630,10 @@ export default function IndexPage() {
       borrowTokens.push(seed);
     }
 
-    setRepayChartDisplay(true);
-    if (borrowTokens.length > 0) {
-      setRepayChartDisplay(true);
-    }
+    // setRepayChartDisplay(true);
+    // if (borrowTokens.length > 0) {
+    //   setRepayChartDisplay(true);
+    // }
 
     // console.log("✈ borrowInformationArray",borrowTokens , lend.pumplend_estimate_interest(borrowTokens[0].raw))
     setRepayData(borrowTokens);
@@ -2636,7 +2638,7 @@ null
               )}
               &nbsp;&nbsp;&nbsp;
               {
-              (windowSize.width > 500&&process.env.NEXT_PUBLIC_NETWORK == "devnet") ? null : (
+              (windowSize.width > 500||process.env.NEXT_PUBLIC_NETWORK == "devnet") ? null : (
                 <a onClick={displayFauct}>[Devnet Fauct]</a>
               )}
             </div>

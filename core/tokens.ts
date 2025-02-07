@@ -173,7 +173,9 @@ async function checkTokenExsitOrNot(publicKey: PublicKey) {
     });
     userBorrowTokens = r;
   }
-  console.log("🚀 checkTokenExsitOrNot", userBorrowTokens);
+  console.log("🚀 checkTokenExsitOrNot", userBorrowTokens,
+    JSON.parse(JSON.stringify(userTokens))
+  );
   return 0;
   // Old solution . loop again and agin
   // let ret :any[];
