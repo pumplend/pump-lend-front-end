@@ -40,7 +40,7 @@ export default function WalletSelector() {
   const okxWalletConnect = async () => {
     if (!(window as any)?.okxwallet) {
       const w = OKXUniversalConnectUI.getWallets();
-      console.log("OKX wallet ::", w);
+      //console.log("OKX wallet ::", w);
       const universalUi = await OKXUniversalConnectUI.init({
         dappMetaData: {
           icon: "https://pumplend.fun/logo.png",

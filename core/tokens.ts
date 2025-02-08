@@ -50,12 +50,19 @@ const userTokenInit = async (publicKey: PublicKey) => {
   userStakingData = PublicKey.findProgramAddressSync(
     [Buffer.from("user_staking_data"), publicKey.toBuffer()],
     programIdDefault,
-  )[0];
+  )[0]; 
 
   const tks = await getUserTokenList(publicKey.toBase58());
-  console.log("debugtks ::", tks);
+  const tkss = []
+  tks.forEach((element:any) => {
+   
+    if (element.address.includes("pump")) {
+      tkss.push(element);
+    }
+  });
+  // console.log("debugtks ::", tks,tkss);
   if (tks) {
-    userTokens = tks;
+    userTokens = JSON.parse(JSON.stringify(tkss))
   }
   await checkTokenExsitOrNot(publicKey);
   await checkTokenPumpOrNot(publicKey);
@@ -173,9 +180,9 @@ async function checkTokenExsitOrNot(publicKey: PublicKey) {
     });
     userBorrowTokens = r;
   }
-  console.log("🚀 checkTokenExsitOrNot", userBorrowTokens,
-    JSON.parse(JSON.stringify(userTokens))
-  );
+  // console.log("🚀 checkTokenExsitOrNot", userBorrowTokens,
+  //   JSON.parse(JSON.stringify(userTokens))
+  // );
   return 0;
   // Old solution . loop again and agin
   // let ret :any[];
@@ -329,7 +336,7 @@ const getAddressBalance = async (address: PublicKey) => {
 };
 const getPumpLtsTokenList = async (list = 10) => {
   const data = await api_pump_lts_token(list);
-  console.log("💊 LTS pump token ::", data);
+  // console.log("💊 LTS pump token ::", data);
   if (!data) {
     return [];
   } else {
@@ -338,7 +345,7 @@ const getPumpLtsTokenList = async (list = 10) => {
 };
 const getPumpLtsTokenSearch = async (searchdata: string) => {
   const data = await api_pump_search_token(searchdata, 10);
-  console.log("💊 LTS pump token ::", data);
+  // console.log("💊 LTS pump token ::", data);
   if (!data) {
     return [];
   } else {

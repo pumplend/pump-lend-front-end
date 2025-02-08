@@ -118,7 +118,7 @@ export const Navbar = () => {
         if (!add) {
           return false;
         }
-        console.log("OKX uni wallet ::", add);
+        //console.log("OKX uni wallet ::", add);
         okxUniWalletConnected(add.address);
         globalWallet.fn["provider"] = okxSolanaProvider;
         globalWallet.address = new PublicKey(add?.address);
@@ -152,7 +152,7 @@ export const Navbar = () => {
   const router = useRouter();
 
   const isHomePageLive = () => {
-    console.log("🍺 isHomePageLive", router.pathname);
+    //console.log("🍺 isHomePageLive", router.pathname);
     if (router.pathname != "/") {
       return false;
     }
@@ -161,9 +161,9 @@ export const Navbar = () => {
 
   useEffect(() => {
     setWalletConnected(true);
-    console.log("💣 Wallet status ::", globalWallet, walletConnected);
+    //console.log("💣 Wallet status ::", globalWallet, walletConnected);
     if (connected && walletConnectedType == 0) {
-      console.log("Emit wallet adapter connection ::", connected, globalWallet);
+      //console.log("Emit wallet adapter connection ::", connected, globalWallet);
       //Wallet adapter connected
       eventBus.emit("wallet_connected", {
         type: 0, //OKX wallet extension type
@@ -175,7 +175,7 @@ export const Navbar = () => {
       });
     }
     if (!connected && walletConnectedType == 0) {
-      console.log("wallet_disconnected ");
+      //console.log("wallet_disconnected ");
       eventBus.emit("wallet_disconnected", {
         type: 0,
       });
@@ -186,7 +186,7 @@ export const Navbar = () => {
       if (e && e.detail) {
         walletChange(e.detail);
       } else {
-        console.log("Wallet connector error :: ", e);
+        //console.log("Wallet connector error :: ", e);
       }
     });
 
@@ -207,7 +207,7 @@ export const Navbar = () => {
     eventBus.on("display_fauct", (e: any) => {
       router.push("/faucet");
     });
-    console.log("Final wallet connect status ::", walletConnected);
+    //console.log("Final wallet connect status ::", walletConnected);
   }, [connected, publicKey, walletConnectedType, walletConnected]);
 
   const walletBtn = () => {
@@ -262,7 +262,7 @@ export const Navbar = () => {
   };
 
   const disconnectWallet = async () => {
-    console.log("Emite Disconnected");
+    //console.log("Emite Disconnected");
     setWalletConnected(false);
     setWalletConnectedType(0);
     setWalletConnectedAddress("");

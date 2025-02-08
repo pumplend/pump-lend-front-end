@@ -78,16 +78,16 @@ const solanaDataInit = (publicKey: PublicKey, token: string) => {
 
   poolTokenAuthority = protocolInfo.poolTokenAuthority;
   poolTokenAccount = userTokenAccounts.poolTokenAccount;
-  console.log(
-    "💊 Account List :: ",
-    systemConfig.toBase58(),
-    poolStakingData.toBase58(),
-    userStakingData.toBase58(),
-    userBorrowData.toBase58(),
-    userTokenAccount.toBase58(),
-    poolTokenAuthority.toBase58(),
-    poolTokenAccount.toBase58(),
-  );
+  //console.log(
+  //   "💊 Account List :: ",
+  //   systemConfig.toBase58(),
+  //   poolStakingData.toBase58(),
+  //   userStakingData.toBase58(),
+  //   userBorrowData.toBase58(),
+  //   userTokenAccount.toBase58(),
+  //   poolTokenAuthority.toBase58(),
+  //   poolTokenAccount.toBase58(),
+  // );
   return {
     systemConfig,
     poolStakingData,
@@ -103,36 +103,36 @@ const solanaDataInit = (publicKey: PublicKey, token: string) => {
  * Data fetching
  */
 const testSoalanData = async (publicKey: PublicKey) => {
-  console.log(
-    "🎦 User borrow sol :",
-    systemConfig.toBase58(),
-    poolStakingData.toBase58(),
-    userStakingData.toBase58(),
-    userBorrowData.toBase58(),
-    userTokenAccount.toBase58(),
-    poolTokenAuthority.toBase58(),
-    poolTokenAccount.toBase58(),
-  );
+  //console.log(
+  //   "🎦 User borrow sol :",
+  //   systemConfig.toBase58(),
+  //   poolStakingData.toBase58(),
+  //   userStakingData.toBase58(),
+  //   userBorrowData.toBase58(),
+  //   userTokenAccount.toBase58(),
+  //   poolTokenAuthority.toBase58(),
+  //   poolTokenAccount.toBase58(),
+  // );
   const tokens = await getUserTokenList(publicKey.toBase58());
-  console.log("tokens :: ", tokens);
+  //console.log("tokens :: ", tokens);
 
-  console.log(await fetchUserBorrowData(userBorrowData));
+  //console.log(await fetchUserBorrowData(userBorrowData));
 
-  console.log(await fetchPoolStakingData(poolStakingData));
+  //console.log(await fetchPoolStakingData(poolStakingData));
 
-  console.log(await fetchSystemConfigData(systemConfig));
+  //console.log(await fetchSystemConfigData(systemConfig));
 
-  console.log(await fetchUserStakingData(userStakingData));
+  //console.log(await fetchUserStakingData(userStakingData));
 };
 
 const initFetchData = async () => {
   try {
     userBorrowDataDetails = await fetchUserBorrowData(userBorrowData);
-    console.log(
-      "BorrowDataInfo :: ",
-      userBorrowDataDetails,
-      userBorrowDataDetails.referrer.toBase58(),
-    );
+    //console.log(
+    //   "BorrowDataInfo :: ",
+    //   userBorrowDataDetails,
+    //   userBorrowDataDetails.referrer.toBase58(),
+    // );
   } catch (e) {}
 };
 
@@ -381,11 +381,11 @@ const culcuateLeverageAbleToken = async (
 ) => {
   // const borrowData = await lend.tryGetUserBorrowData(connection, token, user);
   // const curve = await lend.tryGetPumpTokenCurveData(connection, token);
-  // console.log(borrowData, curve, token, amount);
+  // //console.log(borrowData, curve, token, amount);
 
   // const ret = lend.pumplend_culcuate_max_leverage(borrowData, amount, curve);
   const ret = lend.pumplend_culcuate_max_leverageable(connection,token,user, amount);
-  console.log(ret);
+  //console.log(ret);
   if (!ret) {
     // if (
     //   curve &&

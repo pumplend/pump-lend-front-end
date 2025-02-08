@@ -341,7 +341,7 @@ export default function IndexPage() {
        * Handel Stake information fetch and display
        */
       const userStakeInfo = await userSolStakeFetch(address);
-      console.log("🍺 Stake information ::", userStakeInfo);
+      //console.log("🍺 Stake information ::", userStakeInfo);
       setUserStakeSolInformation(userStakeInfo);
       setUserBorrowInformation(Number(userStakeInfo.totalBorrowed));
       setUserStakeSolApy(
@@ -396,7 +396,7 @@ export default function IndexPage() {
        */
       await stakeDisplayFunction(globalWallet.address)
       // const userStakeInfo = await userSolStakeFetch(globalWallet.address);
-      // console.log("🍺 Stake information ::", userStakeInfo);
+      // //console.log("🍺 Stake information ::", userStakeInfo);
       // setUserStakeSolInformation(userStakeInfo);
       // setUserBorrowInformation(Number(userStakeInfo.totalBorrowed));
       // setUserStakeSolApy(
@@ -410,14 +410,14 @@ export default function IndexPage() {
       // );
       // stakeDisplay(userStakeInfo);
 
-      console.log(
-        "🍺 All my token ::",
-        userTokens,
-        "🚀 Borrow tokens ::",
-        userBorrowTokens,
-        "💊 Pump tokens ::",
-        userPumpTokens,
-      );
+      //console.log(
+      //   "🍺 All my token ::",
+      //   userTokens,
+      //   "🚀 Borrow tokens ::",
+      //   userBorrowTokens,
+      //   "💊 Pump tokens ::",
+      //   userPumpTokens,
+      // );
 
       /**
        * Handel Token information fetch and display
@@ -435,7 +435,7 @@ export default function IndexPage() {
             address,
             userBorrowTokens,
           );
-          console.log("🍺 borrowInformationArray::", borrowInformationArray);
+          //console.log("🍺 borrowInformationArray::", borrowInformationArray);
           setUserBorrowInformationArray(borrowInformationArray.tokenData);
 
           if (
@@ -451,7 +451,7 @@ export default function IndexPage() {
 
       //Do sit hisotry 
       const userHis = await api_pumpmax_get_user_actives(0,50,address.toBase58())
-      console.log("🚀 user his ::",userHis)
+      //console.log("🚀 user his ::",userHis)
       if(userHis && userHis?.code==200 &&userHis?.data)
       {
         setHistoryData(userHis?.data)
@@ -468,7 +468,7 @@ export default function IndexPage() {
       const solPrice = await solPriceFetch();
       setSolPrice(solPrice);
       await stakeDisplayFunction();
-      console.log("Sol price :: ", solPrice);
+      //console.log("Sol price :: ", solPrice);
       const ltsPump = await getPumpLtsTokenList()
       setPumpLtsTokens(ltsPump);
       // setSelectedTokenInfo(ltsPump[0]);
@@ -480,7 +480,7 @@ export default function IndexPage() {
 
     eventBus.on("confirm_connected", async (e: any) => {
       //Wallet connect modal
-      console.log("🍺 Wallet connect status ::", globalWallet);
+      //console.log("🍺 Wallet connect status ::", globalWallet);
       onConnect(globalWallet.address).catch(console.error);
     });
 
@@ -502,7 +502,7 @@ export default function IndexPage() {
     });
 
     eventBus.on("update_selected_token", (e: any) => {
-      // console.log("update_selected_token",e.detail)
+      // //console.log("update_selected_token",e.detail)
       if (e?.detail && e.detail?.mint) {
         updateSelectToken(false, e.detail);
       }
@@ -526,15 +526,15 @@ export default function IndexPage() {
         setReferralAddress(_referral);
       }
 
-      console.log(
-        "🔥 Fetch query ::",
-        {
-          _type,
-          _src,
-          _referral,
-        },
-        q.getAll("type"),
-      );
+      //console.log(
+      //   "🔥 Fetch query ::",
+      //   {
+      //     _type,
+      //     _src,
+      //     _referral,
+      //   },
+      //   q.getAll("type"),
+      // );
 
       if (_type) {
         if (_type == "l") {
@@ -568,7 +568,7 @@ export default function IndexPage() {
         }
         trySetReferral(_ref);
       }
-      console.log("Ref ::", tryLoadReferral());
+      //console.log("Ref ::", tryLoadReferral());
     };
     init().catch();
     // onLoad().catch()
@@ -590,7 +590,7 @@ export default function IndexPage() {
     if (!_total) {
       _total = "0";
     }
-    console.log("🚀 supply culcuation :: ", _your, _total);
+    //console.log("🚀 supply culcuation :: ", _your, _total);
     setUserSupply({
       your: _your,
       total: _total,
@@ -635,7 +635,7 @@ export default function IndexPage() {
     //   setRepayChartDisplay(true);
     // }
 
-    // console.log("✈ borrowInformationArray",borrowTokens , lend.pumplend_estimate_interest(borrowTokens[0].raw))
+    // //console.log("✈ borrowInformationArray",borrowTokens , lend.pumplend_estimate_interest(borrowTokens[0].raw))
     setRepayData(borrowTokens);
   };
 
@@ -721,7 +721,7 @@ export default function IndexPage() {
 
   const userRepayButton = async (address: string) => {
     if (globalWallet.connected) {
-      console.log("repay::", address);
+      //console.log("repay::", address);
       await userRepayToken(globalWallet.address, new PublicKey(address));
       txnSendReload();
     } else {
@@ -736,7 +736,7 @@ export default function IndexPage() {
       
       if(isRay)
       {
-        console.log("Try open it via raydium")
+        //console.log("Try open it via raydium")
         raydiumLoading();
         await userLeverageTokenRaydium(
           leverageAmount,
@@ -762,7 +762,7 @@ export default function IndexPage() {
       
       if(isRay)
       {
-        console.log("Try close it via raydium")
+        //console.log("Try close it via raydium")
         raydiumLoading();
         await userCloseTokenRaydium(globalWallet.address, new PublicKey(address));
       }else{
@@ -787,7 +787,7 @@ export default function IndexPage() {
   };
   const setLeverageAmountFunction = async (amount: number) => {
     setLeverageAmount(amount);
-    console.log("pumpTokenCurveData", pumpTokenCurveData);
+    //console.log("pumpTokenCurveData", pumpTokenCurveData);
     if (pumpTokenCurveData) {
       const maxBorrowAbleData = await culcuateLeverageAbleToken(
         amount * 1e9,
@@ -795,7 +795,7 @@ export default function IndexPage() {
         new PublicKey(globalWallet.address),
       );
 
-      console.log("max Borrowable data ::", maxBorrowAbleData);
+      //console.log("max Borrowable data ::", maxBorrowAbleData);
       if (maxBorrowAbleData) {
         setLeverageAmountTmp(amount);
         setLeverageOutAmount(Number(maxBorrowAbleData.token));
@@ -833,13 +833,13 @@ export default function IndexPage() {
   };
 
   const autoSearchAndSelectToken = async (e: string) => {
-    console.log("🍺 Try search token ", e);
+    //console.log("🍺 Try search token ", e);
     const tokenSearch = await getPumpLtsTokenSearch(e);
-    console.log("🍺 Try search token :: ", tokenSearch);
+    //console.log("🍺 Try search token :: ", tokenSearch);
     if (tokenSearch.length > 0) {
       //Token exsit . take the first One .
       const token = tokenSearch[0];
-      console.log("🍺Token exsit ::", token);
+      //console.log("🍺Token exsit ::", token);
       // setSelectedToken(token.mint);
       updateSelectToken(false, token);
     }
@@ -889,10 +889,10 @@ export default function IndexPage() {
 
       addressBooks(publicKey, tokenAddress);
       const curve = await fetchPumpData(new PublicKey(tokenAddress));
-      console.log("🍺 Curve address :: ", curve);
+      //console.log("🍺 Curve address :: ", curve);
       if (curve) {
         const curveData = await fetchTokenPumpCurveData(curve.bondingCurve);
-        console.log("Bonding curve data :: ", curveData);
+        //console.log("Bonding curve data :: ", curveData);
         // pumpTokenCurveData = curveData
         if (curveData) {
           setPumpTokenCurveData({
@@ -2444,7 +2444,9 @@ null
                                 <Avatar
                                   isBordered
                                   color="default"
-                                  src={"https://pump.fun/logo.png"}
+                                  src={
+                                    item.info.image ? item.info.image : "https://pump.fun/logo.png"
+                                  }
                                 />
                               </div>
 

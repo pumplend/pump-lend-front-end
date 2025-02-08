@@ -139,7 +139,7 @@ const userStakeSol = async (amount: number, publicKey: PublicKey) => {
     const txid = await connection.sendRawTransaction(
       signedTransaction.serialize(),
     );
-    console.log("Transaction sent with ID:", txid);
+    //console.log("Transaction sent with ID:", txid);
   } catch (error) {
     console.error("Transaction failed:", error);
   }
@@ -159,7 +159,7 @@ const userWithdrawSol = async (amount: number, publicKey: PublicKey) => {
     const txid = await connection.sendRawTransaction(
       signedTransaction.serialize(),
     );
-    console.log("Transaction sent with ID:", txid);
+    //console.log("Transaction sent with ID:", txid);
   } catch (error) {
     console.error("Transaction failed:", error);
   }
@@ -188,7 +188,7 @@ const userBorrowToken = async (
     const txid = await connection.sendRawTransaction(
       signedTransaction.serialize(),
     );
-    console.log("Transaction sent with ID:", txid);
+    //console.log("Transaction sent with ID:", txid);
   } catch (error) {
     console.error("Transaction failed:", error);
   }
@@ -207,7 +207,7 @@ const userRepayToken = async (publicKey: PublicKey, token: PublicKey) => {
     const txid = await connection.sendRawTransaction(
       signedTransaction.serialize(),
     );
-    console.log("Transaction sent with ID:", txid);
+    //console.log("Transaction sent with ID:", txid);
   } catch (error) {
     console.error("Transaction failed:", error);
   }
@@ -246,7 +246,7 @@ const userLeverageTokenPump = async (
   publicKey: PublicKey,
   token: PublicKey,
 ) => {
-  console.log("amount ::", amount * LAMPORTS_PER_SOL);
+  //console.log("amount ::", amount * LAMPORTS_PER_SOL);
   const tx = new Transaction();
   
   const userTokenPda = await checkPDA(publicKey,token)
@@ -262,7 +262,7 @@ const userLeverageTokenPump = async (
     return false;
   }
   
-  console.log("userTokenPda::",userTokenPda)
+  //console.log("userTokenPda::",userTokenPda)
   if(!userTokenPda.status)
   {
     const userPDAInstruction = createAssociatedTokenAccountInstruction(publicKey,userTokenPda.acc,publicKey,token);
@@ -279,7 +279,7 @@ const userLeverageTokenPump = async (
     const txid = await connection.sendRawTransaction(
       signedTransaction.serialize(),
     );
-    console.log("Transaction sent with ID:", txid);
+    //console.log("Transaction sent with ID:", txid);
   } catch (error) {
     console.error("Transaction failed:", error);
   }
@@ -290,7 +290,7 @@ const userLeverageTokenRaydium = async (
   publicKey: PublicKey,
   token: PublicKey,
 ) => {
-  console.log("amount ::", amount * LAMPORTS_PER_SOL);
+  //console.log("amount ::", amount * LAMPORTS_PER_SOL);
   const tx = new Transaction();
   
   const userTokenPda = await checkPDA(publicKey,token)
@@ -299,7 +299,7 @@ const userLeverageTokenRaydium = async (
   const pools = await getDefaultPool(token,process.env.NEXT_PUBLIC_NETWORK)
   if(!pools || pools.length == 0 )
   {
-    console.log("No pools found")
+    //console.log("No pools found")
     return false;
   }
 
@@ -316,7 +316,7 @@ const userLeverageTokenRaydium = async (
     return false;
   }
 
-  console.log("userTokenPda::",userTokenPda)
+  //console.log("userTokenPda::",userTokenPda)
   if(!userTokenPda.status)
   {
     const userPDAInstruction = createAssociatedTokenAccountInstruction(publicKey,userTokenPda.acc,publicKey,token);
@@ -333,7 +333,7 @@ const userLeverageTokenRaydium = async (
     const txid = await connection.sendRawTransaction(
       signedTransaction.serialize(),
     );
-    console.log("Transaction sent with ID:", txid);
+    //console.log("Transaction sent with ID:", txid);
   } catch (error) {
     console.error("Transaction failed:", error);
   }
@@ -354,7 +354,7 @@ const userCloseTokenPump = async (publicKey: PublicKey, token: PublicKey) => {
     const txid = await connection.sendRawTransaction(
       signedTransaction.serialize(),
     );
-    console.log("Transaction sent with ID:", txid);
+    //console.log("Transaction sent with ID:", txid);
   } catch (error) {
     console.error("Transaction failed:", error);
   }
@@ -364,7 +364,7 @@ const userCloseTokenRaydium = async (publicKey: PublicKey, token: PublicKey) => 
   const pools = await getDefaultPool(token,process.env.NEXT_PUBLIC_NETWORK)
   if(!pools || pools.length == 0 )
   {
-    console.log("No pools found")
+    //console.log("No pools found")
     return false;
   }
   const tx = await lend.close_raydium(connection,token,pools[0], publicKey);
@@ -380,7 +380,7 @@ const userCloseTokenRaydium = async (publicKey: PublicKey, token: PublicKey) => 
     const txid = await connection.sendRawTransaction(
       signedTransaction.serialize(),
     );
-    console.log("Transaction sent with ID:", txid);
+    //console.log("Transaction sent with ID:", txid);
   } catch (error) {
     console.error("Transaction failed:", error);
   }
@@ -507,7 +507,7 @@ const pumpBuyTest = async (
     if (!getAccountPDA) {
       throw "token PDA not init";
     } else {
-      console.log("Account already init ::", getAccountPDA);
+      //console.log("Account already init ::", getAccountPDA);
     }
   } catch (e) {
     transaction.add(
@@ -524,14 +524,14 @@ const pumpBuyTest = async (
 
   const { blockhash } = await connection.getLatestBlockhash();
   transaction.recentBlockhash = blockhash;
-  console.log("🚀 final txn :: ", transaction);
+  //console.log("🚀 final txn :: ", transaction);
   const signedTransaction = await signTransaction(transaction);
 
   try {
     const txid = await connection.sendRawTransaction(
       signedTransaction.serialize(),
     );
-    console.log("Transaction sent with ID:", txid);
+    //console.log("Transaction sent with ID:", txid);
   } catch (error) {
     console.error("Transaction failed:", error);
   }
@@ -601,7 +601,7 @@ const pumpSellTest = async (
     if (!getAccountPDA) {
       throw "token PDA not init";
     } else {
-      console.log("Account already init ::", getAccountPDA);
+      //console.log("Account already init ::", getAccountPDA);
     }
   } catch (e) {
     transaction.add(
@@ -618,14 +618,14 @@ const pumpSellTest = async (
 
   const { blockhash } = await connection.getLatestBlockhash();
   transaction.recentBlockhash = blockhash;
-  console.log("🚀 final txn :: ", transaction);
+  //console.log("🚀 final txn :: ", transaction);
   const signedTransaction = await signTransaction(transaction);
 
   try {
     const txid = await connection.sendRawTransaction(
       signedTransaction.serialize(),
     );
-    console.log("Transaction sent with ID:", txid);
+    //console.log("Transaction sent with ID:", txid);
   } catch (error) {
     console.error("Transaction failed:", error);
   }
@@ -721,38 +721,38 @@ const pumpMintTest = async (publicKey: PublicKey) => {
     dataBuffer,
   ]);
 
-  console.log({
-    keys: [
-      { pubkey: mint.toBase58(), isSigner: true, isWritable: false },
-      { pubkey: mintAuthority.toBase58(), isSigner: false, isWritable: true },
-      { pubkey: bondingCurve.toBase58(), isSigner: false, isWritable: false },
-      {
-        pubkey: associatedBondingCurve.toBase58(),
-        isSigner: false,
-        isWritable: false,
-      },
-      { pubkey: global.toBase58(), isSigner: false, isWritable: false },
-      {
-        pubkey: mplTokenMetadata.toBase58(),
-        isSigner: false,
-        isWritable: true,
-      },
-      { pubkey: metadata.toBase58(), isSigner: false, isWritable: true },
-      { pubkey: user.toBase58(), isSigner: true, isWritable: false },
-      { pubkey: systemProgram.toBase58(), isSigner: false, isWritable: true },
-      { pubkey: tokenProgram.toBase58(), isSigner: false, isWritable: true },
-      {
-        pubkey: associatedTokenProgram.toBase58(),
-        isSigner: false,
-        isWritable: true,
-      },
-      { pubkey: rent.toBase58(), isSigner: false, isWritable: true },
-      { pubkey: eventAuthority.toBase58(), isSigner: false, isWritable: true },
-      { pubkey: program.toBase58(), isSigner: false, isWritable: true },
-    ],
-    programId: program,
-    data: createBuffer,
-  });
+  //console.log({
+  //   keys: [
+  //     { pubkey: mint.toBase58(), isSigner: true, isWritable: false },
+  //     { pubkey: mintAuthority.toBase58(), isSigner: false, isWritable: true },
+  //     { pubkey: bondingCurve.toBase58(), isSigner: false, isWritable: false },
+  //     {
+  //       pubkey: associatedBondingCurve.toBase58(),
+  //       isSigner: false,
+  //       isWritable: false,
+  //     },
+  //     { pubkey: global.toBase58(), isSigner: false, isWritable: false },
+  //     {
+  //       pubkey: mplTokenMetadata.toBase58(),
+  //       isSigner: false,
+  //       isWritable: true,
+  //     },
+  //     { pubkey: metadata.toBase58(), isSigner: false, isWritable: true },
+  //     { pubkey: user.toBase58(), isSigner: true, isWritable: false },
+  //     { pubkey: systemProgram.toBase58(), isSigner: false, isWritable: true },
+  //     { pubkey: tokenProgram.toBase58(), isSigner: false, isWritable: true },
+  //     {
+  //       pubkey: associatedTokenProgram.toBase58(),
+  //       isSigner: false,
+  //       isWritable: true,
+  //     },
+  //     { pubkey: rent.toBase58(), isSigner: false, isWritable: true },
+  //     { pubkey: eventAuthority.toBase58(), isSigner: false, isWritable: true },
+  //     { pubkey: program.toBase58(), isSigner: false, isWritable: true },
+  //   ],
+  //   programId: program,
+  //   data: createBuffer,
+  // });
   const instruction = new TransactionInstruction({
     keys: [
       { pubkey: mint, isSigner: true, isWritable: true },
@@ -781,13 +781,13 @@ const pumpMintTest = async (publicKey: PublicKey) => {
   transaction.partialSign(mint_account);
   let signedTransaction = await signTxn(transaction);
 
-  console.log(signedTransaction);
+  //console.log(signedTransaction);
   try {
     const txid = await connection.sendRawTransaction(
       signedTransaction.serialize(),
     );
     return mint_account.publicKey.toBase58();
-    console.log("Transaction sent with ID:", txid);
+    //console.log("Transaction sent with ID:", txid);
   } catch (error) {
     console.error("Transaction failed:", error);
     return false;
@@ -925,38 +925,38 @@ const pumpMintAndBuy = async (publicKey: PublicKey, amount: number) => {
     dataBuffer,
   ]);
 
-  console.log({
-    keys: [
-      { pubkey: mint.toBase58(), isSigner: true, isWritable: false },
-      { pubkey: mintAuthority.toBase58(), isSigner: false, isWritable: true },
-      { pubkey: bondingCurve.toBase58(), isSigner: false, isWritable: false },
-      {
-        pubkey: associatedBondingCurve.toBase58(),
-        isSigner: false,
-        isWritable: false,
-      },
-      { pubkey: global.toBase58(), isSigner: false, isWritable: false },
-      {
-        pubkey: mplTokenMetadata.toBase58(),
-        isSigner: false,
-        isWritable: true,
-      },
-      { pubkey: metadata.toBase58(), isSigner: false, isWritable: true },
-      { pubkey: user.toBase58(), isSigner: true, isWritable: false },
-      { pubkey: systemProgram.toBase58(), isSigner: false, isWritable: true },
-      { pubkey: tokenProgram.toBase58(), isSigner: false, isWritable: true },
-      {
-        pubkey: associatedTokenProgram.toBase58(),
-        isSigner: false,
-        isWritable: true,
-      },
-      { pubkey: rent.toBase58(), isSigner: false, isWritable: true },
-      { pubkey: eventAuthority.toBase58(), isSigner: false, isWritable: true },
-      { pubkey: program.toBase58(), isSigner: false, isWritable: true },
-    ],
-    programId: program,
-    data: createBuffer,
-  });
+  //console.log({
+  //   keys: [
+  //     { pubkey: mint.toBase58(), isSigner: true, isWritable: false },
+  //     { pubkey: mintAuthority.toBase58(), isSigner: false, isWritable: true },
+  //     { pubkey: bondingCurve.toBase58(), isSigner: false, isWritable: false },
+  //     {
+  //       pubkey: associatedBondingCurve.toBase58(),
+  //       isSigner: false,
+  //       isWritable: false,
+  //     },
+  //     { pubkey: global.toBase58(), isSigner: false, isWritable: false },
+  //     {
+  //       pubkey: mplTokenMetadata.toBase58(),
+  //       isSigner: false,
+  //       isWritable: true,
+  //     },
+  //     { pubkey: metadata.toBase58(), isSigner: false, isWritable: true },
+  //     { pubkey: user.toBase58(), isSigner: true, isWritable: false },
+  //     { pubkey: systemProgram.toBase58(), isSigner: false, isWritable: true },
+  //     { pubkey: tokenProgram.toBase58(), isSigner: false, isWritable: true },
+  //     {
+  //       pubkey: associatedTokenProgram.toBase58(),
+  //       isSigner: false,
+  //       isWritable: true,
+  //     },
+  //     { pubkey: rent.toBase58(), isSigner: false, isWritable: true },
+  //     { pubkey: eventAuthority.toBase58(), isSigner: false, isWritable: true },
+  //     { pubkey: program.toBase58(), isSigner: false, isWritable: true },
+  //   ],
+  //   programId: program,
+  //   data: createBuffer,
+  // });
   const instruction = new TransactionInstruction({
     keys: [
       { pubkey: mint, isSigner: true, isWritable: true },
@@ -1027,7 +1027,7 @@ const pumpMintAndBuy = async (publicKey: PublicKey, amount: number) => {
     if (!getAccountPDA) {
       throw "token PDA not init";
     } else {
-      console.log("Account already init ::", getAccountPDA);
+      //console.log("Account already init ::", getAccountPDA);
     }
   } catch (e) {
     transaction.add(
@@ -1043,14 +1043,14 @@ const pumpMintAndBuy = async (publicKey: PublicKey, amount: number) => {
   transaction.feePayer = publicKey;
   transaction.partialSign(mint_account);
   let signedTransaction = await signTxn(transaction);
-  console.log(signedTransaction);
+  //console.log(signedTransaction);
 
   try {
     const txid = await connection.sendRawTransaction(
       signedTransaction.serialize(),
     );
     return mint_account.publicKey.toBase58();
-    console.log("Transaction sent with ID:", txid);
+    //console.log("Transaction sent with ID:", txid);
   } catch (error) {
     console.error("Transaction failed:", error);
     return false;

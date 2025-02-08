@@ -28,7 +28,7 @@ const signMsg = async (data: Uint8Array) => {
 };
 
 const signTxn = async (data: Transaction) => {
-  console.log(data, globalWallet);
+  // console.log(data, globalWallet);
   switch (globalWallet.type) {
     case 0:
       if (globalWallet.fn?.signTxn) {
