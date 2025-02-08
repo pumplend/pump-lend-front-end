@@ -1397,7 +1397,7 @@ export default function IndexPage() {
                 <div className="flex gap-2.5 justify-center">
                   <div className="flex flex-col border-dashed border-2 border-divider py-2 px-6 rounded-xl">
                     <span className="text-default-900 text-sm font-semibold">
-                    <a style={{color:"green"}}>PUMPMAX</a> is now live <a style={{color:"red"}}>mainnet-beta version</a> . So be careful while staking SOL .
+                    PUMPMAX <a style={{color:"red"}}>mainnet-beta version</a> is now live . So be careful while staking SOL .
                     </span>
                   </div>
                 </div>
@@ -1842,6 +1842,11 @@ null
                       <div>
                       <span >
                           {
+                            ( item.type == "stake" || item.type == "borrow" || item.type == "borrowLoopRaydium" || item.type == "borrowLoopPump" )?
+                            Number(Number(Number(item.amount)/1e9).toFixed(3))+" SOL"
+                            :null
+                          }
+                          {/* {
                             ( item.type == "stake" )?
                             Number(Number(Number(item.amount)/1e9).toFixed(3))+" SOL"
                             :null
@@ -1850,7 +1855,7 @@ null
                             (item.type == "borrow" || item.type == "borrowLoopRaydium" || item.type == "borrowLoopPump")?
                             Number(Number(Number(item.amount)/1e6).toFixed(3))+" $"
                             :null
-                          }
+                          } */}
                           </span>
                       </div>
 
