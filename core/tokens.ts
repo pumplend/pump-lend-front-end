@@ -53,7 +53,8 @@ const userTokenInit = async (publicKey: PublicKey) => {
   )[0]; 
 
   const tks = await getUserTokenList(publicKey.toBase58());
-  const tkss = []
+  let tkss: any[];
+  tkss = [];
   tks.forEach((element:any) => {
    
     if (element.address.includes("pump")) {
