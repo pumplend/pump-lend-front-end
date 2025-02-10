@@ -1,7 +1,7 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "PUMPMAX",
+  name: "PumpMax",
   description: "First max leverage protocol base on pump.",
   navItems: [
     {

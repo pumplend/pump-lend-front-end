@@ -670,14 +670,14 @@ export default function IndexPage() {
     setTimeout(async () => {
       onPendingClose();
       eventBus.emit("reload_connected", {});
-    }, 10000);
+    }, 30000);
   };
 
   const raydiumLoading = () => {
     onPendingOpen();
     setTimeout(async () => {
       onPendingClose();
-    }, 20000);
+    }, 10000);
   };
   const userStakeButton = async () => {
     if (globalWallet.connected) {
@@ -1127,7 +1127,14 @@ export default function IndexPage() {
           {windowSize.width > 500 ? null : (
             <a onClick={displayHowItWorks}>[How it works]</a>
           )}
-
+           &nbsp;&nbsp;&nbsp;
+          {windowSize.width > 500 ? null : (
+            <a 
+            onClick={()=>{
+              window.open("https://docs.pumpmax.fun/")
+            }}
+            >[Docs]</a>
+          )}
           {/* <Button onClick={debugs}> Debug</Button> */}
           {/* <span className={title({ color: "green" })}>Memecoin&nbsp;</span> */}
           {/* <br />
@@ -1529,7 +1536,7 @@ null
                   >
                     <div>
                       <span className="text-default-900 font-semibold">
-                        Tokens
+                        Token
                       </span>
                     </div>
 
@@ -1572,7 +1579,7 @@ null
                     </div>
                     <div>
                       <span className="text-default-900 font-semibold">
-                        Actions
+                        Action
                       </span>
                     </div>
                   </div>

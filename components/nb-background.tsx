@@ -19,7 +19,7 @@ export default function NbBackground({ width }: NbBackgroundProps) {
         // console.log("req exsit")
       } else {
         // console.log("new req")
-        lts = await getPumpLtsTokenList(40);
+        lts = await getPumpLtsTokenList(42);
         if (!lts || lts.length == 0) {
           lts = pumpLtsMock;
         }
@@ -55,7 +55,7 @@ export default function NbBackground({ width }: NbBackgroundProps) {
         >
           <div className="Items flex items-center absolute top-0 left-0 z-1 h-full">
             <div className="Item flex items-center animation1">
-              {ltsToken.map((item, i) => (
+              {(ltsToken.slice(0,30)).map((item, i) => (
                 <>
                   <div
                     className="flex items-center gap-2 rounded-xl p-2 cursor-pointer hover:bg-white"
@@ -83,7 +83,7 @@ export default function NbBackground({ width }: NbBackgroundProps) {
         >
           <div className="Items flex items-center absolute top-0 left-0 z-1 h-full">
             <div className="Item flex items-center animation1">
-              {ltsToken.map((item, i) => (
+              {(ltsToken.slice(10,42)).map((item, i) => (
                 <>
                   <div
                     className="flex items-center gap-2 rounded-xl p-2 cursor-pointer hover:bg-black"
