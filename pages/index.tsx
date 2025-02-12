@@ -670,7 +670,7 @@ export default function IndexPage() {
     setTimeout(async () => {
       onPendingClose();
       eventBus.emit("reload_connected", {});
-    }, 30000);
+    }, 10000);
   };
 
   const raydiumLoading = () => {
@@ -1849,8 +1849,13 @@ null
                       <div>
                       <span >
                           {
-                            ( item.type == "stake" || item.type == "borrow" || item.type == "borrowLoopRaydium" || item.type == "borrowLoopPump" )?
+                            ( item.type == "stake"  || item.type == "borrowLoopRaydium" || item.type == "borrowLoopPump" )?
                             Number(Number(Number(item.amount)/1e9).toFixed(3))+" SOL"
+                            :null
+                          }
+                          {
+                            (item.type == "borrow")?
+                            Number(Number(Number(item.amount)/1e6).toFixed(3))+ " Coin"
                             :null
                           }
                           {/* {
