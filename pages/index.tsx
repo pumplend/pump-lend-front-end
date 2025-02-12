@@ -490,6 +490,7 @@ export default function IndexPage() {
       setLeverageAmount(0);
       setStakeAmount(0);
       setWithdrawAmount(0);
+      setRepayData([])
       //Onconnect again
       onConnect(globalWallet.address, true).catch(console.error);
     });
@@ -1631,7 +1632,9 @@ null
                         </div>
                       </div>
 
-                      <div>{item.amount} SOL</div>
+                      <div>{
+                        (Number(item.amountSol)+Number(item.amount)).toFixed(3)
+                        } SOL</div>
 
                       <div>
                         {formatTimeInterval(
@@ -1673,7 +1676,7 @@ null
                               lend.pumplend_estimate_interest(
                                 item.raw,
                                 testFeeRate,
-                              ).interest,
+                              ).interest
                             ) / 1e9
                           ),
                         )}{" "}
