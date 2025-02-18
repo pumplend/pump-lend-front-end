@@ -368,7 +368,19 @@ export const Navbar = () => {
               [Devnet Faucet]
             </NextLink>:null
             }
-
+            
+            <div
+              className={clsx(
+                linkStyles({ color: "foreground" }),
+                "data-[active=true]:text-primary data-[active=true]:font-medium",
+              )}
+              color="foreground"
+              onClick={()=>{
+                window.open("https://explorer.pumpmax.fun/")
+              }}
+            >
+              [Explorer]
+            </div>
             &nbsp;&nbsp;&nbsp;
             <div
               className={clsx(
@@ -382,6 +394,7 @@ export const Navbar = () => {
             >
               [Docs]
             </div>
+
           </NavbarItem>
 
           {/* {siteConfig.navItems.map((item) => (

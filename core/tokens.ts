@@ -63,6 +63,7 @@ const userTokenInit = async (publicKey: PublicKey) => {
   });
   // console.log("debugtks ::", tks,tkss);
   if (tks) {
+    tkss.sort((a, b) => b.balance - a.balance);
     userTokens = JSON.parse(JSON.stringify(tkss))
   }
   await checkTokenExsitOrNot(publicKey);

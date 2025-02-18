@@ -1128,6 +1128,14 @@ export default function IndexPage() {
           {windowSize.width > 500 ? null : (
             <a onClick={displayHowItWorks}>[How it works]</a>
           )}
+            &nbsp;&nbsp;&nbsp;
+          {windowSize.width > 500 ? null : (
+            <a 
+            onClick={()=>{
+              window.open("https://explorer.pumpmax.fun/")
+            }}
+            >[Explorer]</a>
+          )}
            &nbsp;&nbsp;&nbsp;
           {windowSize.width > 500 ? null : (
             <a 
@@ -1136,6 +1144,7 @@ export default function IndexPage() {
             }}
             >[Docs]</a>
           )}
+
           {/* <Button onClick={debugs}> Debug</Button> */}
           {/* <span className={title({ color: "green" })}>Memecoin&nbsp;</span> */}
           {/* <br />
@@ -1187,7 +1196,7 @@ export default function IndexPage() {
                 <div className="flex flex-col gap-6 w-full">
                   <div className="flex flex-col justify-center gap-1 relative">
                     <div className="card_head flex justify-between">
-                      <p>Dposite</p>
+                      <p>Deposite</p>
                       <p className=" text-xs">
                         <span style={{ color: "gray" }}>
                           Balance:{" "}
