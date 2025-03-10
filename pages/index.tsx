@@ -1367,7 +1367,7 @@ export default function IndexPage() {
                         display: klineDisplay,
                       }}
                       title="kline"
-                      src={`https://www.gmgn.cc/kline/sol/`+selectedToken}
+                      src={`https://hellodex.io/kline/en/SOLANA/${selectedToken}?timeType=1s`}
                       width={kWindowsSize + "px"}
                       height={windowSize.height * 0.6}
                     ></iframe>
